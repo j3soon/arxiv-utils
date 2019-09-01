@@ -1,6 +1,29 @@
-# arXiv-utils
+# arxiv-utils
 
-For ArXiv PDF / abstract tabs, renames the title and add a button to open its corresponding abstract / PDF page.
+[![](https://img.shields.io/chrome-web-store/v/mnhdpeipjhhkmlhlcljdjpgmilbmehij.svg)](https://chrome.google.com/webstore/detail/mediumship/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
+[![](https://img.shields.io/chrome-web-store/rating/mnhdpeipjhhkmlhlcljdjpgmilbmehij.svg)](https://chrome.google.com/webstore/detail/mediumship/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
+[![](https://img.shields.io/chrome-web-store/users/mnhdpeipjhhkmlhlcljdjpgmilbmehij.svg)](https://chrome.google.com/webstore/detail/mediumship/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
+
+![icon](icons/icon64.png)
+
+For ArXiv PDF / abstract tabs:
+
+- Renames the title to paper's title automatically in the background. (Originally is meaningless paper id, or start with paper id)
+- Add a button to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
+- Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
+
+## Download Links
+
+- [Chrome Web Store](https://chrome.google.com/webstore/detail/arxiv-utils/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
+
+## Screenshots
+
+![](screenshots/abstract.png)
+![](screenshots/pdf.png)
+![](screenshots/pdf2.png)
+![](screenshots/abstract2.png)
+![](screenshots/onetab.png)
+![](screenshots/bookmarks.png)
 
 ## Related Extensions
 
