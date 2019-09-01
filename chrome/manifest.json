@@ -1,0 +1,32 @@
+{
+    "name": "arxiv-utils",
+    "version": "1.0",
+    "description": "ArXiv utilities for easy access",
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "content_scripts": [{
+        "matches": ["*://arxiv.org/pdf/*", "*://arxiv.org/abs/*"],
+        "js": ["content.js"],
+        "run_at": "document_end"
+    }],
+    "browser_action": {
+        "default_icon": {
+            "19": "icon19.png",
+            "38": "icon38.png"
+        },
+        "default_title": "Open Abstract / PDF"
+    },
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "*://export.arxiv.org/*",
+        "*://arxiv.org/*"
+    ],
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    },
+    "manifest_version": 2
+}
