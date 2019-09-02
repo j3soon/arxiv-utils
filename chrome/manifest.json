@@ -1,12 +1,12 @@
 {
     "name": "arxiv-utils",
-    "version": "1.1",
+    "version": "1.2",
     "description": "ArXiv utilities for easy access. Changes the titles of abstract, PDF pages. Adds a button to open the PDF, abstract page.",
     "background": {
         "scripts": ["background.js"]
     },
     "content_scripts": [{
-        "matches": ["*://arxiv.org/pdf/*", "*://arxiv.org/abs/*"],
+        "matches": ["*://arxiv.org/*.pdf", "*://arxiv.org/abs/*"],
         "js": ["content.js"],
         "run_at": "document_end"
     }],

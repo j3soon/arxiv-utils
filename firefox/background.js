@@ -8,7 +8,7 @@ app.pdfviewerTarget = "pdfviewer.html?target=";
 // The match pattern for the URLs to redirect
 // Note: https://arxiv.org/pdf/<id> is the direct link, then the url is renamed to https://arxiv.org/pdf/<id>.pdf
 //       we capture only the last url (the one that ends with '.pdf').
-app.bookmarkPattern = "*://arxiv.org/pdf/*.pdf";
+app.bookmarkPattern = "*://arxiv.org/*.pdf";
 // Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
   if (url.endsWith(".pdf")) {
@@ -16,16 +16,38 @@ app.getType = function (url) {
   }
   return "Abstract";
 }
+// Return the id parsed from the url.
+app.getId = function (url, type) {
+  var match;
+  if (type === "PDF") {
+    // match = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
+    // Must use below for other PDF serving URL.
+    match = url.match(/arxiv.org\/[\S]*\/([^\/]*)\.pdf$/);
+    // The first match is the matched string, the second one is the captured group.
+    if (match === null || match.length !== 2) {
+      return null;
+    }
+  } else {
+    match = url.match(/arxiv.org\/abs\/([\S]*)$/);
+    // The first match is the matched string, the second one is the captured group.
+    if (match === null || match.length !== 2) {
+      return null;
+    }
+  }
+  return match[1];
+}
 // Open the abstract / PDF page using the current URL.
 app.openAbstractTab = function (activeTabIdx, url, type) {
-  // Retrieve the abstract url by modifying the PDF url.
+  // Retrieve the abstract url by modifying the original url.
   var newURL;
   if (type === "PDF") {
     var prefix = chrome.runtime.getURL(app.pdfviewerTarget);
     newURL = url.substr(prefix.length);
-    newURL = newURL.replace('.pdf', '').replace('pdf', 'abs');
+    var id = app.getId(newURL, type);
+    newURL = "https://arxiv.org/abs/" + id;
   } else {
-    newURL = url.replace('abs', 'pdf') + ".pdf";
+    var id = app.getId(url, type);
+    newURL = "https://arxiv.org/pdf/" + id + ".pdf";
   }
   // Create the abstract page in new tab.
   chrome.tabs.create({ "url": newURL }, (tab) => {
@@ -40,7 +62,9 @@ app.openAbstractTab = function (activeTabIdx, url, type) {
 }
 // Check if the URL is abstract or PDF page, returns true if the URL is either.
 app.checkURL = function (url) {
-  var matchPDF = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
+  // var matchPDF = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
+  // Must use below for other PDF serving URL.
+  var matchPDF = url.match(/arxiv.org\/[\S]*\/([^\/]*)\.pdf$/);
   var matchAbs = url.match(/arxiv.org\/abs\/([\S]*)$/);
   if (matchPDF !== null || matchAbs !== null) {
     return true;

@@ -18,7 +18,9 @@ app.getType = function (url) {
 app.getId = function (url, type) {
   var match;
   if (type === "PDF") {
-    match = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
+    // match = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
+    // Must use below for other PDF serving URL.
+    match = url.match(/arxiv.org\/[\S]*\/([^\/]*)\.pdf$/);
     // The first match is the matched string, the second one is the captured group.
     if (match === null || match.length !== 2) {
       return null;
