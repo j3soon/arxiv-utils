@@ -1,6 +1,6 @@
 // This content_script is for changing the title after page loaded. (Abstract retitle only)
-// Note: This script is disabled in PDF.js pages in firefox.
 var app = {};
+// All logs should start with this.
 app.name = "[arXiv-utils]";
 // Return the id parsed from the url.
 app.getId = function (url) {
@@ -11,7 +11,7 @@ app.getId = function (url) {
   }
   return match[1];
 }
-// Get the title asynchronously, call the callback with title as argument when request done.
+// Get the title asynchronously, call the callback with the queried title as argument when request done (`callback(title)`).
 app.getTitleAsync = function (id, type, callback) {
   var request = new XMLHttpRequest();
   request.open("GET", "https://export.arxiv.org/api/query?id_list=" + id);

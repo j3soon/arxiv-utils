@@ -1,24 +1,29 @@
 // This background script is for adding the back to abstract button.
 var app = {};
+// All logs should start with this.
 app.name = "[arXiv-utils]";
-app.pdfviewer = "pdfviewer.html"
+// For our PDF container.
+app.pdfviewer = "pdfviewer.html";
+app.pdfviewerTarget = "pdfviewer.html?target=";
 // The match pattern for the URLs to redirect
 // Note: https://arxiv.org/pdf/<id> is the direct link, then the url is renamed to https://arxiv.org/pdf/<id>.pdf
 //       we capture only the last url (the one that ends with '.pdf').
 app.bookmarkPattern = "*://arxiv.org/pdf/*.pdf";
-// Return the type parsed from the url.
+// Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
   if (url.endsWith(".pdf")) {
     return "PDF";
   }
   return "Abstract";
 }
-// Open the abstract page using the PDF URL.
+// Open the abstract / PDF page using the current URL.
 app.openAbstractTab = function (activeTabIdx, url, type) {
   // Retrieve the abstract url by modifying the PDF url.
   var newURL;
   if (type === "PDF") {
-    newURL = url.replace('.pdf', '').replace('pdf', 'abs');
+    var prefix = chrome.runtime.getURL(app.pdfviewerTarget);
+    newURL = url.substr(prefix.length);
+    newURL = newURL.replace('.pdf', '').replace('pdf', 'abs');
   } else {
     newURL = url.replace('abs', 'pdf') + ".pdf";
   }
@@ -33,7 +38,7 @@ app.openAbstractTab = function (activeTabIdx, url, type) {
     });
   });
 }
-// Check if the URL is abstract or PFD page.
+// Check if the URL is abstract or PDF page, returns true if the URL is either.
 app.checkURL = function (url) {
   var matchPDF = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
   var matchAbs = url.match(/arxiv.org\/abs\/([\S]*)$/);
@@ -57,7 +62,7 @@ app.redirect = function (requestDetails) {
     // Request from this plugin itself.
     return;
   }
-  url = app.pdfviewer + "?target=" + requestDetails.url;
+  url = app.pdfviewerTarget + requestDetails.url;
   url = chrome.runtime.getURL(url);
   console.log(app.name, "Redirecting: " + requestDetails.url + " to " + url);
   // chrome.tabs.create({ "url": url });
@@ -68,7 +73,7 @@ app.redirect = function (requestDetails) {
 }
 // If the custom PDF page is bookmarked, bookmark the original PDF link instead.
 app.modifyBookmark = function (id, bookmarkInfo) {
-  var prefix = chrome.runtime.getURL(app.pdfviewer + "?target=");
+  var prefix = chrome.runtime.getURL(app.pdfviewerTarget);
   if (!bookmarkInfo.url.startsWith(prefix)) {
     return;
   }
@@ -93,7 +98,7 @@ app.run = function (tab) {
 chrome.tabs.onUpdated.addListener(app.updateBrowserActionState);
 // Extension button click to modify title.
 chrome.browserAction.onClicked.addListener(app.run);
-// Redirect the PDF page to custom page.
+// Redirect the PDF page to custom PDF container page.
 chrome.webRequest.onBeforeRequest.addListener(
   app.redirect,
   { urls: [app.bookmarkPattern] },
