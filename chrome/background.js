@@ -1,14 +1,15 @@
 // This background script is for adding the back to abstract button.
 var app = {};
+// All logs should start with this.
 app.name = "[arXiv-utils]";
-// Return the type parsed from the url.
+// Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
   if (url.endsWith(".pdf")) {
     return "PDF";
   }
   return "Abstract";
 }
-// Open the abstract page using the PDF URL.
+// Open the abstract / PDF page using the current URL.
 app.openAbstractTab = function (activeTabIdx, url, type) {
   // Retrieve the abstract url by modifying the PDF url.
   var newURL;
@@ -28,7 +29,7 @@ app.openAbstractTab = function (activeTabIdx, url, type) {
     });
   });
 }
-// Check if the URL is abstract or PFD page.
+// Check if the URL is abstract or PDF page, returns true if the URL is either.
 app.checkURL = function (url) {
   var matchPDF = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
   var matchAbs = url.match(/arxiv.org\/abs\/([\S]*)$/);
@@ -42,10 +43,10 @@ app.updateBrowserActionState = function (tabId, changeInfo, tab) {
   var avail = app.checkURL(tab.url)
   if (avail) {
     chrome.browserAction.enable(tabId);
+    chrome.tabs.sendMessage(tabId, tab);
   } else {
     chrome.browserAction.disable(tabId);
   }
-  chrome.tabs.sendMessage(tabId, tab);
 };
 // Run this when the button clicked.
 app.run = function (tab) {

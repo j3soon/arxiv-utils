@@ -1,9 +1,13 @@
 // This content_script is for changing the title after page loaded.
 var app = {};
+// All logs should start with this.
 app.name = "[arXiv-utils]";
-// For checking if tab title has been updated.
+// These 4 below are For checking if tab title has been updated.
 app.title = null;
-// Return the type parsed from the url.
+app.type = null;
+app.id = null;
+app.newTitle = null;
+// Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
   if (url.endsWith(".pdf")) {
     return "PDF";
@@ -28,7 +32,8 @@ app.getId = function (url, type) {
   }
   return match[1];
 }
-// Get the title asynchronously, call the callback with title as argument when request done.
+// Get the title asynchronously, call the callback with the queried title as argument when request done (`callback(title)`).
+// Updates `app`'s 4 variables: `title`, `type`, `id`, `newTitle` before callback.
 app.getTitleAsync = function (id, type, callback) {
   var request = new XMLHttpRequest();
   request.open("GET", "https://export.arxiv.org/api/query?id_list=" + id);
@@ -40,8 +45,11 @@ app.getTitleAsync = function (id, type, callback) {
       // The first title is query string, second one is paper name.
       var title = xmlDoc.getElementsByTagName("title")[1].innerHTML;
       // Modify the title to differentiate from abstract pages.
-      title = title + " | " + type;
       app.title = title;
+      title = title + " | " + type;
+      app.newTitle = title;
+      app.type = type;
+      app.id = id;
       callback(title);
     }
   };
@@ -50,12 +58,12 @@ app.getTitleAsync = function (id, type, callback) {
 // Insert the title into the active tab.
 // After the insertion, the title might be overwritten after the PDF has been loaded.
 app.insertTitle = function (title) {
-  console.log("Trying to change title to: " + title)
+  console.log(app.name, "Trying to change title to: " + title)
   var elTitles = document.getElementsByTagName("title");
   if (elTitles.length !== 0) {
     // Modify directly if <title> exists.
     var elTitle = elTitles[0];
-    elTitle.innerHTML = title;
+    elTitle.innerText = title;
     console.log(app.name, "Modify <title> tag directly.");
     return;
   }
@@ -64,7 +72,7 @@ app.insertTitle = function (title) {
     // Modify <head> if <title> doesn't exist.
     var elHead = elHeads[0];
     var elTitle = document.createElement("title");
-    elTitle.innerHTML = title;
+    elTitle.innerText = title;
     elHead.appendChild(elTitle);
     console.log(app.name, "Modify <head> tag.");
     return;
@@ -75,7 +83,7 @@ app.insertTitle = function (title) {
     var elHtml = elHtmls[0];
     var elHead = document.createElement("head");
     var elTitle = document.createElement("title");
-    elTitle.innerHTML = title;
+    elTitle.innerText = title;
     elHead.appendChild(elTitle);
     if (elHtml.firstChild !== null) {
       elHtml.insertBefore(elHead, elHtml.firstChild);
@@ -101,19 +109,26 @@ app.run = function () {
 }
 app.run();
 
-// Change the title again if it has been overwritten.
+// Change the title again if it has been overwritten (PDF page only).
 app.onMessage = function (tab, sender, sendResponse) {
   console.log(app.name, "onMessage / tab changed: " + tab.title + ".");
-  if (tab.title === null || app.title === null) {
+  if (tab.title === null || app.newTitle === null) {
     // Didn't changed title or are trying to change.
     return;
   }
-  if (tab.title === app.title || tab.title === tab.url) {
+  if (tab.title === app.newTitle || tab.title === tab.url) {
     // Changed by content_script itself.
+    // For PDF page in Chrome, changing the tab title will result in
+    // a intermediate title that is the tab's url.
     return;
   }
-  console.log(app.name, "Tab title has been changed!");
-  app.insertTitle(app.title);
+  if (app.type === "PDF" && tab.title === app.id + ".pdf") {
+    // The title has been overwritten with the default name of arXiv.
+    console.log(app.name, "Tab title has been changed!");
+    app.insertTitle(app.newTitle);
+    return;
+  }
+  console.log(app.name, "Warning: Some weird tab renaming happened.")
 }
 // Listen for background script's message, since the title might be changed when PDF is loaded.
 chrome.runtime.onMessage.addListener(app.onMessage);
