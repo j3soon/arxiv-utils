@@ -28,8 +28,7 @@
     ],
     "content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org;",
     "web_accessible_resources": [
-        "pdfviewer.html",
-        "pdfdownload.html"
+        "pdfviewer.html"
     ],
     "icons": {
         "16": "icon16.png",

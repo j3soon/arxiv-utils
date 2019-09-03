@@ -38,14 +38,17 @@ Supports Chrome, Firefox, Firefox on Android. (Android version is not tested)
 ## Screenshots
 
 The paper id in the title has been removed automatically!
+A direct download link is added to download PDF with paper's title as the filename!
 ![](screenshots/abstract.png)
 Finally... Meaningful paper title instead of paper id! (For Firefox, this is achieved through a custom PDF container.)
 ![](screenshots/pdf.png)
-Difficult to get back to abstract page... Click to get back to abstract page!
+Difficult to get back to abstract page...
+Click to get back to abstract page!
 ![](screenshots/pdf2.png)
 TADA~ The abstract page is shown at the right of the PDF page! Both with meaningful title!
 ![](screenshots/abstract2.png)
-The button is disabled if not in ArXiv's domain. Meaningful bookmark titles.
+The button is disabled if not in ArXiv's domain.
+Meaningful bookmark titles.
 ![](screenshots/bookmarks.png)
 Meaningful OneTab entries! (Google Chrome only)
 ![](screenshots/onetab.png)
@@ -167,7 +170,7 @@ Meaningful OneTab entries! (Google Chrome only)
 - `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
 - `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
 - `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org;"`: For embedding PDF in container.
-- `"web_accessible_resources": [ "pdfviewer.html", "pdfviewer.js" ]`: To redirect from HTTPS to extension custom page requires them to be visible.
+- `"web_accessible_resources": [ "pdfviewer.html" ]`: To redirect from HTTPS to extension custom page requires them to be visible.
 
 ### Methods
 
