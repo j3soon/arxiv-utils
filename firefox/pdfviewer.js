@@ -43,8 +43,8 @@ app.extractURL = function () {
 app.injectPDF = function (url) {
   console.log(app.name, "Injecting PDF: " + url);
   var elPDF = document.createElement("object");
-  elPDF.setAttribute('type', 'application/pdf');
-  elPDF.setAttribute('data', url);
+  elPDF.setAttribute("type", "application/pdf");
+  elPDF.setAttribute("data", url);
   var elContainer = document.getElementById("container");
   elContainer.appendChild(elPDF);
 }

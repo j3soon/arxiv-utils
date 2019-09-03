@@ -8,7 +8,8 @@ app.pdfviewerTarget = "pdfviewer.html?target=";
 // The match pattern for the URLs to redirect
 // Note: https://arxiv.org/pdf/<id> is the direct link, then the url is renamed to https://arxiv.org/pdf/<id>.pdf
 //       we capture only the last url (the one that ends with '.pdf').
-app.bookmarkPattern = "*://arxiv.org/*.pdf";
+// Adding some extra parameter such as https://arxiv.org/pdf/<id>.pdf?download can bypass this capture.
+app.redirectPattern = "*://arxiv.org/*.pdf";
 // Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
   if (url.endsWith(".pdf")) {
@@ -83,15 +84,13 @@ app.updateBrowserActionState = function (tabId, changeInfo, tab) {
 // Redirect to custom PDF page.
 app.redirect = function (requestDetails) {
   if (requestDetails.documentUrl !== undefined) {
-    // Request from this plugin itself.
+    // Request from this plugin itself (embedded PDF).
     return;
   }
-  url = app.pdfviewerTarget + requestDetails.url;
+  var url = app.pdfviewerTarget + requestDetails.url;
   url = chrome.runtime.getURL(url);
   console.log(app.name, "Redirecting: " + requestDetails.url + " to " + url);
-  // chrome.tabs.create({ "url": url });
   return {
-    /*cancel: true*/
     redirectUrl: url
   };
 }
@@ -125,7 +124,7 @@ chrome.browserAction.onClicked.addListener(app.run);
 // Redirect the PDF page to custom PDF container page.
 chrome.webRequest.onBeforeRequest.addListener(
   app.redirect,
-  { urls: [app.bookmarkPattern] },
+  { urls: [app.redirectPattern] },
   ["blocking"]
 );
 // Capture bookmarking custom PDF page.
