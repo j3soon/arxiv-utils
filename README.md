@@ -79,6 +79,8 @@ Meaningful OneTab entries! (Google Chrome only)
   app.name = "[arXiv-utils]";
   // Return the type parsed from the url. (Returns "PDF" or "Abstract")
   app.getType = function (url);
+  // Return the id parsed from the url.
+  app.getId = function (url, type);
   // Open the abstract / PDF page using the current URL.
   app.openAbstractTab = function (activeTabIdx, url, type);
   // Check if the URL is abstract or PDF page, returns true if the URL is either.
@@ -104,7 +106,7 @@ Meaningful OneTab entries! (Google Chrome only)
 
   Mainly describes what will be run when page loaded. (Modify tab title)
 
-  Runs at `document_end` (The DOM has finished loading, but resources such as scripts and images may still be loading.) for urls: `*://arxiv.org/pdf/*`, `*://arxiv.org/abs/*`.
+  Runs at `document_end` (The DOM has finished loading, but resources such as scripts and images may still be loading.) for urls: `*://arxiv.org/*.pdf`, `*://arxiv.org/abs/*`.
 
   **Compacted methods:**
 
@@ -113,20 +115,22 @@ Meaningful OneTab entries! (Google Chrome only)
   // All logs should start with this.
   app.name = "[arXiv-utils]";
   // These 4 below are For checking if tab title has been updated.
-  app.title = null;
-  app.type = null;
-  app.id = null;
-  app.newTitle = null;
+  app.id = undefined;
+  app.type = undefined;
+  app.title = undefined;
+  app.newTitle = undefined;
   // Return the type parsed from the url. (Returns "PDF" or "Abstract")
   app.getType = function (url);
   // Return the id parsed from the url.
   app.getId = function (url, type);
-  // Get the title asynchronously, call the callback with the queried title as argument when request done (`callback(title)`).
+  // Get the title asynchronously, call the callbacks with the id, the type, and the queried title as argument when request done (`callback(id, type, title, newTitle)`).
   // Updates `app`'s 4 variables: `title`, `type`, `id`, `newTitle` before callback.
-  app.getTitleAsync = function (id, type, callback);
+  app.getTitleAsync = function (id, type, callback, callback2);
   // Insert the title into the active tab.
   // After the insertion, the title might be overwritten after the PDF has been loaded.
-  app.insertTitle = function (title);
+  app.insertTitle = function (id, type, title, newTitle) {
+  // Add a direct download link if is abstract page.
+  app.addDownloadLink = function (id, type, title, newTitle);
   // Run this after the page has finish loading.
   app.run = function () {
     var url = location.href;
@@ -136,7 +140,7 @@ Meaningful OneTab entries! (Google Chrome only)
       console.log(app.name, "Error: Not in ArXiv pdf or abstract page, aborted.");
       return;
     }
-    app.getTitleAsync(id, type, app.insertTitle);
+    app.getTitleAsync(id, type, app.insertTitle, app.addDownloadLink);
   }
   // Change the title again if it has been overwritten (PDF page only).
   app.onMessage = function (tab, sender, sendResponse);
@@ -181,9 +185,12 @@ Meaningful OneTab entries! (Google Chrome only)
   // The match pattern for the URLs to redirect
   // Note: https://arxiv.org/pdf/<id> is the direct link, then the url is renamed to https://arxiv.org/pdf/<id>.pdf
   //       we capture only the last url (the one that ends with '.pdf').
-  app.bookmarkPattern = "*://arxiv.org/pdf/*.pdf";
+  // Adding some extra parameter such as https://arxiv.org/pdf/<id>.pdf?download can bypass this capture.
+  app.redirectPattern = "*://arxiv.org/*.pdf";
   // Return the type parsed from the url. (Returns "PDF" or "Abstract")
   app.getType = function (url);
+  // Return the id parsed from the url.
+  app.getId = function (url, type);
   // Open the abstract / PDF page using the current URL.
   app.openAbstractTab = function (activeTabIdx, url, type);
   // Check if the URL is abstract or PDF page, returns true if the URL is either.
@@ -210,7 +217,7 @@ Meaningful OneTab entries! (Google Chrome only)
   // Redirect the PDF page to custom PDF container page.
   chrome.webRequest.onBeforeRequest.addListener(
     app.redirect,
-    { urls: [app.bookmarkPattern] },
+    { urls: [app.redirectPattern] },
     ["blocking"]
   );
   // Capture bookmarking custom PDF page.
@@ -231,10 +238,12 @@ Meaningful OneTab entries! (Google Chrome only)
   app.name = "[arXiv-utils]";
   // Return the id parsed from the url.
   app.getId = function (url);
-  // Get the title asynchronously, call the callback with the queried title as argument when request done (`callback(title)`).
-  app.getTitleAsync = function (id, type, callback);
+  // Get the title asynchronously, call the callbacks with the id, the type, and the queried title as argument when request done (`callback(id, type, title, newTitle)`).
+  app.getTitleAsync = function (id, type, callback, callback2);
   // Insert the title into the active tab.
-  app.insertTitle = function (title);
+  app.insertTitle = function (id, title, newTitle);
+  // Add a direct download link if is abstract page.
+  app.addDownloadLink = function (id, title, newTitle);
   // Run this after the page has finish loading.
   app.run = function () {
     var url = location.href;
@@ -243,7 +252,7 @@ Meaningful OneTab entries! (Google Chrome only)
       console.log(app.name, "Error: Not in ArXiv pdf or abstract page, aborted.");
       return;
     }
-    app.getTitleAsync(id, "Abstract", app.insertTitle);
+    app.getTitleAsync(id, "Abstract", app.insertTitle, app.addDownloadLink);
   }
   ```
 
@@ -293,3 +302,6 @@ For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Ot
 - Try to bookmark the PDF tab, the title should be the new title.
 - **Firefox Only** Check the PDF bookmark's URL, it should be the original ArXiv PDF link.
 - **Chrome Only** If [OneTab](https://www.one-tab.com/) is installed, click its extension button, the list should show the updated titles of both abstract and PDF page.
+
+- Test [special PDF url](https://arxiv.org/ftp/arxiv/papers/1110/1110.2832.pdf).
+- Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab. (not renamed)
