@@ -1,7 +1,7 @@
 {
     "name": "arxiv-utils",
-    "version": "1.2",
-    "description": "ArXiv utilities for easy access.",
+    "version": "1.3",
+    "description": "Meaningful titles for tabs and PDF downloads!",
     "background": {
         "scripts": ["background.js"]
     },

@@ -10,23 +10,11 @@
 
 ![icon](icons/icon64.png)
 
-ArXiv utilities for easy access.
+If you are a researcher that reads a lot on ArXiv, you'll benefit a lot from this web extension.
 
-For ArXiv PDF / abstract tabs:
-
-- Renames the title to paper's title automatically in the background. (Originally is meaningless paper id, or start with paper id)
-- Add a browser button to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
-- Add a direct download link on abstract page, click it to download the PDF with the title as filename. (Originally is paper id as filename)
-- Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
-- Firefox has [strict restrictions on PDF.js](https://bugzilla.mozilla.org/show_bug.cgi?id=1454760). So it doesn't work well with OneTab, the PDF renaming is achieved by intercepting requests and show the PDF in a container. The bookmark works well though.
-
-ArXiv is a really nice website for researchers, but I think it has 3 main shortages:
-
-1. Unable to link to abstract page from PDF page if the PDF is accessed directly.
-2. No meaningful title for the PDF page, the abstract page have a redundant paper id as the prefix of the title. Bookmarking the PDF page is useless for later bookmark searches.
-3. Downloading PDF requires a manual renaming afterwards.
-
-This extension provides a solution to all of them!
+- Renames the title of PDF page to the paper's title.
+- Adds a button to navigate back to Abstract page.
+- Download PDF with paper's title as filename.
 
 ## Download Links
 
@@ -53,12 +41,25 @@ Meaningful bookmark titles.
 Meaningful OneTab entries! (Google Chrome only)
 ![](screenshots/onetab.png)
 
-## Related Extensions
+## Problem Description
 
-- [arXiv-title-fixer](https://github.com/musically-ut/arXiv-title-fixer) that works well on Google Chrome.
-  This requires a button click to change the pdf title, but will be considered less intrusive than running in the background.
-- [arxiv-url](https://github.com/weakish/arxiv-url)
-  This claims to add a back button, but I can't get it working.
+ArXiv is a really nice website for researchers, but I think it has 3 main shortages:
+
+1. Unable to link to abstract page from PDF page if the PDF page is accessed directly.
+2. No meaningful title for the PDF page, the abstract page have a redundant paper id as the prefix of the title. Bookmarking the PDF page is useless for later bookmark searches.
+3. Downloading PDF requires a manual renaming afterwards.
+
+This extension provides a solution to all of them!
+
+## Solution Descriptions
+
+For ArXiv PDF / abstract tabs:
+
+- Renames the title to paper's title automatically in the background. (Originally is meaningless paper id, or start with paper id)
+- Add a browser button to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
+- Add a direct download link on abstract page, click it to download the PDF with the title as filename. (Originally is paper id as filename)
+- Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
+- Firefox has [strict restrictions on PDF.js](https://bugzilla.mozilla.org/show_bug.cgi?id=1454760). So it doesn't work well with OneTab, the PDF renaming is achieved by intercepting requests and show the PDF in a container. The bookmark works well though.
 
 ## Chrome Documentation
 
@@ -310,3 +311,10 @@ For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Ot
 
 - Test [special PDF url](https://arxiv.org/ftp/arxiv/papers/1110/1110.2832.pdf).
 - Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab. (not renamed)
+
+## Related Extensions
+
+- [arXiv-title-fixer](https://github.com/musically-ut/arXiv-title-fixer) that works well on Google Chrome.
+  This requires a button click to change the pdf title, but will be considered less intrusive than running in the background.
+- [arxiv-url](https://github.com/weakish/arxiv-url)
+  This claims to add a back button, but I can't get it working.
