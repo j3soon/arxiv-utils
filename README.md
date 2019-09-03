@@ -8,6 +8,8 @@
 [![](https://img.shields.io/amo/rating/arxiv-utils.svg)](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/)
 [![](https://img.shields.io/amo/users/arxiv-utils.svg)](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/)
 
+[![](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=166645&theme=light)](https://www.producthunt.com/posts/arxiv-utilities?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-arxiv-utilities)
+
 ![icon](icons/icon64.png)
 
 If you are a researcher that reads a lot on ArXiv, you'll benefit a lot from this web extension.
