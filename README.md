@@ -10,21 +10,23 @@
 
 ![icon](icons/icon64.png)
 
-ArXiv utilities for easy access. Changes the titles of abstract, PDF pages. Adds a button to open the PDF, abstract page.
+ArXiv utilities for easy access.
 
 For ArXiv PDF / abstract tabs:
 
 - Renames the title to paper's title automatically in the background. (Originally is meaningless paper id, or start with paper id)
-- Add a button to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
+- Add a browser button to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
+- Add a direct download link on abstract page, click it to download the PDF with the title as filename. (Originally is paper id as filename)
 - Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
 - Firefox has [strict restrictions on PDF.js](https://bugzilla.mozilla.org/show_bug.cgi?id=1454760). So it doesn't work well with OneTab, the PDF renaming is achieved by intercepting requests and show the PDF in a container. The bookmark works well though.
 
-ArXiv is a really nice website for researchers, but I think it has 2 main shortages:
+ArXiv is a really nice website for researchers, but I think it has 3 main shortages:
 
 1. Unable to link to abstract page from PDF page if the PDF is accessed directly.
 2. No meaningful title for the PDF page, the abstract page have a redundant paper id as the prefix of the title. Bookmarking the PDF page is useless for later bookmark searches.
+3. Downloading PDF requires a manual renaming afterwards.
 
-This extension provides a solution to them!
+This extension provides a solution to all of them!
 
 ## Download Links
 
