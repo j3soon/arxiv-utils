@@ -7,6 +7,9 @@ app.id = undefined;
 app.type = undefined;
 app.title = undefined;
 app.newTitle = undefined;
+// These 2 below are for inserting download link.
+app.firstAuthor = undefined;
+app.publishedYear = undefined;
 // Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
   if (url.endsWith(".pdf")) {
@@ -46,6 +49,9 @@ app.getTitleAsync = function (id, type, callback, callback2) {
       var xmlDoc = parser.parseFromString(resp, "text/xml");
       // The first title is query string, second one is paper name.
       var title = xmlDoc.getElementsByTagName("title")[1].innerHTML;
+      // Store paper info
+      app.firstAuthor = xmlDoc.getElementsByTagName("name")[0].innerHTML;
+      app.publishedYear = xmlDoc.getElementsByTagName("published")[0].innerHTML.split('-')[0];
       // Modify the title to differentiate from abstract pages.
       app.id = id;
       app.type = type;
@@ -103,7 +109,7 @@ app.addDownloadLink = function (id, type, title, newTitle) {
   if (type === "PDF") {
     return;
   }
-  var fileName = title + ".pdf";
+  var fileName = `${title}, ${app.firstAuthor} et al., ${app.publishedYear}.pdf`;
   var elULs = document.querySelectorAll(".full-text > ul");
   if (elULs.length === 0) {
     console.log(app.name, "Error: Items selected by '.full-text > ul' not found");

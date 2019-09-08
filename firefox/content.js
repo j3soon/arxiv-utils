@@ -2,6 +2,9 @@
 var app = {};
 // All logs should start with this.
 app.name = "[arXiv-utils]";
+// These 2 below are for inserting download link.
+app.firstAuthor = undefined;
+app.publishedYear = undefined;
 // Return the id parsed from the url.
 app.getId = function (url) {
   var match = url.match(/arxiv.org\/abs\/([\S]*)$/);
@@ -22,6 +25,9 @@ app.getTitleAsync = function (id, type, callback, callback2) {
       var xmlDoc = parser.parseFromString(resp, "text/xml");
       // The first title is query string, second one is paper name.
       var title = xmlDoc.getElementsByTagName("title")[1].innerHTML;
+      // Store paper info
+      app.firstAuthor = xmlDoc.getElementsByTagName("name")[0].innerHTML;
+      app.publishedYear = xmlDoc.getElementsByTagName("published")[0].innerHTML.split('-')[0];
       // Modify the title to differentiate from abstract pages.
       var newTitle = title + " | " + type;
       callback(id, title, newTitle);
@@ -72,7 +78,7 @@ app.insertTitle = function (id, title, newTitle) {
 }
 // Add a direct download link if is abstract page.
 app.addDownloadLink = function (id, title, newTitle) {
-  var fileName = title + ".pdf";
+  var fileName = `${title}, ${app.firstAuthor} et al., ${app.publishedYear}.pdf`;
   var elULs = document.querySelectorAll(".full-text > ul");
   if (elULs.length === 0) {
     console.log(app.name, "Error: Items selected by '.full-text > ul' not found");

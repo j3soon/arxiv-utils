@@ -127,6 +127,9 @@ For ArXiv PDF / abstract tabs:
   app.type = undefined;
   app.title = undefined;
   app.newTitle = undefined;
+  // These 2 below are for inserting download link.
+  app.firstAuthor = undefined;
+  app.publishedYear = undefined;
   // Return the type parsed from the url. (Returns "PDF" or "Abstract")
   app.getType = function (url);
   // Return the id parsed from the url.
@@ -244,6 +247,9 @@ For ArXiv PDF / abstract tabs:
   var app = {};
   // All logs should start with this.
   app.name = "[arXiv-utils]";
+  // These 2 below are for inserting download link.
+  app.firstAuthor = undefined;
+  app.publishedYear = undefined;
   // Return the id parsed from the url.
   app.getId = function (url);
   // Get the title asynchronously, call the callbacks with the id, the type, and the queried title as argument when request done (`callback(id, type, title, newTitle)`).
