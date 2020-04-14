@@ -17,19 +17,22 @@ app.getType = function (url) {
   }
   return "Abstract";
 }
+var abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
+// pdf url is like abs url, except possibly with .pdf in the end
+var pdf_regexp = /arxiv.org\/pdf\/([\S]*)(.pdf)?$/;
 // Return the id parsed from the url.
 app.getId = function (url, type) {
   var match;
   if (type === "PDF") {
     // match = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
-    // Must use below for other PDF serving URL.
-    match = url.match(/arxiv.org\/[\S]*\/([^\/]*)\.pdf$/);
+    // remove .pdf and then match
+    match = url.replace(/.pdf$/, "").match(pdf_regexp);
     // The first match is the matched string, the second one is the captured group.
-    if (match === null || match.length !== 2) {
+    if (match === null || match.length !== 3) {
       return null;
     }
   } else {
-    match = url.match(/arxiv.org\/abs\/([\S]*)$/);
+    match = url.match(abs_regexp);
     // The first match is the matched string, the second one is the captured group.
     if (match === null || match.length !== 2) {
       return null;

@@ -1,10 +1,13 @@
 // This background script is for adding the back to abstract button.
 var app = {};
+var abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
+// pdf url is like abs url, except possibly with .pdf in the end
+var pdf_regexp = /arxiv.org\/pdf\/([\S]*)(.pdf)?$/;
 // All logs should start with this.
 app.name = "[arXiv-utils]";
 // Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
-  if (url.endsWith(".pdf")) {
+  if (url.match(pdf_regexp)) {
     return "PDF";
   }
   return "Abstract";
@@ -14,14 +17,14 @@ app.getId = function (url, type) {
   var match;
   if (type === "PDF") {
     // match = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
-    // Must use below for other PDF serving URL.
-    match = url.match(/arxiv.org\/[\S]*\/([^\/]*)\.pdf$/);
+    // remove .pdf and then match
+    match = url.replace(/.pdf$/, "").match(pdf_regexp);
     // The first match is the matched string, the second one is the captured group.
-    if (match === null || match.length !== 2) {
+    if (match === null || match.length !== 3) {
       return null;
     }
   } else {
-    match = url.match(/arxiv.org\/abs\/([\S]*)$/);
+    match = url.match(abs_regexp);
     // The first match is the matched string, the second one is the captured group.
     if (match === null || match.length !== 2) {
       return null;
@@ -54,8 +57,8 @@ app.openAbstractTab = function (activeTabIdx, url, type) {
 app.checkURL = function (url) {
   // var matchPDF = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
   // Must use below for other PDF serving URL.
-  var matchPDF = url.match(/arxiv.org\/[\S]*\/([^\/]*)\.pdf$/);
-  var matchAbs = url.match(/arxiv.org\/abs\/([\S]*)$/);
+  var matchPDF = url.match(pdf_regexp);
+  var matchAbs = url.match(abs_regexp);
   if (matchPDF !== null || matchAbs !== null) {
     return true;
   }
