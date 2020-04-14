@@ -87,7 +87,8 @@ app.redirect = function (requestDetails) {
     // Request from this plugin itself (embedded PDF).
     return;
   }
-  var url = app.pdfviewerTarget + requestDetails.url.replace('http:', 'https:');
+  // Force HTTPS to avoid CSP (Content Security Policy) violation.
+  var url = app.pdfviewerTarget + requestDetails.url.replace("http:", "https:");
   url = chrome.runtime.getURL(url);
   console.log(app.name, "Redirecting: " + requestDetails.url + " to " + url);
   return {
