@@ -9,27 +9,32 @@ app.pdfviewerTarget = "pdfviewer.html?target=";
 // Note: https://arxiv.org/pdf/<id> is the direct link, then the url is renamed to https://arxiv.org/pdf/<id>.pdf
 //       we capture only the last url (the one that ends with '.pdf').
 // Adding some extra parameter such as https://arxiv.org/pdf/<id>.pdf?download can bypass this capture.
-app.redirectPattern = "*://arxiv.org/*.pdf";
+app.redirectPatterns = ["*://arxiv.org/*.pdf", "*://export.arxiv.org/*.pdf",
+                        "*://arxiv.org/pdf/*", "*://export.arxiv.org/pdf/*"];
+// These 2 below is for regex matching.
+app.abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
+app.pdf_regexp = /arxiv.org\/[\S]*\/([^\/]*)$/;
 // Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
-  if (url.endsWith(".pdf")) {
+  if (url.indexOf("pdf") !== -1) {
     return "PDF";
   }
   return "Abstract";
 }
 // Return the id parsed from the url.
 app.getId = function (url, type) {
+  url = url.replace(".pdf", "");
+  if (url.endsWith("/")) url = url.slice(0, -1);
   var match;
   if (type === "PDF") {
-    // match = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
-    // Must use below for other PDF serving URL.
-    match = url.match(/arxiv.org\/[\S]*\/([^\/]*)\.pdf$/);
+    // match = url.match(/arxiv.org\/pdf\/([\S]*)\2pdf$/);
+    match = url.match(app.pdf_regexp);
     // The first match is the matched string, the second one is the captured group.
     if (match === null || match.length !== 2) {
       return null;
     }
   } else {
-    match = url.match(/arxiv.org\/abs\/([\S]*)$/);
+    match = url.match(app.abs_regexp);
     // The first match is the matched string, the second one is the captured group.
     if (match === null || match.length !== 2) {
       return null;
@@ -63,10 +68,10 @@ app.openAbstractTab = function (activeTabIdx, url, type) {
 }
 // Check if the URL is abstract or PDF page, returns true if the URL is either.
 app.checkURL = function (url) {
-  // var matchPDF = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
-  // Must use below for other PDF serving URL.
-  var matchPDF = url.match(/arxiv.org\/[\S]*\/([^\/]*)\.pdf$/);
-  var matchAbs = url.match(/arxiv.org\/abs\/([\S]*)$/);
+  url = url.replace(".pdf", "");
+  if (url.endsWith("/")) url = url.slice(0, -1);
+  var matchPDF = url.match(app.pdf_regexp);
+  var matchAbs = url.match(app.abs_regexp);
   if (matchPDF !== null || matchAbs !== null) {
     return true;
   }
@@ -125,7 +130,7 @@ chrome.browserAction.onClicked.addListener(app.run);
 // Redirect the PDF page to custom PDF container page.
 chrome.webRequest.onBeforeRequest.addListener(
   app.redirect,
-  { urls: [app.redirectPattern] },
+  { urls: app.redirectPatterns },
   ["blocking"]
 );
 // Capture bookmarking custom PDF page.

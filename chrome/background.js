@@ -1,30 +1,31 @@
 // This background script is for adding the back to abstract button.
 var app = {};
-var abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
-// pdf url is like abs url, except possibly with .pdf in the end
-var pdf_regexp = /arxiv.org\/pdf\/([\S]*)(.pdf)?$/;
 // All logs should start with this.
 app.name = "[arXiv-utils]";
+// These 2 below is for regex matching.
+app.abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
+app.pdf_regexp = /arxiv.org\/[\S]*\/([^\/]*)$/;
 // Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
-  if (url.match(pdf_regexp)) {
+  if (url.indexOf("pdf") !== -1) {
     return "PDF";
   }
   return "Abstract";
 }
 // Return the id parsed from the url.
 app.getId = function (url, type) {
+  url = url.replace(".pdf", "");
+  if (url.endsWith("/")) url = url.slice(0, -1);
   var match;
   if (type === "PDF") {
-    // match = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
-    // remove .pdf and then match
-    match = url.replace(/.pdf$/, "").match(pdf_regexp);
+    // match = url.match(/arxiv.org\/pdf\/([\S]*)\2pdf$/);
+    match = url.match(app.pdf_regexp);
     // The first match is the matched string, the second one is the captured group.
-    if (match === null || match.length !== 3) {
+    if (match === null || match.length !== 2) {
       return null;
     }
   } else {
-    match = url.match(abs_regexp);
+    match = url.match(app.abs_regexp);
     // The first match is the matched string, the second one is the captured group.
     if (match === null || match.length !== 2) {
       return null;
@@ -55,10 +56,10 @@ app.openAbstractTab = function (activeTabIdx, url, type) {
 }
 // Check if the URL is abstract or PDF page, returns true if the URL is either.
 app.checkURL = function (url) {
-  // var matchPDF = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
-  // Must use below for other PDF serving URL.
-  var matchPDF = url.match(pdf_regexp);
-  var matchAbs = url.match(abs_regexp);
+  url = url.replace(".pdf", "");
+  if (url.endsWith("/")) url = url.slice(0, -1);
+  var matchPDF = url.match(app.pdf_regexp);
+  var matchAbs = url.match(app.abs_regexp);
   if (matchPDF !== null || matchAbs !== null) {
     return true;
   }

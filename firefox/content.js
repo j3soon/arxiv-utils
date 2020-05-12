@@ -5,17 +5,41 @@ app.name = "[arXiv-utils]";
 // These 2 below are for inserting download link.
 app.firstAuthor = undefined;
 app.publishedYear = undefined;
+// These 2 below is for regex matching.
+app.abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
+app.pdf_regexp = /arxiv.org\/[\S]*\/([^\/]*)$/;
+// Return the type parsed from the url. (Returns "PDF" or "Abstract")
+app.getType = function (url) {
+  if (url.indexOf("pdf") !== -1) {
+    return "PDF";
+  }
+  return "Abstract";
+}
 // Return the id parsed from the url.
-app.getId = function (url) {
-  var match = url.match(/arxiv.org\/abs\/([\S]*)$/);
-  // The first match is the matched string, the second one is the captured group.
-  if (match === null || match.length !== 2) {
-    return null;
+app.getId = function (url, type) {
+  url = url.replace(".pdf", "");
+  if (url.endsWith("/")) url = url.slice(0, -1);
+  var match;
+  if (type === "PDF") {
+    // match = url.match(/arxiv.org\/pdf\/([\S]*)\2pdf$/);
+    match = url.match(app.pdf_regexp);
+    // The first match is the matched string, the second one is the captured group.
+    if (match === null || match.length !== 2) {
+      return null;
+    }
+  } else {
+    match = url.match(app.abs_regexp);
+    // The first match is the matched string, the second one is the captured group.
+    if (match === null || match.length !== 2) {
+      return null;
+    }
   }
   return match[1];
 }
 // Get the title asynchronously, call the callbacks with the id, the type, and the queried title as argument when request done (`callback(id, type, title, newTitle)`).
+// Updates `app`'s 4 variables: `title`, `type`, `id`, `newTitle` before callback.
 app.getTitleAsync = function (id, type, callback, callback2) {
+  console.log(app.name, "Retrieving title through ArXiv API request...");
   var request = new XMLHttpRequest();
   request.open("GET", "https://export.arxiv.org/api/query?id_list=" + id);
   request.onload = function () {
@@ -25,13 +49,19 @@ app.getTitleAsync = function (id, type, callback, callback2) {
       var xmlDoc = parser.parseFromString(resp, "text/xml");
       // The first title is query string, second one is paper name.
       var title = xmlDoc.getElementsByTagName("title")[1].innerHTML;
+      title = title.replace("\n", "").replace("  ", " ");
       // Store paper info
       app.firstAuthor = xmlDoc.getElementsByTagName("name")[0].innerHTML;
       app.publishedYear = xmlDoc.getElementsByTagName("published")[0].innerHTML.split('-')[0];
       // Modify the title to differentiate from abstract pages.
-      var newTitle = title + " | " + type;
-      callback(id, title, newTitle);
-      callback2(id, title, newTitle);
+      app.id = id;
+      app.type = type;
+      app.title = title;
+      app.newTitle = title + " | " + type;
+      callback(app.id, app.type, app.title, app.newTitle);
+      callback2(app.id, app.type, app.title, app.newTitle);
+    } else {
+      console.log(app.name, "Error: ArXiv API request failed.");
     }
   };
   request.send();

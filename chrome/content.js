@@ -10,29 +10,33 @@ app.newTitle = undefined;
 // These 2 below are for inserting download link.
 app.firstAuthor = undefined;
 app.publishedYear = undefined;
+// These 2 below is for regex matching.
+app.abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
+app.pdf_regexp = /arxiv.org\/[\S]*\/([^\/]*)$/;
+// Define maximum rename title count.
+app.title_rename_count = 0;
+app.title_rename_max = 20;
 // Return the type parsed from the url. (Returns "PDF" or "Abstract")
 app.getType = function (url) {
-  if (url.endsWith(".pdf")) {
+  if (url.indexOf("pdf") !== -1) {
     return "PDF";
   }
   return "Abstract";
 }
-var abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
-// pdf url is like abs url, except possibly with .pdf in the end
-var pdf_regexp = /arxiv.org\/pdf\/([\S]*)(.pdf)?$/;
 // Return the id parsed from the url.
 app.getId = function (url, type) {
+  url = url.replace(".pdf", "");
+  if (url.endsWith("/")) url = url.slice(0, -1);
   var match;
   if (type === "PDF") {
     // match = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
-    // remove .pdf and then match
-    match = url.replace(/.pdf$/, "").match(pdf_regexp);
+    match = url.match(app.pdf_regexp);
     // The first match is the matched string, the second one is the captured group.
-    if (match === null || match.length !== 3) {
+    if (match === null || match.length !== 2) {
       return null;
     }
   } else {
-    match = url.match(abs_regexp);
+    match = url.match(app.abs_regexp);
     // The first match is the matched string, the second one is the captured group.
     if (match === null || match.length !== 2) {
       return null;
@@ -43,6 +47,7 @@ app.getId = function (url, type) {
 // Get the title asynchronously, call the callbacks with the id, the type, and the queried title as argument when request done (`callback(id, type, title, newTitle)`).
 // Updates `app`'s 4 variables: `title`, `type`, `id`, `newTitle` before callback.
 app.getTitleAsync = function (id, type, callback, callback2) {
+  console.log(app.name, "Retrieving title through ArXiv API request...");
   var request = new XMLHttpRequest();
   request.open("GET", "https://export.arxiv.org/api/query?id_list=" + id);
   request.onload = function () {
@@ -52,6 +57,7 @@ app.getTitleAsync = function (id, type, callback, callback2) {
       var xmlDoc = parser.parseFromString(resp, "text/xml");
       // The first title is query string, second one is paper name.
       var title = xmlDoc.getElementsByTagName("title")[1].innerHTML;
+      title = title.replace("\n", "").replace("  ", " ");
       // Store paper info
       app.firstAuthor = xmlDoc.getElementsByTagName("name")[0].innerHTML;
       app.publishedYear = xmlDoc.getElementsByTagName("published")[0].innerHTML.split('-')[0];
@@ -62,6 +68,8 @@ app.getTitleAsync = function (id, type, callback, callback2) {
       app.newTitle = title + " | " + type;
       callback(app.id, app.type, app.title, app.newTitle);
       callback2(app.id, app.type, app.title, app.newTitle);
+    } else {
+      console.log(app.name, "Error: ArXiv API request failed.");
     }
   };
   request.send();
@@ -69,6 +77,11 @@ app.getTitleAsync = function (id, type, callback, callback2) {
 // Insert the title into the active tab.
 // After the insertion, the title might be overwritten after the PDF has been loaded.
 app.insertTitle = function (id, type, title, newTitle) {
+  app.title_rename_count++;
+  if (app.title_rename_count > app.title_rename_max) {
+    console.log(app.name, "Warning: Title insertion cancelled. Too many title changes");
+    return;
+  }
   console.log(app.name, "Trying to change title to: " + newTitle)
   var elTitles = document.getElementsByTagName("title");
   if (elTitles.length !== 0) {
@@ -131,6 +144,7 @@ app.addDownloadLink = function (id, type, title, newTitle) {
 }
 // Run this after the page has finish loading.
 app.run = function () {
+  console.log(app.name, "Extension initialized.");
   var url = location.href;
   var type = app.getType(url);
   var id = app.getId(url, type);
@@ -157,6 +171,12 @@ app.onMessage = function (tab, sender, sendResponse) {
   }
   if (app.type === "PDF" && tab.title === app.id + ".pdf") {
     // The title has been overwritten with the default name of arXiv.
+    console.log(app.name, "Tab title has been changed!");
+    app.insertTitle(app.id, app.type, app.title, app.newTitle);
+    return;
+  }
+  if (app.type === "PDF") {
+    // If renamed by original PDF file name or something else.
     console.log(app.name, "Tab title has been changed!");
     app.insertTitle(app.id, app.type, app.title, app.newTitle);
     return;

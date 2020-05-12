@@ -175,7 +175,7 @@ For ArXiv PDF / abstract tabs:
 - `bookmarks`: When create a new bookmark of the PDF container page, bookmark the actual ArXiv PDF url instead.
 - `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
 - `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
-- `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org;"`: For embedding PDF in container.
+- `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;"`: For embedding PDF in container.
 - `"web_accessible_resources": [ "pdfviewer.html" ]`: To redirect from HTTPS to extension custom page requires them to be visible.
 
 ### Methods
@@ -197,7 +197,8 @@ For ArXiv PDF / abstract tabs:
   // Note: https://arxiv.org/pdf/<id> is the direct link, then the url is renamed to https://arxiv.org/pdf/<id>.pdf
   //       we capture only the last url (the one that ends with '.pdf').
   // Adding some extra parameter such as https://arxiv.org/pdf/<id>.pdf?download can bypass this capture.
-  app.redirectPattern = "*://arxiv.org/*.pdf";
+  app.redirectPatterns = ["*://arxiv.org/*.pdf", "*://export.arxiv.org/*.pdf",
+                          "*://arxiv.org/pdf/*", "*://export.arxiv.org/pdf/*"];
   // Return the type parsed from the url. (Returns "PDF" or "Abstract")
   app.getType = function (url);
   // Return the id parsed from the url.
@@ -228,7 +229,7 @@ For ArXiv PDF / abstract tabs:
   // Redirect the PDF page to custom PDF container page.
   chrome.webRequest.onBeforeRequest.addListener(
     app.redirect,
-    { urls: [app.redirectPattern] },
+    { urls: app.redirectPatterns },
     ["blocking"]
   );
   // Capture bookmarking custom PDF page.
@@ -317,7 +318,20 @@ For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Ot
 - **Firefox Only** Check the PDF bookmark's URL, it should be the original ArXiv PDF link.
 - **Chrome Only** If [OneTab](https://www.one-tab.com/) is installed, click its extension button, the list should show the updated titles of both abstract and PDF page.
 
-- Test [special PDF url](https://arxiv.org/ftp/arxiv/papers/1110/1110.2832.pdf).
+- Test PDF urls:
+  - PDF link with special format
+    https://arxiv.org/ftp/arxiv/papers/1110/1110.2832.pdf
+  - Export Arxiv site
+    https://export.arxiv.org/pdf/2003.13678.pdf
+  - Doesn't end with `.pdf`
+    https://arxiv.org/pdf/2003.13678
+  - Ends with slash
+    https://arxiv.org/pdf/2003.13678/
+  - **Chrome Only** PDF title renaming by original file name
+    https://arxiv.org/pdf/1906.07413.pdf
+    https://arxiv.org/pdf/2003.01367.pdf
+  - **Firefox Only** PDF using HTTP
+    http://arxiv.org/pdf/2003.13678.pdf
 - Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab. (not renamed)
 
 ## Related Extensions
