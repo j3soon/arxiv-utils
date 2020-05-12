@@ -1,6 +1,6 @@
 {
     "name": "arxiv-utils",
-    "version": "1.4",
+    "version": "1.5",
     "description": "Meaningful titles for tabs and PDF downloads!",
     "background": {
         "scripts": ["background.js"]
