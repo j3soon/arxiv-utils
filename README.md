@@ -332,7 +332,7 @@ For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Ot
     https://arxiv.org/pdf/2003.01367.pdf
   - **Firefox Only** PDF using HTTP
     http://arxiv.org/pdf/2003.13678.pdf
-- Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab. (not renamed)
+- Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab.
 
 ## Related Extensions
 

@@ -10,7 +10,7 @@ app.pdfviewerTarget = "pdfviewer.html?target=";
 //       we capture only the last url (the one that ends with '.pdf').
 // Adding some extra parameter such as https://arxiv.org/pdf/<id>.pdf?download can bypass this capture.
 app.redirectPatterns = ["*://arxiv.org/*.pdf", "*://export.arxiv.org/*.pdf",
-                        "*://arxiv.org/pdf/*", "*://export.arxiv.org/pdf/*"];
+                        "*://arxiv.org/pdf/*/", "*://export.arxiv.org/pdf/*/"];
 // These 2 below is for regex matching.
 app.abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
 app.pdf_regexp = /arxiv.org\/[\S]*\/([^\/]*)$/;
