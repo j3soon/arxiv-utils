@@ -107,7 +107,7 @@ app.insertTitle = function (id, title, newTitle) {
   console.log(app.name, "Error: Cannot insert title");
 }
 // Add a direct download link if is abstract page.
-app.addDownloadLink = function (id, title, newTitle) {
+app.addDownloadLink = function (id, type, title, newTitle) {
   var fileName = `${title}, ${app.firstAuthor} et al., ${app.publishedYear}.pdf`;
   var elULs = document.querySelectorAll(".full-text > ul");
   if (elULs.length === 0) {
