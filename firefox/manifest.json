@@ -1,7 +1,7 @@
 {
     "name": "arxiv-utils",
     "version": "1.5.2",
-    "description": "Meaningful titles for tabs and PDF downloads!",
+    "description": "Easy access on ArXiv! Renames the title of PDF page to the paper's title. Adds a button to navigate back to Abstract page. Download PDF with paper's title as filename.",
     "background": {
         "scripts": ["background.js"]
     },
