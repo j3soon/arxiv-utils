@@ -340,3 +340,7 @@ For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Ot
   This requires a button click to change the pdf title, but will be considered less intrusive than running in the background.
 - [arxiv-url](https://github.com/weakish/arxiv-url)
   This claims to add a back button, but I can't get it working.
+
+## Privacy Policy
+
+We do not gather your personal data. If in doubt, please refer to the source code.
