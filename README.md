@@ -8,6 +8,9 @@
 [![](https://img.shields.io/amo/rating/arxiv-utils.svg)](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/)
 [![](https://img.shields.io/amo/users/arxiv-utils.svg)](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/)
 
+[![](https://img.shields.io/badge/dynamic/json?label=edge%20add-on&prefix=v&query=%24.version&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fngjpcfjabahdoadnajbhnikbemhmemdg)](https://microsoftedge.microsoft.com/addons/detail/arxivutils/ngjpcfjabahdoadnajbhnikbemhmemdg)
+[![](https://img.shields.io/badge/dynamic/json?label=rating&suffix=/5&query=%24.averageRating&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fngjpcfjabahdoadnajbhnikbemhmemdg)](https://microsoftedge.microsoft.com/addons/detail/arxivutils/ngjpcfjabahdoadnajbhnikbemhmemdg)
+
 [![](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=166645&theme=light)](https://www.producthunt.com/posts/arxiv-utilities?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-arxiv-utilities)
 
 ![icon](icons/icon64.png)
@@ -20,10 +23,11 @@ If you are a researcher that reads a lot on ArXiv, you'll benefit a lot from thi
 
 ## Download Links
 
-Supports Chrome, Firefox, Firefox on Android. (Android version is not tested)
+Supports Chrome, Firefox, Edge, Firefox on Android. (Android version is not tested)
 
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/arxiv-utils/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
 - [Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/)
+- [Edge Add-on](https://microsoftedge.microsoft.com/addons/detail/arxivutils/ngjpcfjabahdoadnajbhnikbemhmemdg)
 
 ## Screenshots
 
@@ -63,7 +67,7 @@ For ArXiv PDF / abstract tabs:
 - Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
 - Firefox has [strict restrictions on PDF.js](https://bugzilla.mozilla.org/show_bug.cgi?id=1454760). So it doesn't work well with OneTab, the PDF renaming is achieved by intercepting requests and show the PDF in a container. The bookmark works well though.
 
-## Chrome Documentation
+## Chrome / Edge Documentation
 
 ### Permissions
 
