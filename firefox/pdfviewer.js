@@ -50,9 +50,8 @@ app.extractURL = function () {
 // Inject embedded PDF.
 app.injectPDF = function (url) {
   console.log(app.name, "Injecting PDF: " + url);
-  var elPDF = document.createElement("object");
-  elPDF.setAttribute("type", "application/pdf");
-  elPDF.setAttribute("data", url);
+  var elPDF = document.createElement("iframe");
+  elPDF.setAttribute("src", url);
   var elContainer = document.getElementById("container");
   elContainer.appendChild(elPDF);
 }
