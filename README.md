@@ -20,6 +20,8 @@ If you are a researcher that reads a lot on ArXiv, you'll benefit a lot from thi
 - Renames the title of PDF page to the paper's title.
 - Adds a button to navigate back to Abstract page.
 - Download PDF with paper's title as filename.
+- Works with Native Tab Search, and other plugins! (See the [Solution Descriptions](#solution-descriptions) section for more details)
+- All required permissions are documented in detail.
 
 ## Download Links
 
@@ -66,6 +68,10 @@ For ArXiv PDF / abstract tabs:
 - Add a direct download link on abstract page, click it to download the PDF with the title as filename. (Originally is paper id as filename)
 - Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
 - Firefox has [strict restrictions on PDF.js](https://bugzilla.mozilla.org/show_bug.cgi?id=1454760). So it doesn't work well with OneTab, the PDF renaming is achieved by intercepting requests and show the PDF in a container. The bookmark works well though.
+- Works well with native tab search (credits: [@The Rooler](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/reviews/1674567/))
+  - [Tab search on Firefox](https://support.mozilla.org/en-US/kb/search-open-tabs-firefox)
+  - [Enable Tab search on Chrome](https://www.howtogeek.com/722640/how-to-enable-or-disable-the-tab-search-icon-in-chrome/), [Tab search on Chrome](https://www.howtogeek.com/704212/how-to-search-open-tabs-on-google-chrome/)
+  - [Enable Tab search on Edge](https://www.makeuseof.com/microsoft-edge-chrome-tab-search/)
 
 ## Chrome / Edge Documentation
 
@@ -344,6 +350,8 @@ For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Ot
   This requires a button click to change the pdf title, but will be considered less intrusive than running in the background.
 - [arxiv-url](https://github.com/weakish/arxiv-url)
   This claims to add a back button, but I can't get it working.
+- [redirectify](https://github.com/imurray/redirectify)
+  Automatically redirect PDF links to HTML index page for many academic paper sites.
 
 ## Privacy Policy
 
