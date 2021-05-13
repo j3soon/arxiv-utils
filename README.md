@@ -48,6 +48,8 @@ Meaningful bookmark titles.
 ![](screenshots/bookmarks.png)
 Meaningful OneTab entries! (Google Chrome only)
 ![](screenshots/onetab.png)
+Opened too many tabs? Search in terms of the paper title!
+![](screenshots/search.png)
 
 ## Problem Description
 
