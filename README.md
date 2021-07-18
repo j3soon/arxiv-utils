@@ -47,10 +47,16 @@ TADA~ The abstract page is shown at the right of the PDF page! Both with meaning
 The button is disabled if not in ArXiv's domain.
 Meaningful bookmark titles.
 ![](screenshots/bookmarks.png)
-Meaningful OneTab entries! (Google Chrome only)
+Meaningful OneTab entries! (Chrome & Edge only)
 ![](screenshots/onetab.png)
 Opened too many tabs? Search in terms of the paper title!
 ![](screenshots/search.png)
+Works well with vertical tabs.
+![](screenshots/vertical-tabs.png)
+Right-click the extension icon and select `Options` to set your preference. (Chrome & Edge)
+![](screenshots/filename-format-chrome.png)
+Go to add-ons page, click the extension select `Options` to set your preference. (Firefox)
+![](screenshots/filename-format-firefox.png)
 
 ## Problem Description
 
@@ -346,6 +352,8 @@ For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Ot
   - **Firefox Only** PDF using HTTP
     http://arxiv.org/pdf/2003.13678.pdf
 - Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab.
+  - Change filename format options, reload page, and download to verify the filename is changed.
+  - Reset filename format option to default, reload page, and download to verify the filename format is default.
 
 ## Related Extensions
 
