@@ -15,7 +15,7 @@ function restoreOptions() {
     {'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'},
     function(res) {
       var filename_format = res.filename_format;
-      document.querySelector("#filename-format").innerHTML = filename_format;
+      document.querySelector("#filename-format").innerText = filename_format;
       document.querySelector("#new-filename-format").value = filename_format;
   });
 }

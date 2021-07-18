@@ -88,6 +88,7 @@ For ArXiv PDF / abstract tabs:
 
 - `tabs`: On button click, open a new tab and move it to the right of the old active tab.
 - `activeTab`: Read active tab's title and modify it using the tab's url.
+- `storage`: Save extension configurations.
 - `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
 - `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
 
@@ -192,6 +193,7 @@ For ArXiv PDF / abstract tabs:
 - `webRequest`: Intercept ArXiv PDF request.
 - `webRequestBlocking`: Redirect the ArXiv PDF page to custom PDF container page.
 - `bookmarks`: When create a new bookmark of the PDF container page, bookmark the actual ArXiv PDF url instead.
+- `storage`: Save extension configurations.
 - `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
 - `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
 - `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;"`: For embedding PDF in container.

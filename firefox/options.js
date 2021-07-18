@@ -12,12 +12,12 @@ function restoreOptions() {
   var gettingItem = browser.storage.sync.get('filename_format');
   if (!gettingItem) {
     var filename_format = '${title}, ${firstAuthor} et al., ${publishedYear}.pdf';
-    document.querySelector("#filename-format").innerHTML = filename_format;
+    document.querySelector("#filename-format").innerText = filename_format;
     document.querySelector("#new-filename-format").value = filename_format;
   } else {
     gettingItem.then((res) => {
       var filename_format = res.filename_format || '${title}, ${firstAuthor} et al., ${publishedYear}.pdf';
-      document.querySelector("#filename-format").innerHTML = filename_format;
+      document.querySelector("#filename-format").innerText = filename_format;
       document.querySelector("#new-filename-format").value = filename_format;
     });
   }
