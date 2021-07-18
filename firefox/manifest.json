@@ -23,6 +23,7 @@
         "webRequest",
         "webRequestBlocking",
         "bookmarks",
+        "storage",
         "*://export.arxiv.org/*",
         "*://arxiv.org/*"
     ],
@@ -34,6 +35,15 @@
         "16": "icon16.png",
         "48": "icon48.png",
         "128": "icon128.png"
+    },
+    "options_ui": {
+      "page": "options.html",
+      "browser_style": true
+    },
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "arxiv-utils@j3soon.com"
+      }
     },
     "manifest_version": 2
 }

@@ -108,35 +108,43 @@ app.insertTitle = function (id, title, newTitle) {
 }
 // Add a direct download link if is abstract page.
 app.addDownloadLink = function (id, type, title, newTitle) {
-  var fileName = `${title}, ${app.firstAuthor} et al., ${app.publishedYear}.pdf`;
-  var elULs = document.querySelectorAll(".full-text > ul");
-  if (elULs.length === 0) {
-    console.log(app.name, "Error: Items selected by '.full-text > ul' not found");
-    return;
-  }
-  var elUL = elULs[0];
-  var elLI = document.createElement("li");
-  var elA = document.createElement("a");
-  var directURL = "https://arxiv.org/pdf/" + id + ".pdf?download";
-  elA.innerText = "Direct Download";
-  elA.setAttribute("href", directURL);
-  elA.setAttribute("download", fileName);
-  elA.setAttribute("type", "application/pdf");
-  elLI.appendChild(elA);
-  elUL.appendChild(elLI)
-  console.log(app.name, "Added direct download link.")
-  // For Firefox, add meta tag to force download.
-  // var elHeads = document.getElementsByTagName("head");
-  // if (elHeads.length === 0) {
-  //   console.log(app.name, "Error: head tag not found");
-  //   return;
-  // }
-  // var elHead = elHeads[0];
-  // var elMeta = document.createElement("meta");
-  // elMeta.setAttribute("name", "content-disposition");
-  // elMeta.setAttribute("content", "attachment; filename=" + fileName + ".pdf");
-  // elHead.appendChild(elMeta);
-  // console.log(app.name, "Added meta tag to force firefox download.");
+  var gettingItem = chrome.storage.sync.get('filename_format');
+  gettingItem.then((res) => {
+    var filename_format = res.filename_format || '${title}, ${firstAuthor} et al., ${publishedYear}.pdf';
+    var fileName = filename_format;
+    var fileName = fileName.replace('${title}', title);
+    var fileName = fileName.replace('${firstAuthor}', app.firstAuthor);
+    var fileName = fileName.replace('${publishedYear}', app.publishedYear);
+    // var fileName = `${title}, ${app.firstAuthor} et al., ${app.publishedYear}.pdf`;
+    var elULs = document.querySelectorAll(".full-text > ul");
+    if (elULs.length === 0) {
+      console.log(app.name, "Error: Items selected by '.full-text > ul' not found");
+      return;
+    }
+    var elUL = elULs[0];
+    var elLI = document.createElement("li");
+    var elA = document.createElement("a");
+    var directURL = "https://arxiv.org/pdf/" + id + ".pdf?download";
+    elA.innerText = "Direct Download";
+    elA.setAttribute("href", directURL);
+    elA.setAttribute("download", fileName);
+    elA.setAttribute("type", "application/pdf");
+    elLI.appendChild(elA);
+    elUL.appendChild(elLI)
+    console.log(app.name, "Added direct download link.")
+    // For Firefox, add meta tag to force download.
+    // var elHeads = document.getElementsByTagName("head");
+    // if (elHeads.length === 0) {
+    //   console.log(app.name, "Error: head tag not found");
+    //   return;
+    // }
+    // var elHead = elHeads[0];
+    // var elMeta = document.createElement("meta");
+    // elMeta.setAttribute("name", "content-disposition");
+    // elMeta.setAttribute("content", "attachment; filename=" + fileName + ".pdf");
+    // elHead.appendChild(elMeta);
+    // console.log(app.name, "Added meta tag to force firefox download.");
+  });
 }
 // Run this after the page has finish loading.
 app.run = function () {

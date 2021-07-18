@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+
+<body>
+  <p>Current filename format: <b id="filename-format">${title}, ${firstAuthor} et al., ${publishedYear}.pdf</b></p>
+  <form>
+      <label>New filename format:</label>
+      <input type="text" id="new-filename-format" style="margin: 2px; width:500px;" ><br>
+      <button type="submit">Update</button>
+      <button id="revert" type="submit">Revert to Default</button><br>
+      <p>You'll need to re-open the tabs for the new format to take effect.</p>
+  </form>
+  <script src="options.js"></script>
+</body>
+
+</html>
