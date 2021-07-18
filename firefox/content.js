@@ -108,7 +108,7 @@ app.insertTitle = function (id, type, title, newTitle) {
 }
 // Add a direct download link if is abstract page.
 app.addDownloadLink = function (id, type, title, newTitle) {
-  var gettingItem = chrome.storage.sync.get('filename_format');
+  var gettingItem = browser.storage.sync.get('filename_format');
   gettingItem.then((res) => {
     var filename_format = res.filename_format || '${title}, ${firstAuthor} et al., ${publishedYear}.pdf';
     var fileName = filename_format;
