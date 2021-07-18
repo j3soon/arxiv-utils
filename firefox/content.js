@@ -67,7 +67,7 @@ app.getTitleAsync = function (id, type, callback, callback2) {
   request.send();
 }
 // Insert the title into the active tab.
-app.insertTitle = function (id, title, newTitle) {
+app.insertTitle = function (id, type, title, newTitle) {
   console.log(app.name, "Trying to change title to: " + newTitle)
   var elTitles = document.getElementsByTagName("title");
   if (elTitles.length !== 0) {
