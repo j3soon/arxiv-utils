@@ -21,6 +21,7 @@
     "permissions": [
         "tabs",
         "activeTab",
+        "storage",
         "*://export.arxiv.org/*",
         "*://arxiv.org/*"
     ],
@@ -29,5 +30,6 @@
         "48": "icon48.png",
         "128": "icon128.png"
     },
+    "options_page": "options.html",
     "manifest_version": 2
 }
