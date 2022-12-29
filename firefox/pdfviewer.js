@@ -39,28 +39,19 @@ app.getTitleAsync = function (id, type, callback) {
 }
 // Insert the title into the active tab.
 app.insertTitle = function (title) {
-  var elTitle = document.getElementById("title");
-  elTitle.innerText = title;
+  console.log('Setting title');
+  document.title = title;
 }
 // Extract the pdf url from 'pdfviewer.html?target=<pdfURL>'.
 app.extractURL = function () {
   var url = new URL(window.location.href);
-  return url.searchParams.get("target");
-}
-// Inject embedded PDF.
-app.injectPDF = function (url) {
-  console.log(app.name, "Injecting PDF: " + url);
-  var elPDF = document.createElement("iframe");
-  elPDF.setAttribute("src", url);
-  var elContainer = document.getElementById("container");
-  elContainer.appendChild(elPDF);
+  return url.searchParams.get("file");
 }
 // Run this once.
 app.run = function () {
   var pdfURL = app.extractURL();
   var id = app.getId(pdfURL);
   app.getTitleAsync(id, "PDF", app.insertTitle);
-  app.injectPDF(pdfURL);
 }
 
 app.run();
