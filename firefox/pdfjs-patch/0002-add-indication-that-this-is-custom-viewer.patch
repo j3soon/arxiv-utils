@@ -1,0 +1,56 @@
+From f9ee06923ee9b570289b896910d6d78f27113e9c Mon Sep 17 00:00:00 2001
+From: Ciprian Tomoiaga <ciprian.tomoiaga@gmail.com>
+Date: Thu, 29 Dec 2022 16:02:24 +0100
+Subject: [PATCH 2/3] add indication that this is custom viewer
+
+---
+ web/viewer.css  | 5 +++++
+ web/viewer.html | 5 +++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/web/viewer.css b/web/viewer.css
+index 7770b6883..d6125f474 100644
+--- a/web/viewer.css
++++ b/web/viewer.css
+@@ -654,6 +654,11 @@ body {
+   transform: translateX(-50%);
+ }
+ 
++#toolbarArXivStamp {
++  margin-left: 30px;
++  border: 1px solid red;
++}
++
+ #toolbarViewerLeft,
+ #toolbarSidebarLeft {
+   float: inline-start;
+diff --git a/web/viewer.html b/web/viewer.html
+index 1634f1c5d..3d64a72b9 100644
+--- a/web/viewer.html
++++ b/web/viewer.html
+@@ -1,4 +1,4 @@
+-﻿<!DOCTYPE html>
++<!DOCTYPE html>
+ <!--
+ Copyright 2012 Mozilla Foundation
+ 
+@@ -27,7 +27,7 @@ See https://github.com/adobe-type-tools/cmap-resources
+ <!--#if GENERIC || CHROME-->
+     <meta name="google" content="notranslate">
+ <!--#endif-->
+-    <title>PDF.js viewer</title>
++    <title>arXiv.org PDF viewer</title>
+ 
+ <!--#if MOZCENTRAL-->
+ <!--#include viewer-snippet-firefox-extension.html-->
+@@ -298,6 +298,7 @@ See https://github.com/adobe-type-tools/cmap-resources
+                 </div>
+                 <input type="number" id="pageNumber" class="toolbarField" title="Page" value="1" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
+                 <span id="numPages" class="toolbarLabel"></span>
++                <span id="toolbarArXivStamp" class="toolbarLabel">arXiv PDF viewer</span>
+               </div>
+               <div id="toolbarViewerRight">
+ <!--#if GENERIC-->
+-- 
+2.37.3
+

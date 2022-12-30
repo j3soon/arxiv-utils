@@ -1,0 +1,30 @@
+From 83fa62fdb0f2cd6f32ae348a115f07b969d28a76 Mon Sep 17 00:00:00 2001
+From: Ciprian Tomoiaga <ciprian.tomoiaga@gmail.com>
+Date: Thu, 29 Dec 2022 16:00:41 +0100
+Subject: [PATCH 1/3] change restriction on file origin to allow (only) arxiv
+
+---
+ web/app.js | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/web/app.js b/web/app.js
+index 72019cabd..f670a0244 100644
+--- a/web/app.js
++++ b/web/app.js
+@@ -2140,11 +2140,8 @@ if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
+         return;
+       }
+       const fileOrigin = new URL(file, window.location.href).origin;
+-      // Removing of the following line will not guarantee that the viewer will
+-      // start accepting URLs from foreign origin -- CORS headers on the remote
+-      // server must be properly configured.
+-      if (fileOrigin !== viewerOrigin) {
+-        throw new Error("file origin does not match viewer's");
++      if (fileOrigin !== "https://arxiv.org") {
++        throw new Error("File should only come from arXiv domain");
+       }
+     } catch (ex) {
+       PDFViewerApplication.l10n.get("loading_error").then(msg => {
+-- 
+2.37.3
+

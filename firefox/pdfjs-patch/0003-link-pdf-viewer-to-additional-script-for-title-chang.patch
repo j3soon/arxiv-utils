@@ -1,0 +1,31 @@
+From 4ab0f28c7a0149160ca31c57f76bbeec95162b21 Mon Sep 17 00:00:00 2001
+From: Ciprian Tomoiaga <ciprian.tomoiaga@gmail.com>
+Date: Thu, 29 Dec 2022 16:31:48 +0100
+Subject: [PATCH 3/3] link pdf viewer to additional script for title change
+
+---
+ web/viewer.html | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/web/viewer.html b/web/viewer.html
+index 3d64a72b9..a7e75ed17 100644
+--- a/web/viewer.html
++++ b/web/viewer.html
+@@ -340,7 +340,7 @@ See https://github.com/adobe-type-tools/cmap-resources
+                   <div class="splitToolbarButtonSeparator"></div>
+                   <button id="zoomIn" class="toolbarButton" title="Zoom In" tabindex="22" data-l10n-id="zoom_in">
+                     <span data-l10n-id="zoom_in_label">Zoom In</span>
+-                   </button>
++                  </button>
+                 </div>
+                 <span id="scaleSelectContainer" class="dropdownToolbarButton">
+                   <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom">
+@@ -478,4 +478,5 @@ See https://github.com/adobe-type-tools/cmap-resources
+     <input type="file" id="fileInput" class="hidden">
+ <!--#endif-->
+   </body>
++  <script src="../../../../pdfviewer.js"></script>
+ </html>
+-- 
+2.37.3
+
