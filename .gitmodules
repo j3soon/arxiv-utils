@@ -1,4 +1,4 @@
 [submodule "firefox/pdf.js"]
 	path = firefox/pdf.js
-	url = git@github.com:cipri-tom/pdf.js.git
-	branch = arxiv-utils-customisation
+	url = git@github.com:mozilla/pdf.js.git
+	branch = v3.2.146
