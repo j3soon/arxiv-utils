@@ -24,8 +24,7 @@ index 3d64a72b9..a7e75ed17 100644
      <input type="file" id="fileInput" class="hidden">
  <!--#endif-->
    </body>
-+  <script src="../../../../pdfviewer.js"></script>
++  <script src="../pdfviewer.js"></script> <!--Path relative to the flattened zip of arxiv-utils -->
  </html>
--- 
+--
 2.37.3
-

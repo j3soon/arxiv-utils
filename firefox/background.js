@@ -4,7 +4,7 @@ var app = {};
 app.name = "[arXiv-utils]";
 // For our PDF container.
 app.pdfviewer = "pdfviewer.html";
-app.pdfviewerTarget = "pdf.js/build/generic/web/viewer.html?file=";
+app.pdfviewerTarget = "web/viewer.html?file=";
 // The match pattern for the URLs to redirect
 // Note: https://arxiv.org/pdf/<id> is the direct link, then the url is renamed to https://arxiv.org/pdf/<id>.pdf
 //       we capture only the last url (the one that ends with '.pdf').

@@ -97,10 +97,58 @@ function build() {
     cd -
 }
 
+function dist() {
+
+    if [[ -f "$archive_name" ]]; then
+        echo -e "$archive_name exists. Removing..."
+        rm "$archive_name"
+    fi
+
+    echo -e "Zipping pdf.js built files..."
+    # in order to flatten the zip archive, we move to that directory
+    # in a subshell, output on stdout, and save in the original path
+    (
+        cd "$archive_src"
+        zip -q -r -FS - ./ \
+            --exclude \
+                '*.js.map' \
+                '*web/debugger.*' \
+                '*.pdf' \
+                '*.git*'
+        # we exclude .git for future safety, in case we decide to git-track our builds
+    ) > "$archive_name" || return 31
+
+    # then we add the current files
+    echo -e "Adding our extension files..."
+    zip -q -u                                 \
+        "$archive_name"                       \
+        background.js content.js pdfviewer.js \
+        options.js options.html               \
+        icon*.png                             \
+        manifest.json                         \
+    || return 32
+    echo -e "Done. Extension is: $archive_name"
+}
+
+function clean() {
+    cd pdf.js
+    echo -e "Removing pdf.js build artefacts..."
+    gulp clean || return 41
+
+
+    echo -e "\nRemoving zip build $archive_name..."
+    rm -rf "$archive_name"
+
+    cd -
+}
 
 # === MAIN ====================================================================
 
 me=$(basename "$0")
+
+archive_src='./pdf.js/build/minified/'    # with trailing slash
+archive_name='./arxiv-utils.zip'
+
 # First arg gives which part we should run. By default, all of them
 func='all'
 if [[ -n "$1" ]] ; then
@@ -109,12 +157,11 @@ if [[ -n "$1" ]] ; then
 fi
 
 case $func in
-    code | build )
+    code | build | dist | clean)
         $func $@
         ;;
     all)
-        code
-        build
+        code && build && dist
         ;;
     *)
         echo "Unknown option: $func ."
