@@ -1,4 +1,25 @@
 #!/bin/bash
+#
+# Maintainance of pdf.js updates, together wth rebuild of the extension
+#
+# This script helps build the customized version of pdf.js
+# It relies on a patch that can be applied on top of pdf.js vanilla code.
+#
+# The patch files are under `./pdfjs-patch`.
+# If new changes are required, it is desireable to base them from the
+# latest release branch, which can be found eiter from the github repo,
+# or by running:
+#   $ git describe --tags --abbrev=0
+#
+# Once you have finished your changes, commit them, and generate new patches:
+#   $ cd pdf.js/
+#   $ <perform changes to code>
+#   $ git commit
+#   $ git format-patch <release_branch> -o ../pdfjs-patch/
+#
+# Then rebuild the extension: ./update.sh all
+
+
 
 # === Functions ===============================================================
 
