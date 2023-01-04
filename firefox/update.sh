@@ -1,6 +1,6 @@
 #!/bin/bash
 
-me=$(basename "$0")
+# === Functions ===============================================================
 
 function usage() {
     cat <<EOM
@@ -17,7 +17,8 @@ EOM
 }
 
 function code() {
-    cd pdf.js/
+    cd pdf.js
+
 	echo -e "Updating pdf.js library..."
 	git checkout master || return 11
 	git pull || return 12
@@ -35,12 +36,14 @@ function code() {
 
 	echo -e "\nMoving to the release... ${latest_tag}"
 	git checkout --detach ${latest_tag} || return 14
+
+    cd -
 }
 
 function build() {
-    cd pdf.js/
+    cd pdf.js
 
-    if [[ ! $(which gulp) ]]; then
+    if ! command -v gulp ; then
         echo "Build failed: could not find gulp. "
         echo "Please check pdf.js installation instructions: https://github.com/mozilla/pdf.js/#getting-the-code"
         return 20
@@ -90,11 +93,17 @@ function build() {
         return 23
     fi
 	echo -e "Customization reverted."
+
+    cd -
 }
 
-if [[ -z $1 ]] ; then
-    func='all'
-else
+
+# === MAIN ====================================================================
+
+me=$(basename "$0")
+# First arg gives which part we should run. By default, all of them
+func='all'
+if [[ -n "$1" ]] ; then
     func="$1"
     shift
 fi
@@ -113,9 +122,10 @@ case $func in
         ;;
 esac
 
-if [[ $? -ne 0 ]]; then
-    echo "${me} failed"
-    exit 1
+err_code=$?
+if [[ $err_code -ne 0 ]]; then
+    echo "${me} failed. Error code: $err_code"
+    exit $err_code
 else
     echo "Success!"
 fi
