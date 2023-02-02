@@ -320,42 +320,45 @@ For ArXiv PDF / abstract tabs:
   }
   ```
 
-## Test Flow (Manually)
+## Tests
 
-Let's use this paper: [Exploration via Flow-Based Intrinsic Rewards](https://arxiv.org/abs/1905.10071) for example.
+The automated tests currently include the following:
 
-For Chrome, the Inspector can be opened to see the logs. Make sure there are no errors after performing the actions below:
+- **Default tests**: Test the default title name of arXiv abstract/PDF pages.
+- **Navigation tests**: Test the arxiv-utils button can switch between arXiv abstract/PDF pages, and the title is modified.
+
+The testcases along with their description is stored in [tests/testcases.yaml](tests/testcases.yaml).
+
+Other functions should still be tested manually:
+
+- **Bookmark tests**: Test the bookmarked URL.
+  - Try to bookmark an abstract tab, the title should be the new title.
+  - Try to bookmark a PDF tab, the title should be the new title.
+  - (Firefox Only) Check the PDF bookmark's URL, it should be the original ArXiv PDF link.
+- **Download tests**: Test the downloaded file name.
+  - Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab.
+  - Change filename format options, reload page, and download to verify the filename is changed.
+  - Reset filename format option to default, reload page, and download to verify the filename format is default.
+- The extension button should be disabled outside ArXiv's domain.
+- (Chrome Only) If [OneTab](https://www.one-tab.com/) is installed, click its extension button, the list should show the updated titles of both abstract and PDF page.
+
+## Developer Notes
+
+- Chrome: [Debugging extensions](https://developer.chrome.com/docs/extensions/mv3/tut_debugging/)
+- Firefox: [Test and debug](https://extensionworkshop.com/documentation/develop/#test-and-debug)
+- Edge: [Sideload an extension](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/getting-started/extension-sideloading)
+
+For Chrome, the Inspector can be opened to see the logs. Make sure there are no errors when testing.
 
 For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Other installed add-ons may pollute the logs.
 
-- The extension button should be disabled outside ArXiv's domain.
-- Open [abstract page](https://arxiv.org/abs/1905.10071), the title should be changed to `Exploration via Flow-Based Intrinsic Rewards | Abstract` instead of `[1905.10071] Exploration via Flow-Based Intrinsic Rewards`.
-- Click the extension button, the new [PDF page](https://arxiv.org/pdf/1905.10071.pdf) should be opened at the right of the abstract page.
-- The opened [PDF page](https://arxiv.org/pdf/1905.10071.pdf) should have title `Exploration via Flow-Based Intrinsic Rewards | PDF` instead of `1905.10071.pdf`.
-- **Firefox Only** The PDF tab should have a long URL, which mean that the PDF are in the extension container.
-- Click the extension button, the new [abstract page](https://arxiv.org/abs/1905.10071) should be opened at the right of the PDF page.
-- Try to bookmark the abstract tab, the title should be the new title.
-- Try to bookmark the PDF tab, the title should be the new title.
-- **Firefox Only** Check the PDF bookmark's URL, it should be the original ArXiv PDF link.
-- **Chrome Only** If [OneTab](https://www.one-tab.com/) is installed, click its extension button, the list should show the updated titles of both abstract and PDF page.
+## Frequently Asked Questions (FAQ)
 
-- Test PDF urls:
-  - PDF link with special format
-    https://arxiv.org/ftp/arxiv/papers/1110/1110.2832.pdf
-  - Export Arxiv site
-    https://export.arxiv.org/pdf/2003.13678.pdf
-  - Doesn't end with `.pdf`
-    https://arxiv.org/pdf/2003.13678
-  - Ends with slash
-    https://arxiv.org/pdf/2003.13678/
-  - **Chrome Only** PDF title renaming by original file name
-    https://arxiv.org/pdf/1906.07413.pdf
-    https://arxiv.org/pdf/2003.01367.pdf
-  - **Firefox Only** PDF using HTTP
-    http://arxiv.org/pdf/2003.13678.pdf
-- Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab.
-  - Change filename format options, reload page, and download to verify the filename is changed.
-  - Reset filename format option to default, reload page, and download to verify the filename format is default.
+- Q: Selenium (or WebDriver) has no API to click addon/extension buttons, how do the automated tests click the arxiv-utils button?
+
+  A: This can be achieved by any tool that can simulate mouse click. Since we use Selenium Grid, for simplicity, we apply a hacky workaround that use one meta browser to click the arxiv-utils button in another browser through VNC web viewer. I'm not sure if [other testing tools](https://learn.microsoft.com/en-us/microsoft-edge/test-and-automation/test-and-automation) can achieve this more easily.
+
+If you have further questions, please [open an issue](https://github.com/j3soon/arxiv-utils/issues).
 
 ## Related Extensions
 
