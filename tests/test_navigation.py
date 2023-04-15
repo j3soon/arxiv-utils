@@ -44,12 +44,15 @@ for browser in ['chrome', 'firefox', 'edge']:
         novnc_url = "http://firefox-node:7900"
         extensions_button_pos = (745, 85) # firefox/01-default.jpeg
         extensions_settings_button_pos = (730, 185) # firefox/02-extensions.jpeg
-        pin_button_pos = (450, 240) # firefox/03-extensions-settings.jpeg
+        pin_button_pos = (590, 215) # firefox/03-extensions-settings.jpeg
         arxiv_utils_button_pos = (705, 85) # firefox/04-pinned.jpeg
+        # Below are for add-ons using Manifest v3
+        """
         manage_button_pos = (520, 265) # firefox/03-extensions-settings.jpeg
         permissions_button_pos = (395, 340) # firefox/05-details.jpeg
         toggle_export_arxiv_button_pos = (750, 515) # firefox/06-permissions.jpeg
         toggle_arxiv_button_pos = (750, 540) # firefox/06-permissions.jpeg
+        """
     elif browser == 'edge':
         options = webdriver.EdgeOptions()
         options.add_argument('load-extension=/app/chrome')
@@ -151,6 +154,8 @@ for browser in ['chrome', 'firefox', 'edge']:
                 print("Waiting 1 second after installing add-on")
                 time.sleep(1)
 
+                # Below are for add-ons using Manifest v3
+                """
                 print("(Meta) Setting arxiv-utils Permissions")
                 print("(Meta) Clicking Extensions Button (Open Dropdown)")
                 meta_click_at(extensions_button_pos)
@@ -164,6 +169,7 @@ for browser in ['chrome', 'firefox', 'edge']:
                 meta_click_at(toggle_export_arxiv_button_pos)
                 print("(Meta) Toggling arxiv.org Button for arxiv-utils")
                 meta_click_at(toggle_arxiv_button_pos)
+                """
 
                 print("(Meta) Pinning arxiv-utils")
                 print("(Meta) Clicking Extensions Button (Open Dropdown)")
