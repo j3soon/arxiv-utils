@@ -48,6 +48,9 @@ for browser in ['chrome', 'firefox', 'edge']:
             # - Another way is to somehow use JavaScript to retrieve the pdf frame title and expose it through the browser.
             # - The last way is to give up accessing the pdf title, and instead only check the html title for non-default testcases.
             # The first two solutions cannot be implmented, so we apply the third solution.
+            # Ref: https://stackoverflow.com/a/29817526
+            # Ref: https://stackoverflow.com/a/4693418
+            # Ref: https://stackoverflow.com/a/68041520
             print("Testcase Skipped (Ends with .pdf)")
             n_skipped += 1
             continue
