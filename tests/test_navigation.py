@@ -120,15 +120,16 @@ for browser in ['chrome', 'firefox', 'edge']:
     xpath = '//*[@id="noVNC_container"]/div/canvas'
     element_canvas = meta_wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
 
-    def meta_click_at(pos):
+    def meta_click_at(pos, wait=True):
         x, y = pos
         x, y = x + viewport_offset_x, y + viewport_offset_y
         ActionChains(meta_driver)\
             .move_to_element_with_offset(element_canvas, x, y)\
             .click()\
             .perform()
-        print("Waiting 1 second after click")
-        time.sleep(1)
+        if wait:
+            print("Waiting 1 second after click")
+            time.sleep(1)
 
     def meta_setup_arxiv_utils(restore=False):
         global addon_id
@@ -180,22 +181,8 @@ for browser in ['chrome', 'firefox', 'edge']:
         time.sleep(1)
 
     def meta_click_arxiv_utils():
-        print("(Meta) Locating Canvas")
-        xpath = '//*[@id="noVNC_container"]/div/canvas'
-        element = meta_wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
-        # The center coordinate can be obtained by:
-        #
-        #     ActionChains(meta_driver)\
-        #        .move_to_element_with_offset(element, 0, 0)\
-        #        .context_click()\
-        #        .perform()
-        #
-        # and capture a screenshot with 1:1 VNC screen. The coordinate of the
-        # context menu should be the same as (viewport_offset_x, viewport_offset_y).
-        # Using the same screenshot above, we can then calculate the number of
-        # pixels to retrieve the button coordinates.
         print("(Meta) Clicking Open Abstract / PDF")
-        meta_click_at(arxiv_utils_button_pos)
+        meta_click_at(arxiv_utils_button_pos, wait=False)
 
     meta_setup_arxiv_utils()
 
