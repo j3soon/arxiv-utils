@@ -1,49 +1,56 @@
 {
-    "name": "arxiv-utils",
-    "version": "1.6.0",
-    "description": "Easy access on ArXiv! Rename the title to the paper's title. Add a button to navigate easily. Download PDF with meaningful filename.",
-    "background": {
-        "scripts": ["background.js"]
+  "name": "arxiv-utils",
+  "version": "1.6.0",
+  "description": "Easy access on ArXiv! Rename the title to the paper's title. Add a button to navigate easily. Download PDF with meaningful filename.",
+  "background": {
+    "scripts": [ "background.js" ]
+  },
+  "content_scripts": [{
+    "matches": [ "*://arxiv.org/abs/*", "*://export.arxiv.org/abs/*" ],
+    "js": [ "content.js" ],
+    "run_at": "document_end"
+  }],
+  "action": {
+    "default_icon": {
+      "16": "icon16.png",
+      "32": "icon32.png"
     },
-    "content_scripts": [{
-        "matches": ["*://arxiv.org/abs/*", "*://export.arxiv.org/abs/*"],
-        "js": ["content.js"],
-        "run_at": "document_end"
-    }],
-    "browser_action": {
-        "default_icon": {
-            "16": "icon16.png",
-            "32": "icon32.png"
-        },
-        "default_title": "Open Abstract / PDF"
-    },
-    "permissions": [
-        "tabs",
-        "activeTab",
-        "webRequest",
-        "webRequestBlocking",
-        "bookmarks",
-        "storage",
-        "*://export.arxiv.org/*",
-        "*://arxiv.org/*"
-    ],
-    "content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;",
-    "web_accessible_resources": [
-        "pdfviewer.html"
-    ],
-    "icons": {
-        "16": "icon16.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
-    },
-    "options_ui": {
-      "page": "options.html",
-      "browser_style": true
-    },
-    "browser_specific_settings": {
-      "gecko": {
-        "id": "{ab779d78-7270-4ee8-9ee8-369d73508298}"
-      }
-    },
-    "manifest_version": 2
+    "default_title": "Open Abstract / PDF"
+  },
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "bookmarks",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://export.arxiv.org/*",
+    "*://arxiv.org/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [ "pdfviewer.html" ],
+      "matches": [ "<all_urls>" ]
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "arxiv-utils@j3soon.com"
+    }
+  },
+  "manifest_version": 3
 }

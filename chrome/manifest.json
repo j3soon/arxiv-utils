@@ -1,35 +1,37 @@
 {
-    "name": "arxiv-utils",
-    "version": "1.6.0",
-    "description": "Easy access on ArXiv! Rename the title to the paper's title. Add a button to navigate easily. Download PDF with meaningful filename.",
-    "background": {
-        "scripts": ["background.js"]
+  "name": "arxiv-utils",
+  "version": "1.6.0",
+  "description": "Easy access on ArXiv! Rename the title to the paper's title. Add a button to navigate easily. Download PDF with meaningful filename.",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "matches": [ "*://arxiv.org/*pdf*", "*://arxiv.org/abs/*",
+      "*://export.arxiv.org/*pdf*", "*://export.arxiv.org/abs/*" ],
+    "js": [ "content.js" ],
+    "run_at": "document_end"
+  }],
+  "action": {
+    "default_icon": {
+      "19": "icon19.png",
+      "38": "icon38.png"
     },
-    "content_scripts": [{
-        "matches": ["*://arxiv.org/*pdf*", "*://arxiv.org/abs/*",
-            "*://export.arxiv.org/*pdf*", "*://export.arxiv.org/abs/*"],
-        "js": ["content.js"],
-        "run_at": "document_end"
-    }],
-    "browser_action": {
-        "default_icon": {
-            "19": "icon19.png",
-            "38": "icon38.png"
-        },
-        "default_title": "Open Abstract / PDF"
-    },
-    "permissions": [
-        "tabs",
-        "activeTab",
-        "storage",
-        "*://export.arxiv.org/*",
-        "*://arxiv.org/*"
-    ],
-    "icons": {
-        "16": "icon16.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
-    },
-    "options_page": "options.html",
-    "manifest_version": 2
+    "default_title": "Open Abstract / PDF"
+  },
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://export.arxiv.org/*",
+    "*://arxiv.org/*"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "options_page": "options.html",
+  "manifest_version": 3
 }

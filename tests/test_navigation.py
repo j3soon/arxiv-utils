@@ -27,9 +27,9 @@ for browser in ['chrome', 'firefox', 'edge']:
         meta_options = webdriver.EdgeOptions()
         meta_options.add_argument("--window-size=1024,768")
         novnc_url = "http://chrome-node:7900"
-        extensions_button_pos = (913, 67)
-        pin_button_pos = (866, 219)
-        arxiv_utils_button_pos = (882, 67)
+        extensions_button_pos = (915, 65) # chrome/01-default.jpeg
+        pin_button_pos = (865, 220) # chrome/02-extensions.jpeg
+        arxiv_utils_button_pos = (880, 65) # chrome/03-pinned.jpeg
     elif browser == 'firefox':
         options = webdriver.FirefoxOptions()
         # Ref: https://stackoverflow.com/a/55878622
@@ -42,9 +42,14 @@ for browser in ['chrome', 'firefox', 'edge']:
         meta_options = webdriver.EdgeOptions()
         meta_options.add_argument("--window-size=1024,768")
         novnc_url = "http://firefox-node:7900"
-        extensions_button_pos = None
-        pin_button_pos = None
-        arxiv_utils_button_pos = (741, 87)
+        extensions_button_pos = (745, 85) # firefox/01-default.jpeg
+        extensions_settings_button_pos = (730, 185) # firefox/02-extensions.jpeg
+        pin_button_pos = (450, 240) # firefox/03-extensions-settings.jpeg
+        arxiv_utils_button_pos = (705, 85) # firefox/04-pinned.jpeg
+        manage_button_pos = (520, 265) # firefox/03-extensions-settings.jpeg
+        permissions_button_pos = (395, 340) # firefox/05-details.jpeg
+        toggle_export_arxiv_button_pos = (750, 515) # firefox/06-permissions.jpeg
+        toggle_arxiv_button_pos = (750, 540) # firefox/06-permissions.jpeg
     elif browser == 'edge':
         options = webdriver.EdgeOptions()
         options.add_argument('load-extension=/app/chrome')
@@ -52,9 +57,9 @@ for browser in ['chrome', 'firefox', 'edge']:
         meta_options = webdriver.ChromeOptions()
         meta_options.add_argument("--window-size=1024,768")
         novnc_url = "http://edge-node:7900"
-        extensions_button_pos = (819, 64)
-        pin_button_pos = (785, 139)
-        arxiv_utils_button_pos = (774, 64)
+        extensions_button_pos = (770, 65) # edge/01-default.jpeg
+        pin_button_pos = (740, 140) # edge/02-extensions.jpeg
+        arxiv_utils_button_pos = (725, 65) # edge/03-pinned.jpeg
     else:
         raise ValueError(f"Invalid browser: {browser}")
 
@@ -86,6 +91,9 @@ for browser in ['chrome', 'firefox', 'edge']:
     print("(Meta) Visiting noVNC")
     meta_driver.get(novnc_url)
 
+    print("Waiting 1 second after visiting noVNC")
+    time.sleep(1)
+
     print("(Meta) Clicking the Connect button")
     xpath = '//*[@id="noVNC_connect_button"]'
     element = meta_wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
@@ -108,45 +116,62 @@ for browser in ['chrome', 'firefox', 'edge']:
     print("Waiting 1 second for VNC connection")
     time.sleep(1)
 
+    print("(Meta) Locating Canvas")
+    xpath = '//*[@id="noVNC_container"]/div/canvas'
+    element_canvas = meta_wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+
+    def meta_click_at(pos, wait=True):
+        x, y = pos
+        x, y = x + viewport_offset_x, y + viewport_offset_y
+        ActionChains(meta_driver)\
+            .move_to_element_with_offset(element_canvas, x, y)\
+            .click()\
+            .perform()
+        if wait:
+            print("Waiting 1 second after click")
+            time.sleep(1)
+
     def meta_setup_arxiv_utils(restore=False):
         global addon_id
-        print("(Meta) Locating Canvas")
-        xpath = '//*[@id="noVNC_container"]/div/canvas'
-        element = meta_wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
         if browser == 'chrome' or browser == 'edge':
             if restore:
                 print("(Meta) Unpinning arxiv-utils")
             else:
                 print("(Meta) Pinning arxiv-utils")
             print("(Meta) Clicking Extensions Button (Open Dropdown)")
-            x, y = extensions_button_pos
-            x, y = x + viewport_offset_x, y + viewport_offset_y
-            ActionChains(meta_driver)\
-                .move_to_element_with_offset(element, x, y)\
-                .click()\
-                .perform()
-            print("Waiting 1 second for the dropdown to open")
-            time.sleep(1)
+            meta_click_at(extensions_button_pos)
             print("(Meta) Clicking Pin (Unpinned -> Pinned) for arxiv-utils")
-            x, y = pin_button_pos
-            x, y = x + viewport_offset_x, y + viewport_offset_y
-            ActionChains(meta_driver)\
-                .move_to_element_with_offset(element, x, y)\
-                .click()\
-                .perform()
-            print("Waiting 1 second for the pin to take effect")
-            time.sleep(1)
+            meta_click_at(pin_button_pos)
             print("(Meta) Clicking Extensions Button (Close Dropdown)")
-            x, y = extensions_button_pos
-            x, y = x + viewport_offset_x, y + viewport_offset_y
-            ActionChains(meta_driver)\
-                .move_to_element_with_offset(element, x, y)\
-                .click()\
-                .perform()
+            meta_click_at(extensions_button_pos)
         elif browser == 'firefox':
             if not restore:
                 print(f"Installing add-on...")
                 addon_id = webdriver.Firefox.install_addon(driver, '/app/firefox', temporary=True)
+                print("Waiting 1 second after installing add-on")
+                time.sleep(1)
+
+                print("(Meta) Setting arxiv-utils Permissions")
+                print("(Meta) Clicking Extensions Button (Open Dropdown)")
+                meta_click_at(extensions_button_pos)
+                print("(Meta) Clicking Extensions Settings Button (Open Dropdown)")
+                meta_click_at(extensions_settings_button_pos)
+                print("(Meta) Clicking Manage Extension Button for arxiv-utils")
+                meta_click_at(manage_button_pos)
+                print("(Meta) Clicking Permissions Button for arxiv-utils")
+                meta_click_at(permissions_button_pos)
+                print("(Meta) Toggling export.arxiv.org for arxiv-utils")
+                meta_click_at(toggle_export_arxiv_button_pos)
+                print("(Meta) Toggling arxiv.org Button for arxiv-utils")
+                meta_click_at(toggle_arxiv_button_pos)
+
+                print("(Meta) Pinning arxiv-utils")
+                print("(Meta) Clicking Extensions Button (Open Dropdown)")
+                meta_click_at(extensions_button_pos)
+                print("(Meta) Clicking Extensions Settings Button (Open Dropdown)")
+                meta_click_at(extensions_settings_button_pos)
+                print("(Meta) Clicking Pin (Unpinned -> Pinned) for arxiv-utils")
+                meta_click_at(pin_button_pos)
             else:
                 print(f"Uninstalling add-on...")
                 webdriver.Firefox.uninstall_addon(driver, addon_id)
@@ -156,27 +181,8 @@ for browser in ['chrome', 'firefox', 'edge']:
         time.sleep(1)
 
     def meta_click_arxiv_utils():
-        print("(Meta) Locating Canvas")
-        xpath = '//*[@id="noVNC_container"]/div/canvas'
-        element = meta_wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
-        # The center coordinate can be obtained by:
-        #
-        #     ActionChains(meta_driver)\
-        #        .move_to_element_with_offset(element, 0, 0)\
-        #        .context_click()\
-        #        .perform()
-        #
-        # and capture a screenshot with 1:1 VNC screen. The coordinate of the
-        # context menu should be the same as (viewport_offset_x, viewport_offset_y).
-        # Using the same screenshot above, we can then calculate the number of
-        # pixels to retrieve the button coordinates.
         print("(Meta) Clicking Open Abstract / PDF")
-        x, y = arxiv_utils_button_pos
-        x, y = x + viewport_offset_x, y + viewport_offset_y
-        ActionChains(meta_driver)\
-            .move_to_element_with_offset(element, x, y)\
-            .click()\
-            .perform()
+        meta_click_at(arxiv_utils_button_pos, wait=False)
 
     meta_setup_arxiv_utils()
 

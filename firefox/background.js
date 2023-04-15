@@ -81,9 +81,9 @@ app.checkURL = function (url) {
 app.updateBrowserActionState = function (tabId, changeInfo, tab) {
   var avail = app.checkURL(tab.url)
   if (avail) {
-    chrome.browserAction.enable(tabId);
+    chrome.action.enable(tabId);
   } else {
-    chrome.browserAction.disable(tabId);
+    chrome.action.disable(tabId);
   }
 };
 // Redirect to custom PDF page.
@@ -126,7 +126,7 @@ app.run = function (tab) {
 // Listen for any changes to the URL of any tab.
 chrome.tabs.onUpdated.addListener(app.updateBrowserActionState);
 // Extension button click to modify title.
-chrome.browserAction.onClicked.addListener(app.run);
+chrome.action.onClicked.addListener(app.run);
 // Redirect the PDF page to custom PDF container page.
 chrome.webRequest.onBeforeRequest.addListener(
   app.redirect,

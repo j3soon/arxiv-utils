@@ -69,10 +69,9 @@ app.checkURL = function (url) {
 app.updateBrowserActionState = function (tabId, changeInfo, tab) {
   var avail = app.checkURL(tab.url)
   if (avail) {
-    chrome.browserAction.enable(tabId);
-    chrome.tabs.sendMessage(tabId, tab);
+    chrome.action.enable(tabId);
   } else {
-    chrome.browserAction.disable(tabId);
+    chrome.action.disable(tabId);
   }
 };
 // Run this when the button clicked.
@@ -87,4 +86,4 @@ app.run = function (tab) {
 // Listen for any changes to the URL of any tab.
 chrome.tabs.onUpdated.addListener(app.updateBrowserActionState);
 // Extension button click to modify title.
-chrome.browserAction.onClicked.addListener(app.run);
+chrome.action.onClicked.addListener(app.run);
