@@ -10,7 +10,7 @@
     "js": [ "content.js" ],
     "run_at": "document_end"
   }],
-  "action": {
+  "browser_action": {
     "default_icon": {
       "16": "icon16.png",
       "32": "icon32.png"
@@ -23,20 +23,14 @@
     "webRequest",
     "webRequestBlocking",
     "bookmarks",
-    "storage"
-  ],
-  "host_permissions": [
+    "storage",
     "*://export.arxiv.org/*",
     "*://arxiv.org/*"
   ],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;"
-  },
+  "content_security_policy":
+    "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;",
   "web_accessible_resources": [
-    {
-      "resources": [ "pdfviewer.html" ],
-      "matches": [ "<all_urls>" ]
-    }
+    "pdfviewer.html"
   ],
   "icons": {
     "16": "icon16.png",
@@ -52,5 +46,5 @@
       "id": "{ab779d78-7270-4ee8-9ee8-369d73508298}"
     }
   },
-  "manifest_version": 3
+  "manifest_version": 2
 }
