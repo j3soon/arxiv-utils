@@ -1,0 +1,22 @@
+name: build
+on:
+  release:
+    types: [published]
+jobs:
+  build-and-publish:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build zip files
+      run: |
+        cd chrome && zip -r "../arxiv-utils-chrome-${{ github.event.release.tag_name }}.zip" . && cd ..
+        cd chrome && zip -r "../arxiv-utils-edge-${{ github.event.release.tag_name }}.zip" . && cd ..
+        cd firefox && zip -r "../arxiv-utils-firefox-${{ github.event.release.tag_name }}.zip" . && cd ..
+    - name: Publish to Stores
+      uses: PlasmoHQ/bpp@v3
+      with:
+        keys: ${{ secrets.BPP_KEYS }}
+        chrome-file: "arxiv-utils-chrome-${{ github.event.release.tag_name }}.zip"
+        edge-file: "arxiv-utils-edge-${{ github.event.release.tag_name }}.zip"
+        firefox-file: "arxiv-utils-firefox-${{ github.event.release.tag_name }}.zip"
