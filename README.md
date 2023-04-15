@@ -1,5 +1,8 @@
 # arxiv-utils
 
+[![tests](https://img.shields.io/github/actions/workflow/status/j3soon/arxiv-utils/test-with-selenium.yaml?label=tests)](https://github.com/j3soon/arxiv-utils/actions/workflows/test-with-selenium.yaml)
+[![build](https://img.shields.io/github/actions/workflow/status/j3soon/arxiv-utils/build-and-publish.yaml)](https://github.com/j3soon/arxiv-utils/actions/workflows/build-and-publish.yaml)
+
 [![](https://img.shields.io/chrome-web-store/v/mnhdpeipjhhkmlhlcljdjpgmilbmehij.svg)](https://chrome.google.com/webstore/detail/arxiv-utils/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
 [![](https://img.shields.io/chrome-web-store/rating/mnhdpeipjhhkmlhlcljdjpgmilbmehij.svg)](https://chrome.google.com/webstore/detail/arxiv-utils/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
 [![](https://img.shields.io/chrome-web-store/users/mnhdpeipjhhkmlhlcljdjpgmilbmehij.svg)](https://chrome.google.com/webstore/detail/arxiv-utils/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
@@ -11,8 +14,6 @@
 [![](https://img.shields.io/badge/dynamic/json?label=edge%20add-on&prefix=v&query=%24.version&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fngjpcfjabahdoadnajbhnikbemhmemdg)](https://microsoftedge.microsoft.com/addons/detail/arxivutils/ngjpcfjabahdoadnajbhnikbemhmemdg)
 [![](https://img.shields.io/badge/dynamic/json?label=rating&suffix=/5&query=%24.averageRating&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fngjpcfjabahdoadnajbhnikbemhmemdg)](https://microsoftedge.microsoft.com/addons/detail/arxivutils/ngjpcfjabahdoadnajbhnikbemhmemdg)
 [![](https://img.shields.io/badge/dynamic/json?label=users&query=%24.activeInstallCount&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fngjpcfjabahdoadnajbhnikbemhmemdg)](https://microsoftedge.microsoft.com/addons/detail/arxivutils/ngjpcfjabahdoadnajbhnikbemhmemdg)
-
-[![](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=166645&theme=light)](https://www.producthunt.com/posts/arxiv-utilities?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-arxiv-utilities)
 
 ![icon](icons/icon64.png)
 
@@ -57,16 +58,6 @@ Right-click the extension icon and select `Options` to set your preference. (Chr
 ![](screenshots/filename-format-chrome.png)
 Go to add-ons page, click the extension select `Options` to set your preference. (Firefox)
 ![](screenshots/filename-format-firefox.png)
-
-## Problem Description
-
-ArXiv is a really nice website for researchers, but I think it has 3 main shortages:
-
-1. Unable to link to abstract page from PDF page if the PDF page is accessed directly.
-2. No meaningful title for the PDF page, the abstract page have a redundant paper id as the prefix of the title. Bookmarking the PDF page is useless for later bookmark searches.
-3. Downloading PDF requires a manual renaming afterwards.
-
-This extension provides a solution to all of them!
 
 ## Solution Descriptions
 
@@ -344,6 +335,8 @@ Other functions should still be tested manually:
 
 ## Developer Notes
 
+### Development
+
 - Chrome: [Debugging extensions](https://developer.chrome.com/docs/extensions/mv3/tut_debugging/)
 - Firefox: [Test and debug](https://extensionworkshop.com/documentation/develop/#test-and-debug)
 - Edge: [Sideload an extension](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/getting-started/extension-sideloading)
@@ -351,6 +344,12 @@ Other functions should still be tested manually:
 For Chrome, the Inspector can be opened to see the logs. Make sure there are no errors when testing.
 
 For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Other installed add-ons may pollute the logs.
+
+### Build and Publish
+
+- Chrome: [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
+- Firefox: [Add-on Developer Hub](https://addons.mozilla.org/en-US/developers/addons)
+- Edge: [Microsoft Partner Center](https://partner.microsoft.com/en-us/dashboard/microsoftedge)
 
 ## Frequently Asked Questions (FAQ)
 
@@ -362,11 +361,11 @@ If you have further questions, please [open an issue](https://github.com/j3soon/
 
 ## Related Extensions
 
-- [arXiv-title-fixer](https://github.com/musically-ut/arXiv-title-fixer) that works well on Google Chrome.
+- [musically-ut/arXiv-title-fixer](https://github.com/musically-ut/arXiv-title-fixer) that works well on Google Chrome.
   This requires a button click to change the pdf title, but will be considered less intrusive than running in the background.
-- [arxiv-url](https://github.com/weakish/arxiv-url)
+- [weakish/arxiv-url](https://github.com/weakish/arxiv-url)
   This claims to add a back button, but I can't get it working.
-- [redirectify](https://github.com/imurray/redirectify)
+- [imurray/redirectify](https://github.com/imurray/redirectify)
   Automatically redirect PDF links to HTML index page for many academic paper sites.
 
 ## Privacy Policy
