@@ -17,18 +17,36 @@ function getId(url, pageType) {
   return match && match[1];
 }
 // Update the state of the extension button (i.e., browser action)
+function updateActionState(tabId, url) {
+  const id = getId(url, "Abstract") || getId(url, "PDF");
+  if (id === null) {
+    chrome.action.disable(tabId, () => {
+      console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
+    });
+    return false;
+  }
+  chrome.action.enable(tabId, () => {
+    console.log(LOG_PREFIX, `Enabled browser action for tab ${tabId} with url: ${url}.`);
+  });
+  return true;
+}
+// Update browser action state upon installation.
+function onInstalled() {
+  chrome.tabs.query({}, function(tabs) {
+    if (!tabs) return;
+    for (const tab of tabs)
+      updateActionState(tab.id, tab.url)
+  });
+}
+// Update browser action state for the updated tab.
 function onTabUpdated(tabId, changeInfo, tab) {
-  const id = getId(tab.url, "Abstract") || getId(tab.url, "PDF");
-  if (id !== null) {
-    chrome.action.enable(tabId);
-    if (changeInfo.title && tab.status == "complete") {
-      // Send title changed message to content script.
-      // Ref: https://stackoverflow.com/a/73151665
-      console.log(LOG_PREFIX, "Title changed, sending message to content script.");
-      chrome.tabs.sendMessage(tabId, tab);
-    }
-  } else {
-    chrome.action.disable(tabId);
+  const actionActive = updateActionState(tabId, tab.url)
+  if (!actionActive) return;
+  if (changeInfo.title && tab.status == "complete") {
+    // Send title changed message to content script.
+    // Ref: https://stackoverflow.com/a/73151665
+    console.log(LOG_PREFIX, "Title changed, sending message to content script.");
+    chrome.tabs.sendMessage(tabId, tab);
   }
 }
 // Open the abstract / PDF page according to the current URL.
@@ -54,12 +72,15 @@ function onButtonClickedAsync(tab) {
   });
 }
 
+// Disable the extension button by default. (Manifest v3)
+chrome.action.disable();
+// Listen to on extension install event.
+chrome.runtime.onInstalled.addListener(onInstalled);
 // Listen to all tab updates.
 chrome.tabs.onUpdated.addListener(onTabUpdated);
 // Listen to extension button click.
 chrome.action.onClicked.addListener(onButtonClickedAsync);
-
-// Add Help menu item to extension button context menu.
+// Add Help menu item to extension button context menu. (Manifest v3)
 chrome.contextMenus.create({
   id: "help",
   title: "Help",

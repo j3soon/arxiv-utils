@@ -27,13 +27,30 @@ function getId(url, pageType) {
   return match && match[1];
 }
 // Update the state of the extension button (i.e., browser action)
-function onTabUpdated(tabId, changeInfo, tab) {
-  const id = getId(tab.url, "Abstract") || getId(tab.url, "PDF");
-  if (id !== null) {
-    chrome.browserAction.enable(tabId);
-  } else {
-    chrome.browserAction.disable(tabId);
+function updateActionState(tabId, url) {
+  const id = getId(url, "Abstract") || getId(url, "PDF");
+  if (id === null) {
+    chrome.browserAction.disable(tabId, () => {
+      console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
+    });
+    return false;
   }
+  chrome.browserAction.enable(tabId, () => {
+    console.log(LOG_PREFIX, `Enabled browser action for tab ${tabId} with url: ${url}.`);
+  });
+  return true;
+}
+// Update browser action state upon installation.
+function onInstalled() {
+  chrome.tabs.query({}, function(tabs) {
+    if (!tabs) return;
+    for (const tab of tabs)
+      updateActionState(tab.id, tab.url)
+  });
+}
+// Update browser action state for the updated tab.
+function onTabUpdated(tabId, changeInfo, tab) {
+  updateActionState(tabId, tab.url)
 }
 // Open the abstract / PDF page according to the current URL.
 function onButtonClickedAsync(tab) {
@@ -92,10 +109,23 @@ function onCreateBookmarkAsync(id, bookmarkInfo) {
   });
 }
 
+// Disable the extension button by default. (Manifest v2)
+chrome.browserAction.disable();
+// Listen to on extension install event.
+chrome.runtime.onInstalled.addListener(onInstalled);
 // Listen to all tab updates.
 chrome.tabs.onUpdated.addListener(onTabUpdated);
 // Listen to extension button click.
 chrome.browserAction.onClicked.addListener(onButtonClickedAsync);
+// Add Help menu item to extension button context menu. (Manifest v2)
+chrome.contextMenus.create({
+  title: "Help",
+  contexts: ["browser_action"],
+  onclick: () => {
+    chrome.tabs.create({ "url": "https://github.com/j3soon/arxiv-utils" })
+  }
+});
+
 // Redirect the PDF page to custom PDF container page.
 chrome.webRequest.onBeforeRequest.addListener(
   onBeforeWebRequest,
@@ -104,12 +134,3 @@ chrome.webRequest.onBeforeRequest.addListener(
 );
 // Capture bookmarking event of custom PDF page.
 chrome.bookmarks.onCreated.addListener(onCreateBookmarkAsync);
-
-// Add Help menu item to extension button context menu.
-chrome.contextMenus.create({
-  title: "Help",
-  contexts: ["browser_action"],
-  onclick: () => {
-    chrome.tabs.create({ "url": "https://github.com/j3soon/arxiv-utils" })
-  }
-});
