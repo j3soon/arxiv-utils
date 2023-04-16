@@ -25,6 +25,8 @@ If you are a researcher that reads a lot on ArXiv, you'll benefit a lot from thi
 - Works with Native Tab Search, and other plugins! (See the [Solution Descriptions](#solution-descriptions) section for more details)
 - All required permissions are documented in detail.
 
+Please [open an issue](https://github.com/j3soon/arxiv-utils/issues) if you have any questions, feature requests, or bug reports.
+
 ## Download Links
 
 Supports Chrome, Firefox, Edge, Firefox on Android. (Not tested on Android)
@@ -81,20 +83,22 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 
 ### Chrome / Edge Permissions
 
-- `tabs`: On button click, open a new tab and move it to the right of the old active tab.
+- `tabs`: On extension button click, open a new tab and move it to the right of the old active tab.
 - `activeTab`: Read active tab's title and modify it using the tab's url.
 - `storage`: Save extension configurations.
+- `contextMenus`: When right-click the extension button, show a help menu item.
 - `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
 - `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
 
 ### Firefox Permissions
 
-- `tabs`: On button click, open a new tab and move it to the right of the old active tab.
+- `tabs`: On extension button click, open a new tab and move it to the right of the old active tab.
 - `activeTab`: Read active tab's title and modify it using the tab's url.
 - `webRequest`: Intercept ArXiv PDF request.
 - `webRequestBlocking`: Redirect the ArXiv PDF page to custom PDF container page.
 - `bookmarks`: When create a new bookmark of the PDF container page, bookmark the actual ArXiv PDF url instead.
 - `storage`: Save extension configurations.
+- `contextMenus`: When right-click the extension button, show a help menu item.
 - `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
 - `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
 - `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;"`: For embedding PDF in container.

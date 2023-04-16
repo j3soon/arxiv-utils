@@ -104,3 +104,12 @@ chrome.webRequest.onBeforeRequest.addListener(
 );
 // Capture bookmarking event of custom PDF page.
 chrome.bookmarks.onCreated.addListener(onCreateBookmarkAsync);
+
+// Add Help menu item to extension button context menu.
+chrome.contextMenus.create({
+  title: "Help",
+  contexts: ["browser_action"],
+  onclick: () => {
+    chrome.tabs.create({ "url": "https://github.com/j3soon/arxiv-utils" })
+  }
+});

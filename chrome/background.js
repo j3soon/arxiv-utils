@@ -58,3 +58,15 @@ function onButtonClickedAsync(tab) {
 chrome.tabs.onUpdated.addListener(onTabUpdated);
 // Listen to extension button click.
 chrome.action.onClicked.addListener(onButtonClickedAsync);
+
+// Add Help menu item to extension button context menu.
+chrome.contextMenus.create({
+  id: "help",
+  title: "Help",
+  contexts: ["action"],
+});
+function onContextClicked(info, tab) {
+  if (info.menuItemId === 'help')
+    chrome.tabs.create({ "url": "https://github.com/j3soon/arxiv-utils" })
+}
+chrome.contextMenus.onClicked.addListener(onContextClicked)

@@ -21,7 +21,8 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "storage"
+    "storage",
+    "contextMenus"
   ],
   "host_permissions": [
     "*://export.arxiv.org/*",
