@@ -30,8 +30,14 @@ function updateActionState(tabId, url) {
   });
   return true;
 }
-// Update browser action state upon installation.
 function onInstalled() {
+  // Add Help menu item to extension button context menu. (Manifest v3)
+  chrome.contextMenus.create({
+    id: "help",
+    title: "Help",
+    contexts: ["action"],
+  });
+  // Update browser action state upon installation.
   chrome.tabs.query({}, function(tabs) {
     if (!tabs) return;
     for (const tab of tabs)
@@ -80,12 +86,6 @@ chrome.runtime.onInstalled.addListener(onInstalled);
 chrome.tabs.onUpdated.addListener(onTabUpdated);
 // Listen to extension button click.
 chrome.action.onClicked.addListener(onButtonClickedAsync);
-// Add Help menu item to extension button context menu. (Manifest v3)
-chrome.contextMenus.create({
-  id: "help",
-  title: "Help",
-  contexts: ["action"],
-});
 function onContextClicked(info, tab) {
   if (info.menuItemId === 'help')
     chrome.tabs.create({ "url": "https://github.com/j3soon/arxiv-utils" })
