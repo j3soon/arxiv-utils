@@ -24,10 +24,6 @@
     "storage",
     "contextMenus"
   ],
-  "host_permissions": [
-    "*://export.arxiv.org/*",
-    "*://arxiv.org/*"
-  ],
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",

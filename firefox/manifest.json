@@ -25,8 +25,8 @@
     "bookmarks",
     "storage",
     "contextMenus",
-    "*://export.arxiv.org/*",
-    "*://arxiv.org/*"
+    "*://export.arxiv.org/*pdf*",
+    "*://arxiv.org/*pdf*"
   ],
   "content_security_policy":
     "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;",

@@ -87,8 +87,6 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `activeTab`: Read active tab's title and modify it using the tab's url.
 - `storage`: Save extension configurations.
 - `contextMenus`: When right-click the extension button, show a help menu item.
-- `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
-- `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
 
 ### Firefox Permissions
 
@@ -99,8 +97,8 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `bookmarks`: When create a new bookmark of the PDF container page, bookmark the actual ArXiv PDF url instead.
 - `storage`: Save extension configurations.
 - `contextMenus`: When right-click the extension button, show a help menu item.
-- `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
-- `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
+- `*://export.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
+- `*://arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;"`: For embedding PDF in container.
 - `"web_accessible_resources": [ "pdfviewer.html" ]`: To redirect from HTTPS to extension custom page requires them to be visible.
 
