@@ -59,7 +59,9 @@ async function addDownloadLinkAsync(id, articleInfo) {
     .replace('${firstAuthor}', articleInfo.firstAuthor)
     .replace('${publishedYear}', articleInfo.publishedYear);
   const directURL = `https://arxiv.org/pdf/${id}.pdf`;
-  const htmlInsert = `<li><a href="${directURL}" download="${fileName}" type="application/pdf">Direct Download</a></li>`;
+  const elementId = "arxiv-utils-direct-download-li";
+  document.getElementById(elementId)?.remove();
+  const htmlInsert = `<li id="${elementId}"><a href="${directURL}" download="${fileName}" type="application/pdf">Direct Download</a></li>`;
   const elUL = document.querySelector(".full-text > ul");
   if (!elUL) {
     console.error(LOG_PREFIX, "Error: Cannot find the unordered list inside the Download section at the right side of the abstract page.");
