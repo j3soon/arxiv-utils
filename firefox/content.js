@@ -46,8 +46,9 @@ async function getArticleInfoAsync(id, pageType) {
     publishedYear,
   }
 }
-// Add a direct download link in abstract page.
-async function addDownloadLinkAsync(id, articleInfo) {
+// Add a custom links in abstract page.
+async function addCustomLinksAsync(id, articleInfo) {
+  // Add direct download link.
   const result = await chrome.storage.sync.get({
     'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'
   });
@@ -57,16 +58,37 @@ async function addDownloadLinkAsync(id, articleInfo) {
     .replace('${firstAuthor}', articleInfo.firstAuthor)
     .replace('${publishedYear}', articleInfo.publishedYear);
   const directURL = `https://arxiv.org/pdf/${id}.pdf?download`;
-  const elementId = "arxiv-utils-direct-download-li";
-  document.getElementById(elementId)?.remove();
-  const htmlInsert = `<li id="${elementId}"><a href="${directURL}" download="${fileName}" type="application/pdf">Direct Download</a></li>`;
-  const elUL = document.querySelector(".full-text > ul");
-  if (!elUL) {
+  const directDownloadId = "arxiv-utils-direct-download-li";
+  document.getElementById(directDownloadId)?.remove();
+  const directDownloadHTML = ` \
+    <li id="${directDownloadId}"> \
+      <a href="${directURL}" download="${fileName}" type="application/pdf">Direct Download</a> \
+    </li>`;
+  const downloadUL = document.querySelector(".full-text > ul");
+  if (!downloadUL) {
     console.error(LOG_PREFIX, "Error: Cannot find the unordered list inside the Download section at the right side of the abstract page.");
     return;
   }
-  elUL.innerHTML += htmlInsert;
+  downloadUL.innerHTML += directDownloadHTML;
   console.log(LOG_PREFIX, "Added direct download link.")
+  // Add extra services links.
+  const elExtraRefCite = document.querySelector(".extra-ref-cite");
+  if (!elExtraRefCite) {
+    console.error(LOG_PREFIX, "Error: Cannot find the References & Citations section at the right side of the abstract page.");
+    return;
+  }
+  const extraServicesId = "arxiv-utils-extra-services-div";
+  document.getElementById(extraServicesId)?.remove();
+  const extraServicesDiv = document.createElement("div");
+  extraServicesDiv.classList.add('extra-ref-cite');
+  extraServicesDiv.id = extraServicesId;
+  extraServicesDiv.innerHTML = ` \
+    <h3>Extra Services</h3> \
+    <ul> \
+      <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
+      <li><a href="https://www.arxiv-vanity.com/papers/${id}">arXiv Vanity</a></li> \
+    </ul>`;
+  elExtraRefCite.after(extraServicesDiv);
 }
 
 async function mainAsync() {
@@ -80,7 +102,7 @@ async function mainAsync() {
   const articleInfo = await getArticleInfoAsync(id, "Abstract");
   document.title = articleInfo.newTitle;
   console.log(LOG_PREFIX, `Set document title to: ${articleInfo.newTitle}.`);
-  addDownloadLinkAsync(id, articleInfo);
+  addCustomLinksAsync(id, articleInfo);
 }
 
 // Execute main logic.
