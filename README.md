@@ -311,28 +311,6 @@ For ArXiv PDF / abstract tabs:
   }
   ```
 
-## Tests
-
-The automated tests currently include the following:
-
-- **Default tests**: Test the default title name of arXiv abstract/PDF pages.
-- **Navigation tests**: Test the arxiv-utils button can switch between arXiv abstract/PDF pages, and the title is modified.
-
-The testcases along with their description is stored in [tests/testcases.yaml](tests/testcases.yaml).
-
-Other functions should still be tested manually:
-
-- **Bookmark tests**: Test the bookmarked URL.
-  - Try to bookmark an abstract tab, the title should be the new title.
-  - Try to bookmark a PDF tab, the title should be the new title.
-  - (Firefox Only) Check the PDF bookmark's URL, it should be the original ArXiv PDF link.
-- **Download tests**: Test the downloaded file name.
-  - Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab.
-  - Change filename format options, reload page, and download to verify the filename is changed.
-  - Reset filename format option to default, reload page, and download to verify the filename format is default.
-- The extension button should be disabled outside ArXiv's domain.
-- (Chrome Only) If [OneTab](https://www.one-tab.com/) is installed, click its extension button, the list should show the updated titles of both abstract and PDF page.
-
 ## Developer Notes
 
 ### Development
@@ -344,6 +322,33 @@ Other functions should still be tested manually:
 For Chrome, the Inspector can be opened to see the logs. Make sure there are no errors when testing.
 
 For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Other installed add-ons may pollute the logs.
+
+## Tests
+
+The automated tests currently include the following:
+
+- **Default tests**: Test the default title name of arXiv abstract/PDF pages.
+- **Navigation tests**: Test the arxiv-utils button can switch between arXiv abstract/PDF pages, and the title is modified.
+
+The testcases along with their description is stored in [tests/testcases.yaml](tests/testcases.yaml).
+
+Other functions should still be tested manually:
+
+- **Special cases**:
+  - (Chrome Only) Clear the browser cache and reload the PDF page, the title should be the new title after PDF load.  
+    Test with: https://arxiv.org/abs/1512.03385
+- **Bookmark tests**: Test the bookmarked URL.
+  - Try to bookmark an abstract tab, the title should be the new title.
+  - Try to bookmark a PDF tab, the title should be the new title.
+  - (Firefox Only) Check the PDF bookmark's URL, it should be the original ArXiv PDF link.
+- **Download tests**: Test the downloaded file name.
+  - Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab.
+  - Change filename format options, reload page, and download to verify the filename is changed.
+  - Reset filename format option to default, reload page, and download to verify the filename format is default.
+  - Test papers with long title.
+  - Test papers with special characters in title.
+- The extension button should be disabled outside ArXiv's domain.
+- (Chrome Only) If [OneTab](https://www.one-tab.com/) is installed, click its extension button, the list should show the updated titles of both abstract and PDF page.
 
 ### Build and Publish
 

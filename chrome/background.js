@@ -1,89 +1,60 @@
-// This background script is for adding the back to abstract button.
-var app = {};
-// All logs should start with this.
-app.name = "[arXiv-utils]";
-// These 2 below is for regex matching.
-app.abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
-app.pdf_regexp = /arxiv.org\/[\S]*\/([^\/]*)$/;
-// Return the type parsed from the url. (Returns "PDF" or "Abstract")
-app.getType = function (url) {
-  if (url.indexOf("pdf") !== -1) {
-    return "PDF";
-  }
-  return "Abstract";
-}
+// This background script implements the extension button,
+// and triggers the content script upon tab title change.
+
+// Regular expressions for parsing arXiv URLs.
+// Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
+const ABS_REGEXP = /arxiv\.org\/abs\/([\S]*)$/;
+const PDF_REGEXP = /arxiv\.org\/[\S]*\/([^\/]*)$/;
+// All console logs should start with this prefix.
+const LOG_PREFIX = "[arXiv-utils]";
+
 // Return the id parsed from the url.
-app.getId = function (url, type) {
+function getId(url, pageType) {
   url = url.replace(".pdf", "");
   if (url.endsWith("/")) url = url.slice(0, -1);
-  var match;
-  if (type === "PDF") {
-    // match = url.match(/arxiv.org\/pdf\/([\S]*)\2pdf$/);
-    match = url.match(app.pdf_regexp);
-    // The first match is the matched string, the second one is the captured group.
-    if (match === null || match.length !== 2) {
-      return null;
-    }
-  } else {
-    match = url.match(app.abs_regexp);
-    // The first match is the matched string, the second one is the captured group.
-    if (match === null || match.length !== 2) {
-      return null;
-    }
-  }
-  return match[1];
+  const match = pageType === "PDF" ? url.match(PDF_REGEXP) : url.match(ABS_REGEXP);
+  // string.match() returns null if no match found.
+  return match && match[1];
 }
-// Open the abstract / PDF page using the current URL.
-app.openAbstractTab = function (activeTabIdx, url, type) {
-  var id = app.getId(url, type);
-  // Retrieve the abstract url by modifying the original url.
-  var newURL;
-  if (type === "PDF") {
-    newURL = "https://arxiv.org/abs/" + id;
-  } else {
-    newURL = "https://arxiv.org/pdf/" + id + ".pdf";
-  }
-  // Create the abstract page in new tab.
-  chrome.tabs.create({ "url": newURL }, (tab) => {
-    console.log(app.name, "Opened abstract page in new tab.");
-    // Move the target tab next to the active tab.
-    chrome.tabs.move(tab.id, {
-      index: activeTabIdx + 1
-    }, function (tab) {
-      console.log(app.name, "Moved abstract tab.");
-    });
-  });
-}
-// Check if the URL is abstract or PDF page, returns true if the URL is either.
-app.checkURL = function (url) {
-  url = url.replace(".pdf", "");
-  if (url.endsWith("/")) url = url.slice(0, -1);
-  var matchPDF = url.match(app.pdf_regexp);
-  var matchAbs = url.match(app.abs_regexp);
-  if (matchPDF !== null || matchAbs !== null) {
-    return true;
-  }
-  return false;
-}
-// Called when the url of a tab changes.
-app.updateBrowserActionState = function (tabId, changeInfo, tab) {
-  var avail = app.checkURL(tab.url)
-  if (avail) {
+// Update the state of the extension button (i.e., browser action)
+function onTabUpdated(tabId, changeInfo, tab) {
+  const id = getId(tab.url, "Abstract") || getId(tab.url, "PDF");
+  if (id !== null) {
     chrome.action.enable(tabId);
+    if (changeInfo.title && tab.status == "complete") {
+      // Send title changed message to content script.
+      // Ref: https://stackoverflow.com/a/73151665
+      console.log(LOG_PREFIX, "Title changed, sending message to content script.");
+      chrome.tabs.sendMessage(tabId, tab);
+    }
   } else {
     chrome.action.disable(tabId);
   }
-};
-// Run this when the button clicked.
-app.run = function (tab) {
-  if (!app.checkURL(tab.url)) {
-    console.log(app.name, "Error: Not arXiv page.");
+}
+// Open the abstract / PDF page according to the current URL.
+function onButtonClickedAsync(tab) {
+  console.log(LOG_PREFIX, "Button clicked, opening abstract / PDF page.");
+  const pageType = tab.url.includes("pdf") ? "PDF" : "Abstract";
+  const id = getId(tab.url, pageType);
+  if (id === null) {
+    console.error(LOG_PREFIX, "Error: Failed to get paper ID, aborted.");
     return;
   }
-  var type = app.getType(tab.url);
-  app.openAbstractTab(tab.index, tab.url, type);
+  // Construct the target URL.
+  const targetURL = (pageType === "PDF") ? `https://arxiv.org/abs/${id}` : `https://arxiv.org/pdf/${id}.pdf`;
+  // Create the abstract / PDF page in new tab.
+  chrome.tabs.create({ "url": targetURL }, (newTab) => {
+    console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
+    // Move the new tab to the right of the active tab.
+    chrome.tabs.move(newTab.id, {
+      index: tab.index + 1
+    }, function (tab) {
+      console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
+    });
+  });
 }
-// Listen for any changes to the URL of any tab.
-chrome.tabs.onUpdated.addListener(app.updateBrowserActionState);
-// Extension button click to modify title.
-chrome.action.onClicked.addListener(app.run);
+
+// Listen to all tab updates.
+chrome.tabs.onUpdated.addListener(onTabUpdated);
+// Listen to extension button click.
+chrome.action.onClicked.addListener(onButtonClickedAsync);

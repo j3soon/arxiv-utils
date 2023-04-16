@@ -1,137 +1,106 @@
-// This background script is for adding the back to abstract button.
-var app = {};
-// All logs should start with this.
-app.name = "[arXiv-utils]";
+// This background script implements the extension button,
+// and redirects PDF pages to custom PDF container.
+
 // For our PDF container.
-app.pdfviewer = "pdfviewer.html";
-app.pdfviewerTarget = "pdfviewer.html?target=";
+const pdfViewerRelatedURL = "pdfviewer.html?target=";
 // The match pattern for the URLs to redirect
 // Note: https://arxiv.org/pdf/<id> is the direct link, then the url is renamed to https://arxiv.org/pdf/<id>.pdf
 //       we capture only the last url (the one that ends with '.pdf').
 // Adding some extra parameter such as https://arxiv.org/pdf/<id>.pdf?download can bypass this capture.
-app.redirectPatterns = ["*://arxiv.org/*.pdf", "*://export.arxiv.org/*.pdf",
-                        "*://arxiv.org/pdf/*/", "*://export.arxiv.org/pdf/*/"];
-// These 2 below is for regex matching.
-app.abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
-app.pdf_regexp = /arxiv.org\/[\S]*\/([^\/]*)$/;
-// Return the type parsed from the url. (Returns "PDF" or "Abstract")
-app.getType = function (url) {
-  if (url.indexOf("pdf") !== -1) {
-    return "PDF";
-  }
-  return "Abstract";
-}
+const redirectPatterns = [
+  "*://arxiv.org/*.pdf", "*://export.arxiv.org/*.pdf",
+  "*://arxiv.org/pdf/*/", "*://export.arxiv.org/pdf/*/"
+];
+// Regular expressions for parsing arXiv URLs.
+// Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
+const ABS_REGEXP = /arxiv\.org\/abs\/([\S]*)$/;
+const PDF_REGEXP = /arxiv\.org\/[\S]*\/([^\/]*)$/;
+// All console logs should start with this prefix.
+const LOG_PREFIX = "[arXiv-utils]";
+
 // Return the id parsed from the url.
-app.getId = function (url, type) {
+function getId(url, pageType) {
   url = url.replace(".pdf", "");
   if (url.endsWith("/")) url = url.slice(0, -1);
-  var match;
-  if (type === "PDF") {
-    // match = url.match(/arxiv.org\/pdf\/([\S]*)\.pdf$/);
-    match = url.match(app.pdf_regexp);
-    // The first match is the matched string, the second one is the captured group.
-    if (match === null || match.length !== 2) {
-      return null;
-    }
-  } else {
-    match = url.match(app.abs_regexp);
-    // The first match is the matched string, the second one is the captured group.
-    if (match === null || match.length !== 2) {
-      return null;
-    }
-  }
-  return match[1];
+  const match = pageType === "PDF" ? url.match(PDF_REGEXP) : url.match(ABS_REGEXP);
+  // string.match() returns null if no match found.
+  return match && match[1];
 }
-// Open the abstract / PDF page using the current URL.
-app.openAbstractTab = function (activeTabIdx, url, type) {
-  // Retrieve the abstract url by modifying the original url.
-  var newURL;
-  if (type === "PDF") {
-    var prefix = chrome.runtime.getURL(app.pdfviewerTarget);
-    newURL = url.substr(prefix.length);
-    var id = app.getId(newURL, type);
-    newURL = "https://arxiv.org/abs/" + id;
-  } else {
-    var id = app.getId(url, type);
-    newURL = "https://arxiv.org/pdf/" + id + ".pdf";
-  }
-  // Create the abstract page in new tab.
-  chrome.tabs.create({ "url": newURL }, (tab) => {
-    console.log(app.name, "Opened abstract page in new tab.");
-    // Move the target tab next to the active tab.
-    chrome.tabs.move(tab.id, {
-      index: activeTabIdx + 1
-    }, function (tab) {
-      console.log(app.name, "Moved abstract tab.");
-    });
-  });
-}
-// Check if the URL is abstract or PDF page, returns true if the URL is either.
-app.checkURL = function (url) {
-  url = url.replace(".pdf", "");
-  if (url.endsWith("/")) url = url.slice(0, -1);
-  var matchPDF = url.match(app.pdf_regexp);
-  var matchAbs = url.match(app.abs_regexp);
-  if (matchPDF !== null || matchAbs !== null) {
-    return true;
-  }
-  return false;
-}
-// Called when the url of a tab changes.
-app.updateBrowserActionState = function (tabId, changeInfo, tab) {
-  var avail = app.checkURL(tab.url)
-  if (avail) {
+// Update the state of the extension button (i.e., browser action)
+function onTabUpdated(tabId, changeInfo, tab) {
+  const id = getId(tab.url, "Abstract") || getId(tab.url, "PDF");
+  if (id !== null) {
     chrome.browserAction.enable(tabId);
   } else {
     chrome.browserAction.disable(tabId);
   }
-};
+}
+// Open the abstract / PDF page according to the current URL.
+function onButtonClickedAsync(tab) {
+  console.log(LOG_PREFIX, "Button clicked, opening abstract / PDF page.");
+  const pageType = tab.url.includes("pdf") ? "PDF" : "Abstract";
+  var url = tab.url;
+  if (pageType === "PDF") {
+    // Remove the PDF container prefix of the custom PDF page.
+    const pdfViewerURL = chrome.runtime.getURL(pdfViewerRelatedURL);
+    url = tab.url.substr(pdfViewerURL.length);
+  }
+  const id = getId(tab.url, pageType);
+  if (id === null) {
+    console.error(LOG_PREFIX, "Error: Failed to get paper ID, aborted.");
+    return;
+  }
+  // Construct the target URL.
+  const targetURL = (pageType === "PDF") ? `https://arxiv.org/abs/${id}` : `https://arxiv.org/pdf/${id}.pdf`;
+  // Create the abstract / PDF page in new tab.
+  chrome.tabs.create({ "url": targetURL }, (newTab) => {
+    console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
+    // Move the new tab to the right of the active tab.
+    chrome.tabs.move(newTab.id, {
+      index: tab.index + 1
+    }, function (tab) {
+      console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
+    });
+  });
+}
 // Redirect to custom PDF page.
-app.redirect = function (requestDetails) {
+function onBeforeWebRequest(requestDetails) {
   if (requestDetails.documentUrl !== undefined) {
-    // Request from this plugin itself (embedded PDF).
+    // Request from this plugin itself (the embedded PDF).
     return;
   }
   // Force HTTPS to avoid CSP (Content Security Policy) violation.
-  var url = app.pdfviewerTarget + requestDetails.url.replace("http:", "https:");
-  url = chrome.runtime.getURL(url);
-  console.log(app.name, "Redirecting: " + requestDetails.url + " to " + url);
+  const targetRelatedURL = pdfViewerRelatedURL + requestDetails.url.replace("http:", "https:");
+  const targetURL = chrome.runtime.getURL(targetRelatedURL);
+  console.log(`${LOG_PREFIX} Redirecting: ${requestDetails.url} to ${targetURL}`);
   return {
-    redirectUrl: url
+    redirectUrl: targetURL
   };
 }
 // If the custom PDF page is bookmarked, bookmark the original PDF link instead.
-app.modifyBookmark = function (id, bookmarkInfo) {
-  var prefix = chrome.runtime.getURL(app.pdfviewerTarget);
+function onCreateBookmarkAsync(id, bookmarkInfo) {
+  var prefix = chrome.runtime.getURL(pdfViewerRelatedURL);
   if (!bookmarkInfo.url.startsWith(prefix)) {
     return;
   }
-  console.log(app.name, "Updating bookmark with id: " + id + ", url: " + bookmarkInfo.url);
+  console.log(LOG_PREFIX, "Updating bookmark with id: " + id + ", url: " + bookmarkInfo.url);
   var url = bookmarkInfo.url.substr(prefix.length);
   chrome.bookmarks.update(id, {
     url: url
   }, () => {
-    console.log(app.name, "Updated bookmark with id: " + id + " to URL: " + url);
+    console.log(LOG_PREFIX, "Updated bookmark with id: " + id + " to URL: " + url);
   });
 }
-// Run this when the button clicked.
-app.run = function (tab) {
-  if (!app.checkURL(tab.url)) {
-    console.log(app.name, "Error: Not arXiv page.");
-    return;
-  }
-  var type = app.getType(tab.url);
-  app.openAbstractTab(tab.index, tab.url, type);
-}
-// Listen for any changes to the URL of any tab.
-chrome.tabs.onUpdated.addListener(app.updateBrowserActionState);
-// Extension button click to modify title.
-chrome.browserAction.onClicked.addListener(app.run);
+
+// Listen to all tab updates.
+chrome.tabs.onUpdated.addListener(onTabUpdated);
+// Listen to extension button click.
+chrome.browserAction.onClicked.addListener(onButtonClickedAsync);
 // Redirect the PDF page to custom PDF container page.
 chrome.webRequest.onBeforeRequest.addListener(
-  app.redirect,
-  { urls: app.redirectPatterns },
+  onBeforeWebRequest,
+  { urls: redirectPatterns },
   ["blocking"]
 );
-// Capture bookmarking custom PDF page.
-chrome.bookmarks.onCreated.addListener(app.modifyBookmark);
+// Capture bookmarking event of custom PDF page.
+chrome.bookmarks.onCreated.addListener(onCreateBookmarkAsync);
