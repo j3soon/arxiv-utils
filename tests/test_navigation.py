@@ -44,7 +44,7 @@ for browser in ['chrome', 'firefox', 'edge']:
         novnc_url = "http://firefox-node:7900"
         extensions_button_pos = (745, 85) # firefox/01-default.jpeg
         extensions_settings_button_pos = (730, 185) # firefox/02-extensions.jpeg
-        pin_button_pos = (590, 215) # firefox/03-extensions-settings.jpeg
+        pin_button_pos = (590, 240) # firefox/03-extensions-settings.jpeg
         arxiv_utils_button_pos = (705, 85) # firefox/04-pinned.jpeg
         # Below are for add-ons using Manifest v3
         """
