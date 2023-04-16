@@ -20,11 +20,11 @@
   "permissions": [
     "tabs",
     "activeTab",
+    "storage",
+    "contextMenus",
     "webRequest",
     "webRequestBlocking",
     "bookmarks",
-    "storage",
-    "contextMenus",
     "*://export.arxiv.org/*pdf*",
     "*://arxiv.org/*pdf*"
   ],

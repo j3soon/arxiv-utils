@@ -87,16 +87,19 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `activeTab`: Read active tab's title and modify it using the tab's url.
 - `storage`: Save extension configurations.
 - `contextMenus`: When right-click the extension button, show a help menu item.
+- `scripting`: Inject content scripts to existing tabs.
+- `*://export.arxiv.org/*`: Inject content scripts to existing tabs.
+- `*://arxiv.org/*`: Inject content scripts to existing tabs.
 
 ### Firefox Permissions
 
 - `tabs`: On extension button click, open a new tab and move it to the right of the old active tab.
 - `activeTab`: Read active tab's title and modify it using the tab's url.
+- `storage`: Save extension configurations.
+- `contextMenus`: When right-click the extension button, show a help menu item.
 - `webRequest`: Intercept ArXiv PDF request.
 - `webRequestBlocking`: Redirect the ArXiv PDF page to custom PDF container page.
 - `bookmarks`: When create a new bookmark of the PDF container page, bookmark the actual ArXiv PDF url instead.
-- `storage`: Save extension configurations.
-- `contextMenus`: When right-click the extension button, show a help menu item.
 - `*://export.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `*://arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;"`: For embedding PDF in container.
@@ -128,10 +131,6 @@ The testcases along with their description is stored in [tests/testcases.yaml](t
 
 Other functions should still be tested manually:
 
-- **Special cases**:
-  - (Chrome Only) Clear the browser cache and reload the PDF page, the title should be the new title after PDF load.  
-    Test with: https://arxiv.org/abs/1512.03385
-  - Verify there are no console errors in both the content script and background script logs.
 - **Bookmark tests**: Test the bookmarked URL.
   - Try to bookmark an abstract tab, the title should be the new title.
   - Try to bookmark a PDF tab, the title should be the new title.
@@ -144,6 +143,12 @@ Other functions should still be tested manually:
   - Test papers with special characters in title.
 - The extension button should be disabled outside ArXiv's domain.
 - (Chrome Only) If [OneTab](https://www.one-tab.com/) is installed, click its extension button, the list should show the updated titles of both abstract and PDF page.
+- (Chrome Only) Clear the browser cache and reload the PDF page, the title should be the new title after PDF load.  
+  Test with: https://arxiv.org/abs/1512.03385
+- Verify there are no console errors in both the content script and background script logs.
+- Disable and re-enabling the extension should not cause any errors.
+- Installing or re-enabling the extension should immediately update the title of existing tabs.
+- The help menu item in the context menu should link to this GitHub page.
 
 ### Build and Publish
 

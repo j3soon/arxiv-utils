@@ -69,6 +69,22 @@ function onInstalled() {
     contexts: ["action"],
   });
 }
+// Inject content scripts to pre-existing tabs. E.g., after installation or re-enable.
+// Firefox injects content scripts automatically, but Chrome does not.
+async function injectContentScriptsAsync() {
+  // Injecting content scripts seems to cause error when
+  // disabling and re-enabling the extension very quickly with existing arXiv tabs:
+  //     Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'sync')
+  for (const cs of chrome.runtime.getManifest().content_scripts) {
+    for (const tab of await chrome.tabs.query({url: cs.matches})) {
+      console.log(LOG_PREFIX, `Injecting content scripts for tab ${tab.id} with url: ${tab.url}.`);
+      chrome.scripting.executeScript({
+        target: {tabId: tab.id},
+        files: cs.js,
+      });
+    }
+  }
+}
 
 // Update browser action state upon start (e.g., installation, enable).
 chrome.tabs.query({}, function(tabs) {
@@ -87,3 +103,4 @@ chrome.contextMenus.onClicked.addListener(onContextClicked)
 
 // Listen to on extension install event.
 chrome.runtime.onInstalled.addListener(onInstalled);
+injectContentScriptsAsync();
