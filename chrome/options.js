@@ -11,10 +11,10 @@ function saveOptions(e) {
 }
 
 function restoreOptions() {
-  chrome.storage.sync.get(
-    {'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'},
-    function(res) {
-      var filename_format = res.filename_format;
+  chrome.storage.sync.get({
+    'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'
+  }, (result) => {
+      var filename_format = result.filename_format;
       document.querySelector("#filename-format").innerText = filename_format;
       document.querySelector("#new-filename-format").value = filename_format;
   });
