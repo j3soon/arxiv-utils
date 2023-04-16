@@ -27,11 +27,13 @@ If you are a researcher that reads a lot on ArXiv, you'll benefit a lot from thi
 
 ## Download Links
 
-Supports Chrome, Firefox, Edge, Firefox on Android. (Android version is not tested)
+Supports Chrome, Firefox, Edge, Firefox on Android. (Not tested on Android)
 
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/arxiv-utils/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
 - [Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/)
 - [Edge Add-on](https://microsoftedge.microsoft.com/addons/detail/arxivutils/ngjpcfjabahdoadnajbhnikbemhmemdg)
+
+Alternatively, these 3 browsers can also load arxiv-utils directly from source. First, download the source code release from [Releases](https://github.com/j3soon/arxiv-utils/releases), and then load the extension as an unpacked extension following the [Development Section](#development).
 
 ## Screenshots
 
@@ -73,9 +75,11 @@ For ArXiv PDF / abstract tabs:
   - [Enable Tab search on Chrome](https://www.howtogeek.com/722640/how-to-enable-or-disable-the-tab-search-icon-in-chrome/), [Tab search on Chrome](https://www.howtogeek.com/704212/how-to-search-open-tabs-on-google-chrome/)
   - [Enable Tab search on Edge](https://www.makeuseof.com/microsoft-edge-chrome-tab-search/)
 
-## Chrome / Edge Documentation
+## Privacy Policy
 
-### Permissions
+We do not gather your personal data. If in doubt, please refer to the source code.
+
+### Chrome / Edge Permissions
 
 - `tabs`: On button click, open a new tab and move it to the right of the old active tab.
 - `activeTab`: Read active tab's title and modify it using the tab's url.
@@ -83,101 +87,7 @@ For ArXiv PDF / abstract tabs:
 - `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
 - `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
 
-### Methods
-
-- `background` (`background.js`)
-
-  Mainly describes the methods for button click. (Open new tab)
-
-  **Compacted methods:**
-
-  ```js
-  // This background script is for adding the back to abstract button.
-  var app = {};
-  // All logs should start with this.
-  app.name = "[arXiv-utils]";
-  // Return the type parsed from the url. (Returns "PDF" or "Abstract")
-  app.getType = function (url);
-  // Return the id parsed from the url.
-  app.getId = function (url, type);
-  // Open the abstract / PDF page using the current URL.
-  app.openAbstractTab = function (activeTabIdx, url, type);
-  // Check if the URL is abstract or PDF page, returns true if the URL is either.
-  app.checkURL = function (url);
-  // Called when the url of a tab changes.
-  app.updateBrowserActionState = function (tabId, changeInfo, tab);
-  // Run this when the button clicked.
-  app.run = function (tab) {
-    if (!app.checkURL(tab.url)) {
-      console.log(app.name, "Error: Not arXiv page.");
-      return;
-    }
-    var type = app.getType(tab.url);
-    app.openAbstractTab(tab.index, tab.url, type);
-  }
-  // Listen for any changes to the URL of any tab.
-  chrome.tabs.onUpdated.addListener(app.updateBrowserActionState);
-  // Extension button click to modify title.
-  chrome.browserAction.onClicked.addListener(app.run);
-  ```
-
-- `content_scripts` (`content.js`)
-
-  Mainly describes what will be run when page loaded. (Modify tab title)
-
-  Runs at `document_end` (The DOM has finished loading, but resources such as scripts and images may still be loading.) for urls: `*://arxiv.org/*.pdf`, `*://arxiv.org/abs/*`.
-
-  **Compacted methods:**
-
-  ```js
-  var app = {};
-  // All logs should start with this.
-  app.name = "[arXiv-utils]";
-  // These 4 below are For checking if tab title has been updated.
-  app.id = undefined;
-  app.type = undefined;
-  app.title = undefined;
-  app.newTitle = undefined;
-  // These 2 below are for inserting download link.
-  app.firstAuthor = undefined;
-  app.publishedYear = undefined;
-  // Return the type parsed from the url. (Returns "PDF" or "Abstract")
-  app.getType = function (url);
-  // Return the id parsed from the url.
-  app.getId = function (url, type);
-  // Get the title asynchronously, call the callbacks with the id, the type, and the queried title as argument when request done (`callback(id, type, title, newTitle)`).
-  // Updates `app`'s 4 variables: `title`, `type`, `id`, `newTitle` before callback.
-  app.getTitleAsync = function (id, type, callback, callback2);
-  // Insert the title into the active tab.
-  // After the insertion, the title might be overwritten after the PDF has been loaded.
-  app.insertTitle = function (id, type, title, newTitle) {
-  // Add a direct download link if is abstract page.
-  app.addDownloadLink = function (id, type, title, newTitle);
-  // Run this after the page has finish loading.
-  app.run = function () {
-    var url = location.href;
-    var type = app.getType(url);
-    var id = app.getId(url, type);
-    if (id === null) {
-      console.log(app.name, "Error: Not in ArXiv pdf or abstract page, aborted.");
-      return;
-    }
-    app.getTitleAsync(id, type, app.insertTitle, app.addDownloadLink);
-  }
-  // Change the title again if it has been overwritten (PDF page only).
-  app.onMessage = function (tab, sender, sendResponse);
-  // Listen for background script's message, since the title might be changed when PDF is loaded.
-  chrome.runtime.onMessage.addListener(app.onMessage);
-  ```
-
-- `browser_action`
-  - When clicked on Abstract page: Open PDF page in new tab.
-  - When clicked on PDF page: Open Abstract page in new tab.
-  - Disabled outside ArXiv's domain.
-
-## Firefox Documentation
-
-### Permissions
+### Firefox Permissions
 
 - `tabs`: On button click, open a new tab and move it to the right of the old active tab.
 - `activeTab`: Read active tab's title and modify it using the tab's url.
@@ -190,127 +100,6 @@ For ArXiv PDF / abstract tabs:
 - `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;"`: For embedding PDF in container.
 - `"web_accessible_resources": [ "pdfviewer.html" ]`: To redirect from HTTPS to extension custom page requires them to be visible.
 
-### Methods
-
-- `background` (`background.js`)
-
-  Mainly describes the methods for button click. (Open new tab)
-
-  **Compacted methods:**
-
-  ```js
-  var app = {};
-  // All logs should start with this.
-  app.name = "[arXiv-utils]";
-  // For our PDF container.
-  app.pdfviewer = "pdfviewer.html";
-  app.pdfviewerTarget = "pdfviewer.html?target=";
-  // The match pattern for the URLs to redirect
-  // Note: https://arxiv.org/pdf/<id> is the direct link, then the url is renamed to https://arxiv.org/pdf/<id>.pdf
-  //       we capture only the last url (the one that ends with '.pdf').
-  // Adding some extra parameter such as https://arxiv.org/pdf/<id>.pdf?download can bypass this capture.
-  app.redirectPatterns = ["*://arxiv.org/*.pdf", "*://export.arxiv.org/*.pdf",
-                          "*://arxiv.org/pdf/*", "*://export.arxiv.org/pdf/*"];
-  // Return the type parsed from the url. (Returns "PDF" or "Abstract")
-  app.getType = function (url);
-  // Return the id parsed from the url.
-  app.getId = function (url, type);
-  // Open the abstract / PDF page using the current URL.
-  app.openAbstractTab = function (activeTabIdx, url, type);
-  // Check if the URL is abstract or PDF page, returns true if the URL is either.
-  app.checkURL = function (url);
-  // Called when the url of a tab changes.
-  app.updateBrowserActionState = function (tabId, changeInfo, tab);
-  // Redirect to custom PDF page.
-  app.redirect = function (requestDetails);
-  // If the custom PDF page is bookmarked, bookmark the original PDF link instead.
-  app.modifyBookmark = function (id, bookmarkInfo);
-  // Run this when the button clicked.
-  app.run = function (tab) {
-    if (!app.checkURL(tab.url)) {
-      console.log(app.name, "Error: Not arXiv page.");
-      return;
-    }
-    var type = app.getType(tab.url);
-    app.openAbstractTab(tab.index, tab.url, type);
-  }
-  // Listen for any changes to the URL of any tab.
-  chrome.tabs.onUpdated.addListener(app.updateBrowserActionState);
-  // Extension button click to modify title.
-  chrome.browserAction.onClicked.addListener(app.run);
-  // Redirect the PDF page to custom PDF container page.
-  chrome.webRequest.onBeforeRequest.addListener(
-    app.redirect,
-    { urls: app.redirectPatterns },
-    ["blocking"]
-  );
-  // Capture bookmarking custom PDF page.
-  chrome.bookmarks.onCreated.addListener(app.modifyBookmark);
-  ```
-
-- `content_scripts` (`content.js`)
-
-  Mainly describes what will be run when page loaded. (Modify tab title)
-
-  Runs at `document_end` (The DOM has finished loading, but resources such as scripts and images may still be loading.) for urls: `*://arxiv.org/abs/*`.
-
-  **Compacted methods:**
-
-  ```js
-  var app = {};
-  // All logs should start with this.
-  app.name = "[arXiv-utils]";
-  // These 2 below are for inserting download link.
-  app.firstAuthor = undefined;
-  app.publishedYear = undefined;
-  // Return the id parsed from the url.
-  app.getId = function (url);
-  // Get the title asynchronously, call the callbacks with the id, the type, and the queried title as argument when request done (`callback(id, type, title, newTitle)`).
-  app.getTitleAsync = function (id, type, callback, callback2);
-  // Insert the title into the active tab.
-  app.insertTitle = function (id, title, newTitle);
-  // Add a direct download link if is abstract page.
-  app.addDownloadLink = function (id, title, newTitle);
-  // Run this after the page has finish loading.
-  app.run = function () {
-    var url = location.href;
-    var id = app.getId(url);
-    if (id === null) {
-      console.log(app.name, "Error: Not in ArXiv pdf or abstract page, aborted.");
-      return;
-    }
-    app.getTitleAsync(id, "Abstract", app.insertTitle, app.addDownloadLink);
-  }
-  ```
-
-- `browser_action`
-  - When clicked on Abstract page: Open PDF page in new tab.
-  - When clicked on PDF page: Open Abstract page in new tab.
-  - Disabled outside ArXiv's domain.
-- PDF container (`pdfviewer.html`, `pdfviewer.js`)
-  Embed the target pdf (retrieved from url parameter) in the page.
-  ```js
-  var app = {};
-  app.name = "[arXiv-utils]";
-  // Return the id parsed from the url.
-  app.getId = function (url);
-  // Get the title asynchronously, call the callback with title as argument when request done.
-  app.getTitleAsync = function (id, type, callback);
-  // Insert the title into the active tab.
-  app.insertTitle = function (title);
-  // Extract the pdf url from 'pdfviewer.html?target=<pdfURL>'.
-  app.extractURL = function ();
-  // Inject embedded PDF.
-  app.injectPDF = function (url);
-  // Run this once.
-  app.run = function () {
-    var pdfURL = app.extractURL();
-    var id = app.getId(pdfURL);
-    app.getTitleAsync(id, "PDF", app.insertTitle);
-    app.injectPDF(pdfURL);
-  }
-  ```
-
 ## Developer Notes
 
 ### Development
@@ -319,9 +108,12 @@ For ArXiv PDF / abstract tabs:
 - Firefox: [Test and debug](https://extensionworkshop.com/documentation/develop/#test-and-debug)
 - Edge: [Sideload an extension](https://learn.microsoft.com/en-us/microsoft-edge/extensions-chromium/getting-started/extension-sideloading)
 
-For Chrome, the Inspector can be opened to see the logs. Make sure there are no errors when testing.
+For viewing the content script logs, open the Inspector of the arXiv webpage (as in normal web development).
 
-For Firefox, the Inspector and Add-on Debugger can be opened to see the logs. Other installed add-ons may pollute the logs.
+For viewing background script logs, open the Inspector of the plugin in the `Extensions` page.
+- Firefox: Go to `about:debugging#/runtime/this-firefox` and click `Inspect` on the temporarily loaded extension.
+- Chrome: Go to `chrome://extensions/` and click `Inspect views: background page` on the loaded (unpacked) extension.
+- Edge: Go to `edge://extensions/` and click `Inspect views: service workder` on the loaded (unpacked) extension.
 
 ## Tests
 
@@ -337,6 +129,7 @@ Other functions should still be tested manually:
 - **Special cases**:
   - (Chrome Only) Clear the browser cache and reload the PDF page, the title should be the new title after PDF load.  
     Test with: https://arxiv.org/abs/1512.03385
+  - Verify there are no console errors in both the content script and background script logs.
 - **Bookmark tests**: Test the bookmarked URL.
   - Try to bookmark an abstract tab, the title should be the new title.
   - Try to bookmark a PDF tab, the title should be the new title.
@@ -372,7 +165,3 @@ If you have further questions, please [open an issue](https://github.com/j3soon/
   This claims to add a back button, but I can't get it working.
 - [imurray/redirectify](https://github.com/imurray/redirectify)
   Automatically redirect PDF links to HTML index page for many academic paper sites.
-
-## Privacy Policy
-
-We do not gather your personal data. If in doubt, please refer to the source code.
