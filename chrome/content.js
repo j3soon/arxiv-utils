@@ -1,4 +1,4 @@
-// This content script modifies the title of the abstract page once it has finished loading.
+// This content script modifies the title of the abstract / PDF page once it has finished loading.
 
 // Store new title for onMessage.
 var newTitle = undefined;

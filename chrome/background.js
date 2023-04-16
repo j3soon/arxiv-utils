@@ -30,20 +30,6 @@ function updateActionState(tabId, url) {
   });
   return true;
 }
-function onInstalled() {
-  // Add Help menu item to extension button context menu. (Manifest v3)
-  chrome.contextMenus.create({
-    id: "help",
-    title: "Help",
-    contexts: ["action"],
-  });
-  // Update browser action state upon installation.
-  chrome.tabs.query({}, function(tabs) {
-    if (!tabs) return;
-    for (const tab of tabs)
-      updateActionState(tab.id, tab.url)
-  });
-}
 // Update browser action state for the updated tab.
 function onTabUpdated(tabId, changeInfo, tab) {
   const actionActive = updateActionState(tabId, tab.url)
@@ -77,17 +63,33 @@ function onButtonClickedAsync(tab) {
     });
   });
 }
-
-// Disable the extension button by default. (Manifest v3)
-chrome.action.disable();
-// Listen to on extension install event.
-chrome.runtime.onInstalled.addListener(onInstalled);
-// Listen to all tab updates.
-chrome.tabs.onUpdated.addListener(onTabUpdated);
-// Listen to extension button click.
-chrome.action.onClicked.addListener(onButtonClickedAsync);
 function onContextClicked(info, tab) {
   if (info.menuItemId === 'help')
     chrome.tabs.create({ "url": "https://github.com/j3soon/arxiv-utils" })
 }
+function onInstalled() {
+  // Add Help menu item to extension button context menu. (Manifest v3)
+  chrome.contextMenus.create({
+    id: "help",
+    title: "Help",
+    contexts: ["action"],
+  });
+}
+
+// Update browser action state upon start (e.g., installation, enable).
+chrome.tabs.query({}, function(tabs) {
+  if (!tabs) return;
+  for (const tab of tabs)
+    updateActionState(tab.id, tab.url)
+});
+// Disable the extension button by default. (Manifest v3)
+chrome.action.disable();
+// Listen to all tab updates.
+chrome.tabs.onUpdated.addListener(onTabUpdated);
+// Listen to extension button click.
+chrome.action.onClicked.addListener(onButtonClickedAsync);
+// Listen to extension button right-click.
 chrome.contextMenus.onClicked.addListener(onContextClicked)
+
+// Listen to on extension install event.
+chrome.runtime.onInstalled.addListener(onInstalled);

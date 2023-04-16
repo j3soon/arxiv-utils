@@ -40,14 +40,6 @@ function updateActionState(tabId, url) {
   });
   return true;
 }
-// Update browser action state upon installation.
-function onInstalled() {
-  chrome.tabs.query({}, function(tabs) {
-    if (!tabs) return;
-    for (const tab of tabs)
-      updateActionState(tab.id, tab.url)
-  });
-}
 // Update browser action state for the updated tab.
 function onTabUpdated(tabId, changeInfo, tab) {
   updateActionState(tabId, tab.url)
@@ -56,12 +48,6 @@ function onTabUpdated(tabId, changeInfo, tab) {
 function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Button clicked, opening abstract / PDF page.");
   const pageType = tab.url.includes("pdf") ? "PDF" : "Abstract";
-  var url = tab.url;
-  if (pageType === "PDF") {
-    // Remove the PDF container prefix of the custom PDF page.
-    const pdfViewerURL = chrome.runtime.getURL(pdfViewerRelatedURL);
-    url = tab.url.substr(pdfViewerURL.length);
-  }
   const id = getId(tab.url, pageType);
   if (id === null) {
     console.error(LOG_PREFIX, "Error: Failed to get paper ID, aborted.");
@@ -109,10 +95,14 @@ function onCreateBookmarkAsync(id, bookmarkInfo) {
   });
 }
 
+// Update browser action state upon start (e.g., installation, enable).
+chrome.tabs.query({}, function(tabs) {
+  if (!tabs) return;
+  for (const tab of tabs)
+    updateActionState(tab.id, tab.url)
+});
 // Disable the extension button by default. (Manifest v2)
 chrome.browserAction.disable();
-// Listen to on extension install event.
-chrome.runtime.onInstalled.addListener(onInstalled);
 // Listen to all tab updates.
 chrome.tabs.onUpdated.addListener(onTabUpdated);
 // Listen to extension button click.
