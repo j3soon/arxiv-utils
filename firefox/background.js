@@ -27,25 +27,22 @@ function getId(url, pageType) {
   return match && match[1];
 }
 // Update the state of the extension button (i.e., browser action)
-function updateActionState(tabId, url) {
+async function updateActionStateAsync(tabId, url) {
   const id = getId(url, "Abstract") || getId(url, "PDF");
   if (id === null) {
-    chrome.browserAction.disable(tabId, () => {
-      console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
-    });
-    return false;
-  }
-  chrome.browserAction.enable(tabId, () => {
+    await chrome.browserAction.disable(tabId);
+    console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
+  } else {
+    await chrome.browserAction.enable(tabId);
     console.log(LOG_PREFIX, `Enabled browser action for tab ${tabId} with url: ${url}.`);
-  });
-  return true;
+  }
 }
 // Update browser action state for the updated tab.
 function onTabUpdated(tabId, changeInfo, tab) {
-  updateActionState(tabId, tab.url)
+  updateActionStateAsync(tabId, tab.url)
 }
 // Open the abstract / PDF page according to the current URL.
-function onButtonClickedAsync(tab) {
+async function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Button clicked, opening abstract / PDF page.");
   const pageType = tab.url.includes("pdf") ? "PDF" : "Abstract";
   const id = getId(tab.url, pageType);
@@ -56,15 +53,11 @@ function onButtonClickedAsync(tab) {
   // Construct the target URL.
   const targetURL = (pageType === "PDF") ? `https://arxiv.org/abs/${id}` : `https://arxiv.org/pdf/${id}.pdf`;
   // Create the abstract / PDF page in new tab.
-  chrome.tabs.create({ "url": targetURL }, (newTab) => {
-    console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
-    // Move the new tab to the right of the active tab.
-    chrome.tabs.move(newTab.id, {
-      index: tab.index + 1
-    }, function (tab) {
-      console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
-    });
-  });
+  const newTab = chrome.tabs.create({ "url": targetURL });
+  console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
+  // Move the new tab to the right of the active tab.
+  await chrome.tabs.move(newTab.id, {index: tab.index + 1});
+  console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
 }
 // Redirect to custom PDF page.
 function onBeforeWebRequest(requestDetails) {
@@ -99,7 +92,7 @@ function onCreateBookmarkAsync(id, bookmarkInfo) {
 chrome.tabs.query({}, function(tabs) {
   if (!tabs) return;
   for (const tab of tabs)
-    updateActionState(tab.id, tab.url)
+    updateActionStateAsync(tab.id, tab.url)
 });
 // Disable the extension button by default. (Manifest v2)
 chrome.browserAction.disable();

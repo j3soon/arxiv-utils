@@ -1,24 +1,23 @@
-function saveOptions(e) {
+async function saveOptionsAsync(e) {
   if (e.submitter.id === "revert") {
-    chrome.storage.sync.remove('filename_format');
+    await chrome.storage.sync.remove('filename_format');
   } else {
-    chrome.storage.sync.set({
+    await chrome.storage.sync.set({
       'filename_format': document.querySelector("#new-filename-format").value
     });
   }
   e.preventDefault();
-  restoreOptions();
+  await restoreOptionsAsync();
 }
 
-function restoreOptions() {
-  chrome.storage.sync.get({
+async function restoreOptionsAsync() {
+  const result = await chrome.storage.sync.get({
     'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'
-  }, (result) => {
-      var filename_format = result.filename_format;
-      document.querySelector("#filename-format").innerText = filename_format;
-      document.querySelector("#new-filename-format").value = filename_format;
   });
+  var filename_format = result.filename_format;
+  document.querySelector("#filename-format").innerText = filename_format;
+  document.querySelector("#new-filename-format").value = filename_format;
 }
 
-document.addEventListener('DOMContentLoaded', restoreOptions);
-document.querySelector("form").addEventListener("submit", saveOptions);
+document.addEventListener('DOMContentLoaded', restoreOptionsAsync);
+document.querySelector("form").addEventListener("submit", saveOptionsAsync);

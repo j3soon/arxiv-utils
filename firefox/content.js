@@ -47,25 +47,24 @@ async function getArticleInfoAsync(id, pageType) {
   }
 }
 // Add a direct download link in abstract page.
-function addDownloadLinkAsync(id, articleInfo) {
-  chrome.storage.sync.get({
+async function addDownloadLinkAsync(id, articleInfo) {
+  const result = await chrome.storage.sync.get({
     'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'
-  }, (result) => {
-    const fileNameFormat = result.filename_format;
-    const fileName = fileNameFormat
-      .replace('${title}', articleInfo.escapedTitle)
-      .replace('${firstAuthor}', articleInfo.firstAuthor)
-      .replace('${publishedYear}', articleInfo.publishedYear);
-    const directURL = `https://arxiv.org/pdf/${id}.pdf?download`;
-    const htmlInsert = `<li><a href="${directURL}" download="${fileName}" type="application/pdf">Direct Download</a></li>`;
-    const elUL = document.querySelector(".full-text > ul");
-    if (!elUL) {
-      console.error(LOG_PREFIX, "Error: Cannot find the unordered list inside the Download section at the right side of the abstract page.");
-      return;
-    }
-    elUL.innerHTML += htmlInsert;
-    console.log(LOG_PREFIX, "Added direct download link.")
   });
+  const fileNameFormat = result.filename_format;
+  const fileName = fileNameFormat
+    .replace('${title}', articleInfo.escapedTitle)
+    .replace('${firstAuthor}', articleInfo.firstAuthor)
+    .replace('${publishedYear}', articleInfo.publishedYear);
+  const directURL = `https://arxiv.org/pdf/${id}.pdf?download`;
+  const htmlInsert = `<li><a href="${directURL}" download="${fileName}" type="application/pdf">Direct Download</a></li>`;
+  const elUL = document.querySelector(".full-text > ul");
+  if (!elUL) {
+    console.error(LOG_PREFIX, "Error: Cannot find the unordered list inside the Download section at the right side of the abstract page.");
+    return;
+  }
+  elUL.innerHTML += htmlInsert;
+  console.log(LOG_PREFIX, "Added direct download link.")
 }
 
 async function mainAsync() {
