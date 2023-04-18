@@ -154,9 +154,17 @@ Other functions should still be tested manually:
 
 ### Build and Publish
 
+Store dashboards:
+
 - Chrome: [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
 - Firefox: [Add-on Developer Hub](https://addons.mozilla.org/en-US/developers/addons)
 - Edge: [Microsoft Partner Center](https://partner.microsoft.com/en-us/dashboard/microsoftedge)
+
+Download the signed `.crx` or `.xpi` files:
+
+- Chrome: [How to download a CRX file from the Chrome web store for a given ID?](https://stackoverflow.com/a/14099762)
+- Firefox: [How to download Firefox extensions from addons.mozilla.org without installing them?](https://superuser.com/a/441011)
+- Edge: [How to get CRX file of a published in Microsoft Edge Web Store (Chromium Based)](https://stackoverflow.com/a/76016563)
 
 ## Frequently Asked Questions (FAQ)
 
