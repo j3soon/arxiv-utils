@@ -22,8 +22,11 @@ If you are a researcher that reads a lot on ArXiv, you'll benefit a lot from thi
 - Renames the title of PDF page to the paper's title.
 - Adds a button to navigate back to Abstract page.
 - Download PDF with paper's title as filename.
+- Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/) and [arXiv Vanity](https://www.arxiv-vanity.com/).
 - Works with Native Tab Search, and other plugins! (See the [Solution Descriptions](#solution-descriptions) section for more details)
 - All required permissions are documented in detail.
+
+Please [open an issue](https://github.com/j3soon/arxiv-utils/issues) if you have any questions, feature requests, or bug reports.
 
 ## Download Links
 
@@ -68,6 +71,7 @@ For ArXiv PDF / abstract tabs:
 - Renames the title to paper's title automatically in the background. (Originally is meaningless paper id, or start with paper id)
 - Add a browser button to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
 - Add a direct download link on abstract page, click it to download the PDF with the title as filename. (Originally is paper id as filename)
+- Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/) and [arXiv Vanity](https://www.arxiv-vanity.com/).
 - Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
 - Firefox has [strict restrictions on PDF.js](https://bugzilla.mozilla.org/show_bug.cgi?id=1454760). So it doesn't work well with OneTab, the PDF renaming is achieved by intercepting requests and show the PDF in a container. The bookmark works well though.
 - Works well with native tab search (credits: [@The Rooler](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/reviews/1674567/))
@@ -81,22 +85,25 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 
 ### Chrome / Edge Permissions
 
-- `tabs`: On button click, open a new tab and move it to the right of the old active tab.
+- `tabs`: On extension button click, open a new tab and move it to the right of the old active tab.
 - `activeTab`: Read active tab's title and modify it using the tab's url.
 - `storage`: Save extension configurations.
-- `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
-- `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
+- `contextMenus`: When right-click the extension button, show a help menu item.
+- `scripting`: Inject content scripts to existing tabs.
+- `*://export.arxiv.org/*`: Inject content scripts to existing tabs.
+- `*://arxiv.org/*`: Inject content scripts to existing tabs.
 
 ### Firefox Permissions
 
-- `tabs`: On button click, open a new tab and move it to the right of the old active tab.
+- `tabs`: On extension button click, open a new tab and move it to the right of the old active tab.
 - `activeTab`: Read active tab's title and modify it using the tab's url.
+- `storage`: Save extension configurations.
+- `contextMenus`: When right-click the extension button, show a help menu item.
 - `webRequest`: Intercept ArXiv PDF request.
 - `webRequestBlocking`: Redirect the ArXiv PDF page to custom PDF container page.
 - `bookmarks`: When create a new bookmark of the PDF container page, bookmark the actual ArXiv PDF url instead.
-- `storage`: Save extension configurations.
-- `*://export.arxiv.org/*`: Query the title of the paper using the paper id retrieved in the tab's url.
-- `*://arxiv.org/*`: This plugin works on ArXiv's abstract and PDF page.
+- `*://export.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
+- `*://arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;"`: For embedding PDF in container.
 - `"web_accessible_resources": [ "pdfviewer.html" ]`: To redirect from HTTPS to extension custom page requires them to be visible.
 
@@ -126,10 +133,6 @@ The testcases along with their description is stored in [tests/testcases.yaml](t
 
 Other functions should still be tested manually:
 
-- **Special cases**:
-  - (Chrome Only) Clear the browser cache and reload the PDF page, the title should be the new title after PDF load.  
-    Test with: https://arxiv.org/abs/1512.03385
-  - Verify there are no console errors in both the content script and background script logs.
 - **Bookmark tests**: Test the bookmarked URL.
   - Try to bookmark an abstract tab, the title should be the new title.
   - Try to bookmark a PDF tab, the title should be the new title.
@@ -142,12 +145,26 @@ Other functions should still be tested manually:
   - Test papers with special characters in title.
 - The extension button should be disabled outside ArXiv's domain.
 - (Chrome Only) If [OneTab](https://www.one-tab.com/) is installed, click its extension button, the list should show the updated titles of both abstract and PDF page.
+- (Chrome Only) Clear the browser cache and reload the PDF page, the title should be the new title after PDF load.  
+  Test with: https://arxiv.org/abs/1512.03385
+- Verify there are no console errors in both the content script and background script logs.
+- Disable and re-enabling the extension should not cause any errors.
+- Installing or re-enabling the extension should immediately update the title of existing tabs.
+- The help menu item in the context menu should link to this GitHub page.
 
 ### Build and Publish
+
+Store dashboards:
 
 - Chrome: [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
 - Firefox: [Add-on Developer Hub](https://addons.mozilla.org/en-US/developers/addons)
 - Edge: [Microsoft Partner Center](https://partner.microsoft.com/en-us/dashboard/microsoftedge)
+
+Download the signed `.crx` or `.xpi` files:
+
+- Chrome: [How to download a CRX file from the Chrome web store for a given ID?](https://stackoverflow.com/a/14099762)
+- Firefox: [How to download Firefox extensions from addons.mozilla.org without installing them?](https://superuser.com/a/441011)
+- Edge: [How to get CRX file of a published in Microsoft Edge Web Store (Chromium Based)](https://stackoverflow.com/a/76016563)
 
 ## Frequently Asked Questions (FAQ)
 

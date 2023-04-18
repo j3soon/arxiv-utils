@@ -27,24 +27,24 @@ function getId(url, pageType) {
   return match && match[1];
 }
 // Update the state of the extension button (i.e., browser action)
-function onTabUpdated(tabId, changeInfo, tab) {
-  const id = getId(tab.url, "Abstract") || getId(tab.url, "PDF");
-  if (id !== null) {
-    chrome.browserAction.enable(tabId);
+async function updateActionStateAsync(tabId, url) {
+  const id = getId(url, "Abstract") || getId(url, "PDF");
+  if (id === null) {
+    await chrome.browserAction.disable(tabId);
+    console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
   } else {
-    chrome.browserAction.disable(tabId);
+    await chrome.browserAction.enable(tabId);
+    console.log(LOG_PREFIX, `Enabled browser action for tab ${tabId} with url: ${url}.`);
   }
 }
+// Update browser action state for the updated tab.
+function onTabUpdated(tabId, changeInfo, tab) {
+  updateActionStateAsync(tabId, tab.url)
+}
 // Open the abstract / PDF page according to the current URL.
-function onButtonClickedAsync(tab) {
+async function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Button clicked, opening abstract / PDF page.");
   const pageType = tab.url.includes("pdf") ? "PDF" : "Abstract";
-  var url = tab.url;
-  if (pageType === "PDF") {
-    // Remove the PDF container prefix of the custom PDF page.
-    const pdfViewerURL = chrome.runtime.getURL(pdfViewerRelatedURL);
-    url = tab.url.substr(pdfViewerURL.length);
-  }
   const id = getId(tab.url, pageType);
   if (id === null) {
     console.error(LOG_PREFIX, "Error: Failed to get paper ID, aborted.");
@@ -53,15 +53,11 @@ function onButtonClickedAsync(tab) {
   // Construct the target URL.
   const targetURL = (pageType === "PDF") ? `https://arxiv.org/abs/${id}` : `https://arxiv.org/pdf/${id}.pdf`;
   // Create the abstract / PDF page in new tab.
-  chrome.tabs.create({ "url": targetURL }, (newTab) => {
-    console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
-    // Move the new tab to the right of the active tab.
-    chrome.tabs.move(newTab.id, {
-      index: tab.index + 1
-    }, function (tab) {
-      console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
-    });
-  });
+  const newTab = chrome.tabs.create({ "url": targetURL });
+  console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
+  // Move the new tab to the right of the active tab.
+  await chrome.tabs.move(newTab.id, {index: tab.index + 1});
+  console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
 }
 // Redirect to custom PDF page.
 function onBeforeWebRequest(requestDetails) {
@@ -92,10 +88,27 @@ function onCreateBookmarkAsync(id, bookmarkInfo) {
   });
 }
 
+// Update browser action state upon start (e.g., installation, enable).
+chrome.tabs.query({}, function(tabs) {
+  if (!tabs) return;
+  for (const tab of tabs)
+    updateActionStateAsync(tab.id, tab.url)
+});
+// Disable the extension button by default. (Manifest v2)
+chrome.browserAction.disable();
 // Listen to all tab updates.
 chrome.tabs.onUpdated.addListener(onTabUpdated);
 // Listen to extension button click.
 chrome.browserAction.onClicked.addListener(onButtonClickedAsync);
+// Add Help menu item to extension button context menu. (Manifest v2)
+chrome.contextMenus.create({
+  title: "Help",
+  contexts: ["browser_action"],
+  onclick: () => {
+    chrome.tabs.create({ "url": "https://github.com/j3soon/arxiv-utils" })
+  }
+});
+
 // Redirect the PDF page to custom PDF container page.
 chrome.webRequest.onBeforeRequest.addListener(
   onBeforeWebRequest,

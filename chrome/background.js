@@ -17,22 +17,30 @@ function getId(url, pageType) {
   return match && match[1];
 }
 // Update the state of the extension button (i.e., browser action)
-function onTabUpdated(tabId, changeInfo, tab) {
-  const id = getId(tab.url, "Abstract") || getId(tab.url, "PDF");
-  if (id !== null) {
-    chrome.action.enable(tabId);
-    if (changeInfo.title && tab.status == "complete") {
-      // Send title changed message to content script.
-      // Ref: https://stackoverflow.com/a/73151665
-      console.log(LOG_PREFIX, "Title changed, sending message to content script.");
-      chrome.tabs.sendMessage(tabId, tab);
-    }
+async function updateActionStateAsync(tabId, url) {
+  const id = getId(url, "Abstract") || getId(url, "PDF");
+  if (id === null) {
+    await chrome.action.disable(tabId);
+    console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
   } else {
-    chrome.action.disable(tabId);
+    await chrome.action.enable(tabId);
+    console.log(LOG_PREFIX, `Enabled browser action for tab ${tabId} with url: ${url}.`);
+  }
+}
+// Update browser action state for the updated tab.
+function onTabUpdated(tabId, changeInfo, tab) {
+  updateActionStateAsync(tabId, tab.url)
+  const id = getId(tab.url, "Abstract") || getId(tab.url, "PDF");
+  if (!id) return;
+  if (changeInfo.title && tab.status == "complete") {
+    // Send title changed message to content script.
+    // Ref: https://stackoverflow.com/a/73151665
+    console.log(LOG_PREFIX, "Title changed, sending message to content script.");
+    chrome.tabs.sendMessage(tabId, tab);
   }
 }
 // Open the abstract / PDF page according to the current URL.
-function onButtonClickedAsync(tab) {
+async function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Button clicked, opening abstract / PDF page.");
   const pageType = tab.url.includes("pdf") ? "PDF" : "Abstract";
   const id = getId(tab.url, pageType);
@@ -43,18 +51,61 @@ function onButtonClickedAsync(tab) {
   // Construct the target URL.
   const targetURL = (pageType === "PDF") ? `https://arxiv.org/abs/${id}` : `https://arxiv.org/pdf/${id}.pdf`;
   // Create the abstract / PDF page in new tab.
-  chrome.tabs.create({ "url": targetURL }, (newTab) => {
-    console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
-    // Move the new tab to the right of the active tab.
-    chrome.tabs.move(newTab.id, {
-      index: tab.index + 1
-    }, function (tab) {
-      console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
-    });
+  const newTab = await chrome.tabs.create({ "url": targetURL });
+  console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
+  // Move the new tab to the right of the active tab.
+  await chrome.tabs.move(newTab.id, {index: tab.index + 1});
+  console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
+}
+function onContextClicked(info, tab) {
+  if (info.menuItemId === 'help')
+    chrome.tabs.create({ "url": "https://github.com/j3soon/arxiv-utils" })
+}
+function onInstalled() {
+  // Add Help menu item to extension button context menu. (Manifest v3)
+  chrome.contextMenus.create({
+    id: "help",
+    title: "Help",
+    contexts: ["action"],
   });
 }
+// Inject content scripts to pre-existing tabs. E.g., after installation or re-enable.
+// Firefox injects content scripts automatically, but Chrome does not.
+async function injectContentScriptsAsync() {
+  // TODO: Fix errors:
+  // - Injecting content scripts seems to cause error when
+  //   disabling and re-enabling the extension very quickly with existing arXiv tabs:
+  //       Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'sync')
+  // - Another error seems to occur under unknown circumstances:
+  //       Uncaught SyntaxError: Identifier 'ABS_REGEXP' has already been declared
+  // - Another error seems to occur under unknown circumstances:
+  //       Unchecked runtime.lastError: Cannot create item with duplicate id help
+  for (const cs of chrome.runtime.getManifest().content_scripts) {
+    for (const tab of await chrome.tabs.query({url: cs.matches})) {
+      console.log(LOG_PREFIX, `Injecting content scripts for tab ${tab.id} with url: ${tab.url}.`);
+      chrome.scripting.executeScript({
+        target: {tabId: tab.id},
+        files: cs.js,
+      });
+    }
+  }
+}
 
+// Update browser action state upon start (e.g., installation, enable).
+chrome.tabs.query({}, function(tabs) {
+  if (!tabs) return;
+  for (const tab of tabs)
+    updateActionStateAsync(tab.id, tab.url)
+});
+// Disable the extension button by default. (Manifest v3)
+chrome.action.disable();
 // Listen to all tab updates.
 chrome.tabs.onUpdated.addListener(onTabUpdated);
 // Listen to extension button click.
 chrome.action.onClicked.addListener(onButtonClickedAsync);
+// Listen to extension button right-click.
+chrome.contextMenus.onClicked.addListener(onContextClicked)
+
+// Listen to on extension install event.
+chrome.runtime.onInstalled.addListener(onInstalled);
+injectContentScriptsAsync();
