@@ -78,6 +78,8 @@ async function injectContentScriptsAsync() {
   //       Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'sync')
   // - Another error seems to occur under unknown circumstances:
   //       Uncaught SyntaxError: Identifier 'ABS_REGEXP' has already been declared
+  // - Another error seems to occur under unknown circumstances:
+  //       Unchecked runtime.lastError: Cannot create item with duplicate id help
   for (const cs of chrome.runtime.getManifest().content_scripts) {
     for (const tab of await chrome.tabs.query({url: cs.matches})) {
       console.log(LOG_PREFIX, `Injecting content scripts for tab ${tab.id} with url: ${tab.url}.`);
