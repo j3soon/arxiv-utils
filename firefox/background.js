@@ -30,11 +30,11 @@ function getId(url, pageType) {
 async function updateActionStateAsync(tabId, url) {
   const id = getId(url, "Abstract") || getId(url, "PDF");
   if (id === null) {
-    await chrome.browserAction.disable(tabId);
-    console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
+    await browser.browserAction.disable(tabId);
+    // console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
   } else {
-    await chrome.browserAction.enable(tabId);
-    console.log(LOG_PREFIX, `Enabled browser action for tab ${tabId} with url: ${url}.`);
+    await browser.browserAction.enable(tabId);
+    // console.log(LOG_PREFIX, `Enabled browser action for tab ${tabId} with url: ${url}.`);
   }
 }
 // Update browser action state for the updated tab.
@@ -53,10 +53,10 @@ async function onButtonClickedAsync(tab) {
   // Construct the target URL.
   const targetURL = (pageType === "PDF") ? `https://arxiv.org/abs/${id}` : `https://arxiv.org/pdf/${id}.pdf`;
   // Create the abstract / PDF page in new tab.
-  const newTab = chrome.tabs.create({ "url": targetURL });
+  const newTab = await browser.tabs.create({ "url": targetURL });
   console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
   // Move the new tab to the right of the active tab.
-  await chrome.tabs.move(newTab.id, {index: tab.index + 1});
+  await browser.tabs.move(newTab.id, {index: tab.index + 1});
   console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
 }
 // Redirect to custom PDF page.
@@ -67,7 +67,7 @@ function onBeforeWebRequest(requestDetails) {
   }
   // Force HTTPS to avoid CSP (Content Security Policy) violation.
   const targetRelatedURL = pdfViewerRelatedURL + requestDetails.url.replace("http:", "https:");
-  const targetURL = chrome.runtime.getURL(targetRelatedURL);
+  const targetURL = browser.runtime.getURL(targetRelatedURL);
   console.log(`${LOG_PREFIX} Redirecting: ${requestDetails.url} to ${targetURL}`);
   return {
     redirectUrl: targetURL
@@ -75,13 +75,13 @@ function onBeforeWebRequest(requestDetails) {
 }
 // If the custom PDF page is bookmarked, bookmark the original PDF link instead.
 function onCreateBookmarkAsync(id, bookmarkInfo) {
-  var prefix = chrome.runtime.getURL(pdfViewerRelatedURL);
+  var prefix = browser.runtime.getURL(pdfViewerRelatedURL);
   if (!bookmarkInfo.url.startsWith(prefix)) {
     return;
   }
   console.log(LOG_PREFIX, "Updating bookmark with id: " + id + ", url: " + bookmarkInfo.url);
   var url = bookmarkInfo.url.substr(prefix.length);
-  chrome.bookmarks.update(id, {
+  browser.bookmarks.update(id, {
     url: url
   }, () => {
     console.log(LOG_PREFIX, "Updated bookmark with id: " + id + " to URL: " + url);
@@ -89,31 +89,33 @@ function onCreateBookmarkAsync(id, bookmarkInfo) {
 }
 
 // Update browser action state upon start (e.g., installation, enable).
-chrome.tabs.query({}, function(tabs) {
+browser.tabs.query({}, function(tabs) {
   if (!tabs) return;
   for (const tab of tabs)
     updateActionStateAsync(tab.id, tab.url)
 });
 // Disable the extension button by default. (Manifest v2)
-chrome.browserAction.disable();
+browser.browserAction.disable();
 // Listen to all tab updates.
-chrome.tabs.onUpdated.addListener(onTabUpdated);
+browser.tabs.onUpdated.addListener(onTabUpdated);
 // Listen to extension button click.
-chrome.browserAction.onClicked.addListener(onButtonClickedAsync);
+browser.browserAction.onClicked.addListener(onButtonClickedAsync);
 // Add Help menu item to extension button context menu. (Manifest v2)
-chrome.contextMenus.create({
+browser.contextMenus.create({
   title: "Help",
   contexts: ["browser_action"],
   onclick: () => {
-    chrome.tabs.create({ "url": "https://github.com/j3soon/arxiv-utils" })
+    browser.tabs.create({
+      url: "https://github.com/j3soon/arxiv-utils",
+    });
   }
 });
 
 // Redirect the PDF page to custom PDF container page.
-chrome.webRequest.onBeforeRequest.addListener(
+browser.webRequest.onBeforeRequest.addListener(
   onBeforeWebRequest,
   { urls: redirectPatterns },
   ["blocking"]
 );
 // Capture bookmarking event of custom PDF page.
-chrome.bookmarks.onCreated.addListener(onCreateBookmarkAsync);
+browser.bookmarks.onCreated.addListener(onCreateBookmarkAsync);

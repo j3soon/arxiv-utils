@@ -49,7 +49,7 @@ async function getArticleInfoAsync(id, pageType) {
 // Add a custom links in abstract page.
 async function addCustomLinksAsync(id, articleInfo) {
   // Add direct download link.
-  const result = await chrome.storage.sync.get({
+  const result = await browser.storage.sync.get({
     'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'
   });
   const fileNameFormat = result.filename_format;
