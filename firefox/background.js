@@ -53,11 +53,11 @@ async function onButtonClickedAsync(tab) {
   // Construct the target URL.
   const targetURL = (pageType === "PDF") ? `https://arxiv.org/abs/${id}` : `https://arxiv.org/pdf/${id}.pdf`;
   // Create the abstract / PDF page in new tab.
-  const newTab = await browser.tabs.create({ "url": targetURL });
+  await browser.tabs.create({
+    url: targetURL,
+    index: tab.index + 1,
+  });
   console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
-  // Move the new tab to the right of the active tab.
-  await browser.tabs.move(newTab.id, {index: tab.index + 1});
-  console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
 }
 // Redirect to custom PDF page.
 function onBeforeWebRequest(requestDetails) {

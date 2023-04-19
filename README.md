@@ -69,7 +69,7 @@ Go to add-ons page, click the extension select `Options` to set your preference.
 For ArXiv PDF / abstract tabs:
 
 - Renames the title to paper's title automatically in the background. (Originally is meaningless paper id, or start with paper id)
-- Add a browser button to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
+- Add an action button to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
 - Add a direct download link on abstract page, click it to download the PDF with the title as filename. (Originally is paper id as filename)
 - Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/) and [arXiv Vanity](https://www.arxiv-vanity.com/).
 - Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
@@ -144,6 +144,7 @@ Other functions should still be tested manually:
   - Test papers with long title.
   - Test papers with special characters in title.
 - The extension button should be disabled outside ArXiv's domain.
+- Clicking the extension button should open a new tab at the right of the current active tab (instead of open at the end of the tab list).
 - (Chrome Only) If [OneTab](https://www.one-tab.com/) is installed, click its extension button, the list should show the updated titles of both abstract and PDF page.
 - (Chrome Only) Clear the browser cache and reload the PDF page, the title should be the new title after PDF load.  
   Test with: https://arxiv.org/abs/1512.03385
@@ -186,6 +187,8 @@ Store dashboards:
 - Chrome: [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
 - Firefox: [Add-on Developer Hub](https://addons.mozilla.org/en-US/developers/addons)
 - Edge: [Microsoft Partner Center](https://partner.microsoft.com/en-us/dashboard/microsoftedge)
+
+May need to update description, permission details, and screenshots for Firefox and Chrome store.
 
 Download the signed `.crx` or `.xpi` files:
 

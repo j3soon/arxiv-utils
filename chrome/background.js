@@ -21,10 +21,10 @@ async function updateActionStateAsync(tabId, url) {
   const id = getId(url, "Abstract") || getId(url, "PDF");
   if (id === null) {
     await chrome.action.disable(tabId);
-    console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
+    // console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
   } else {
     await chrome.action.enable(tabId);
-    console.log(LOG_PREFIX, `Enabled browser action for tab ${tabId} with url: ${url}.`);
+    // console.log(LOG_PREFIX, `Enabled browser action for tab ${tabId} with url: ${url}.`);
   }
 }
 // Update browser action state for the updated tab.
@@ -51,15 +51,17 @@ async function onButtonClickedAsync(tab) {
   // Construct the target URL.
   const targetURL = (pageType === "PDF") ? `https://arxiv.org/abs/${id}` : `https://arxiv.org/pdf/${id}.pdf`;
   // Create the abstract / PDF page in new tab.
-  const newTab = await chrome.tabs.create({ "url": targetURL });
+  await chrome.tabs.create({
+    url: targetURL,
+    index: tab.index + 1,
+  });
   console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
-  // Move the new tab to the right of the active tab.
-  await chrome.tabs.move(newTab.id, {index: tab.index + 1});
-  console.log(LOG_PREFIX, "Moved the new tab to the right of the active tab.");
 }
 function onContextClicked(info, tab) {
   if (info.menuItemId === 'help')
-    chrome.tabs.create({ "url": "https://github.com/j3soon/arxiv-utils" })
+    chrome.tabs.create({
+      url: "https://github.com/j3soon/arxiv-utils",
+    });
 }
 function onInstalled() {
   // Add Help menu item to extension button context menu. (Manifest v3)
