@@ -122,7 +122,7 @@ For viewing background script logs, open the Inspector of the plugin in the `Ext
 - Chrome: Go to `chrome://extensions/` and click `Inspect views: background page` on the loaded (unpacked) extension.
 - Edge: Go to `edge://extensions/` and click `Inspect views: service workder` on the loaded (unpacked) extension.
 
-## Tests
+### Tests
 
 The automated tests currently include the following:
 
@@ -151,6 +151,33 @@ Other functions should still be tested manually:
 - Disable and re-enabling the extension should not cause any errors.
 - Installing or re-enabling the extension should immediately update the title of existing tabs.
 - The help menu item in the context menu should link to this GitHub page.
+
+### Interactive Testing
+
+Install VSCode and [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) plugin.
+
+```sh
+tests/scripts/docker/compose/up.sh -d
+```
+
+Press `Ctrl + P` and select `>Dev Container: Attach to Running Container...`,
+then select `/tests_selenium-tests_1`.
+
+In the new VSCode window, click `Open Folders` and select `/app`.
+
+Install the [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) plugin inside the dev container.
+
+Launch a Terminal inside the dev container and run:
+
+```sh
+apk add build-base linux-headers
+```
+
+Open `tests/test_interactive.py`, select the first cell and press `Shift + Enter` and click `Install` (Install the `ipykernel`).
+
+You can now begin interactive testing!
+
+Reference: [Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers)
 
 ### Build and Publish
 
