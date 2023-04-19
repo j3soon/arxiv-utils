@@ -1,12 +1,11 @@
+// TODO: Refactor
 var app = {};
 app.name = "[arXiv-utils]";
 // These 2 below is for regex matching.
-app.abs_regexp = /arxiv.org\/abs\/([\S]*)$/;
-app.pdf_regexp = /arxiv.org\/[\S]*\/([^\/]*)$/;
+app.abs_regexp = /arxiv\.org\/abs\/([\S]*?)\/*$/;
+app.pdf_regexp = /arxiv\.org\/(?:pdf|ftp)\/.*?([^\/]*?)(?:\.pdf)?\/*$/;
 // Return the id parsed from the url.
 app.getId = function (url) {
-  url = url.replace(".pdf", "");
-  if (url.endsWith("/")) url = url.slice(0, -1);
   match = url.match(app.pdf_regexp);
   // The first match is the matched string, the second one is the captured group.
   if (match === null || match.length !== 2) {

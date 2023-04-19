@@ -4,11 +4,8 @@
 var newTitle = undefined;
 // Regular expressions for parsing arXiv URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
-const ABS_REGEXP = /arxiv\.org\/abs\/([\S]*)$/;
-const PDF_REGEXP = /arxiv\.org\/[\S]*\/([^\/]*)$/;
-// TODO: May deal with `.pdf` and trailing slash in regexp.
-// TODO: Change `[\S]*` to `(?:pdf|ftp)`.
-// TODO: The above changes also need to be applied to background script.
+const ABS_REGEXP = /arxiv\.org\/abs\/([\S]*?)\/*$/;
+const PDF_REGEXP = /arxiv\.org\/(?:pdf|ftp)\/.*?([^\/]*?)(?:\.pdf)?\/*$/;
 // Define onMessage countdown for Chrome PDF viewer bug.
 var messageCallbackCountdown = 3;
 // All console logs should start with this prefix.
@@ -16,8 +13,6 @@ const LOG_PREFIX = "[arXiv-utils]";
 
 // Return the id parsed from the url.
 function getId(url, pageType) {
-  url = url.replace(".pdf", "");
-  if (url.endsWith("/")) url = url.slice(0, -1);
   const match = pageType === "PDF" ? url.match(PDF_REGEXP) : url.match(ABS_REGEXP);
   // string.match() returns null if no match found.
   return match && match[1];
