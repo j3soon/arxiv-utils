@@ -58,13 +58,25 @@ navigation:
   pdf_url: https://arxiv.org/pdf/2003.13678/
   pdf_title: Designing Network Design Spaces | PDF
   abs2pdf: False
-  description: pdf end with slash
+  description: pdf with trailing slash
 - url: https://arxiv.org/abs/2003.13678/
   title: Designing Network Design Spaces | Abstract
   pdf_url: https://arxiv.org/pdf/2003.13678.pdf
   pdf_title: Designing Network Design Spaces | PDF
   pdf2abs: False
-  description: abs end with slash
+  description: abs with trailing slash
+- url: https://arxiv.org/abs/2003.13678
+  title: Designing Network Design Spaces | Abstract
+  pdf_url: https://arxiv.org/pdf/2003.13678//
+  pdf_title: Designing Network Design Spaces | PDF
+  abs2pdf: False
+  description: pdf with trailing double slash
+- url: https://arxiv.org/abs/2003.13678//
+  title: Designing Network Design Spaces | Abstract
+  pdf_url: https://arxiv.org/pdf/2003.13678.pdf
+  pdf_title: Designing Network Design Spaces | PDF
+  pdf2abs: False
+  description: abs with trailing double slash
 - url: https://arxiv.org/abs/1906.07413
   title: Learning Imbalanced Datasets with Label-Distribution-Aware Margin Loss | Abstract
   pdf_url: https://arxiv.org/pdf/1906.07413.pdf
