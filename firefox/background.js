@@ -15,7 +15,7 @@ const redirectPatterns = [
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
 const ABS_REGEXP = /arxiv\.org\/abs\/(\S*?)\/*$/;
 const PDF_REGEXP = /arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*$/;
-const FTP_REGEXP = /arxiv\.org\/ftp\/(?:arxiv\/)?((?!arxiv\/)[^\/]*\/)?papers\/.*?([^\/]*?)\.pdf$/;
+const FTP_REGEXP = /arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf$/;
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
 
