@@ -2,11 +2,13 @@
 
 // Store new title for onMessage.
 var newTitle = undefined;
-// Regular expressions for parsing arXiv URLs.
+// Regular expressions for parsing arXiv IDs from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
-const ABS_REGEXP = /arxiv\.org\/abs\/(\S*?)\/*$/;
-const PDF_REGEXP = /arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*$/;
-const FTP_REGEXP = /arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf$/;
+const ID_REGEXP_REPLACE = [
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*$/, "$1"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*$/, "$1"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf$/, "$1$2"],
+];
 // Define onMessage countdown for Chrome PDF viewer bug.
 var messageCallbackCountdown = 3;
 // All console logs should start with this prefix.
@@ -14,13 +16,11 @@ const LOG_PREFIX = "[arXiv-utils]";
 
 // Return the id parsed from the url.
 function getId(url) {
-  const match_abs = url.match(ABS_REGEXP);
-  const match_pdf = url.match(PDF_REGEXP);
-  const match_ftp = url.match(FTP_REGEXP);
-  // string.match() returns null if no match found.
-  return match_abs && match_abs[1] ||
-         match_pdf && match_pdf[1] ||
-         match_ftp && match_ftp[2] && [match_ftp[1], match_ftp[2]].join('');
+  for (const [regexp, replacement] of ID_REGEXP_REPLACE) {
+    if (regexp.test(url))
+      return url.replace(regexp, replacement);
+  }
+  return null;
 }
 // Get article information through arXiv API asynchronously.
 // Ref: https://info.arxiv.org/help/api/user-manual.html#31-calling-the-api
