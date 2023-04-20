@@ -4,18 +4,23 @@
 var newTitle = undefined;
 // Regular expressions for parsing arXiv URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
-const ABS_REGEXP = /arxiv\.org\/abs\/([\S]*?)\/*$/;
-const PDF_REGEXP = /arxiv\.org\/(?:pdf|ftp)\/.*?([^\/]*?)(?:\.pdf)?\/*$/;
+const ABS_REGEXP = /arxiv\.org\/abs\/(\S*?)\/*$/;
+const PDF_REGEXP = /arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*$/;
+const FTP_REGEXP = /arxiv\.org\/ftp\/(?:arxiv\/)?((?!arxiv\/)[^\/]*\/)?papers\/.*?([^\/]*?)\.pdf$/;
 // Define onMessage countdown for Chrome PDF viewer bug.
 var messageCallbackCountdown = 3;
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
 
 // Return the id parsed from the url.
-function getId(url, pageType) {
-  const match = pageType === "PDF" ? url.match(PDF_REGEXP) : url.match(ABS_REGEXP);
+function getId(url) {
+  const match_abs = url.match(ABS_REGEXP);
+  const match_pdf = url.match(PDF_REGEXP);
+  const match_ftp = url.match(FTP_REGEXP);
   // string.match() returns null if no match found.
-  return match && match[1];
+  return match_abs && match_abs[1] ||
+         match_pdf && match_pdf[1] ||
+         match_ftp && match_ftp[2] && [match_ftp[1], match_ftp[2]].join('');
 }
 // Get article information through arXiv API asynchronously.
 // Ref: https://info.arxiv.org/help/api/user-manual.html#31-calling-the-api
@@ -116,9 +121,9 @@ async function onMessageAsync(tab, sender, sendResponse) {
 async function mainAsync() {
   console.log(LOG_PREFIX, "Extension initialized.");
   const url = location.href;
-  const pageType = url.includes("pdf") ? "PDF" : "Abstract";
-  const id = getId(url, pageType);
-  if (id === null) {
+  const pageType = url.includes("abs") ? "Abstract" : "PDF";
+  const id = getId(url);
+  if (!id) {
     console.error(LOG_PREFIX, "Error: Failed to get paper ID, aborted.");
     return;
   }

@@ -1,17 +1,22 @@
 // TODO: Refactor
 var app = {};
 app.name = "[arXiv-utils]";
-// These 2 below is for regex matching.
-app.abs_regexp = /arxiv\.org\/abs\/([\S]*?)\/*$/;
-app.pdf_regexp = /arxiv\.org\/(?:pdf|ftp)\/.*?([^\/]*?)(?:\.pdf)?\/*$/;
+// Regular expressions for parsing arXiv URLs.
+// Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
+const ABS_REGEXP = /arxiv\.org\/abs\/(\S*?)\/*$/;
+const PDF_REGEXP = /arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*$/;
+const FTP_REGEXP = /arxiv\.org\/ftp\/(?:arxiv\/)?((?!arxiv\/)[^\/]*\/)?papers\/.*?([^\/]*?)\.pdf$/;
+// All console logs should start with this prefix.
+const LOG_PREFIX = "[arXiv-utils]";
 // Return the id parsed from the url.
-app.getId = function (url) {
-  match = url.match(app.pdf_regexp);
-  // The first match is the matched string, the second one is the captured group.
-  if (match === null || match.length !== 2) {
-    return null;
-  }
-  return match[1];
+function getId(url) {
+  const match_abs = url.match(ABS_REGEXP);
+  const match_pdf = url.match(PDF_REGEXP);
+  const match_ftp = url.match(FTP_REGEXP);
+  // string.match() returns null if no match found.
+  return match_abs && match_abs[1] ||
+         match_pdf && match_pdf[1] ||
+         match_ftp && match_ftp[2] && [match_ftp[1], match_ftp[2]].join('');
 }
 // Get the title asynchronously, call the callbacks with the id, the type, and the queried title as argument when request done (`callback(id, type, title, newTitle)`).
 app.getTitleAsync = function (id, type, callback) {
@@ -57,7 +62,7 @@ app.injectPDF = function (url) {
 // Run this once.
 app.run = function () {
   var pdfURL = app.extractURL();
-  var id = app.getId(pdfURL);
+  var id = getId(pdfURL);
   app.getTitleAsync(id, "PDF", app.insertTitle);
   app.injectPDF(pdfURL);
 }
