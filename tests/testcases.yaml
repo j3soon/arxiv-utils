@@ -77,6 +77,35 @@ navigation:
   pdf_title: Designing Network Design Spaces | PDF
   pdf2abs: False
   description: abs with trailing double slash
+- url: https://arxiv.org/abs/cs/9605103
+  title: "Reinforcement Learning: A Survey | Abstract"
+  pdf_url: https://arxiv.org/pdf/cs/9605103.pdf
+  pdf_title: "Reinforcement Learning: A Survey | PDF"
+  description: old url basic testcase
+- url: https://arxiv.org/abs/cs/9605103
+  title: "Reinforcement Learning: A Survey | Abstract"
+  pdf_url: https://arxiv.org/pdf/cs/9605103
+  pdf_title: "Reinforcement Learning: A Survey | PDF"
+  abs2pdf: False
+  description: old url pdf not ending with `.pdf`
+- url: https://arxiv.org/abs/cs/9605103
+  title: "Reinforcement Learning: A Survey | Abstract"
+  pdf_url: https://arxiv.org/pdf/cs/9605103/
+  pdf_title: "Reinforcement Learning: A Survey | PDF"
+  abs2pdf: False
+  description: old url pdf with trailing slash
+- url: https://arxiv.org/abs/cs/9605103/
+  title: "Reinforcement Learning: A Survey | Abstract"
+  pdf_url: https://arxiv.org/pdf/cs/9605103.pdf
+  pdf_title: "Reinforcement Learning: A Survey | PDF"
+  pdf2abs: False
+  description: old url abs with trailing slash
+- url: https://arxiv.org/abs/cond-mat/0408502
+  title: Pressure Raman Effects and Internal Stress in Network Glasses | Abstract
+  pdf_url: https://arxiv.org/ftp/cond-mat/papers/0408/0408502.pdf
+  pdf_title: Pressure Raman Effects and Internal Stress in Network Glasses | PDF
+  abs2pdf: False
+  description: old url with special ftp format
 - url: https://arxiv.org/abs/1906.07413
   title: Learning Imbalanced Datasets with Label-Distribution-Aware Margin Loss | Abstract
   pdf_url: https://arxiv.org/pdf/1906.07413.pdf
