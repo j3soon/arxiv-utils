@@ -13,9 +13,9 @@ const redirectPatterns = [
 // Regular expressions for parsing arXiv IDs from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
 const ID_REGEXP_REPLACE = [
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*$/, "$1"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*$/, "$1"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf$/, "$1$2"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "$1"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2"],
 ];
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
@@ -26,8 +26,6 @@ function getId(url) {
   const prefix = browser.runtime.getURL(pdfViewerRelatedURL);
   if (url.startsWith(prefix))
     url = url.substr(prefix.length);
-  // Remove query string and anchor
-  url = url.split(/[?#]/)[0];
   for (const [regexp, replacement] of ID_REGEXP_REPLACE) {
     if (regexp.test(url))
       return url.replace(regexp, replacement);

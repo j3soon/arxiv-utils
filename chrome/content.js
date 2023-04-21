@@ -5,9 +5,9 @@ var newTitle = undefined;
 // Regular expressions for parsing arXiv IDs from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
 const ID_REGEXP_REPLACE = [
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*$/, "$1"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*$/, "$1"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf$/, "$1$2"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "$1"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2"],
 ];
 // Define onMessage countdown for Chrome PDF viewer bug.
 var messageCallbackCountdown = 3;
@@ -16,8 +16,6 @@ const LOG_PREFIX = "[arXiv-utils]";
 
 // Return the id parsed from the url.
 function getId(url) {
-  // Remove query string and anchor
-  url = url.split(/[?#]/)[0];
   for (const [regexp, replacement] of ID_REGEXP_REPLACE) {
     if (regexp.test(url))
       return url.replace(regexp, replacement);
