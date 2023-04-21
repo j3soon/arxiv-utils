@@ -5,9 +5,10 @@ var newTitle = undefined;
 // Regular expressions for parsing arXiv IDs from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
 const ID_REGEXP_REPLACE = [
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "$1"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1", "Abstract"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "$1", "PDF"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2", "PDF"],
+  [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1", "HTML5"],
 ];
 // Define onMessage countdown for Chrome PDF viewer bug.
 var messageCallbackCountdown = 3;
@@ -16,9 +17,17 @@ const LOG_PREFIX = "[arXiv-utils]";
 
 // Return the id parsed from the url.
 function getId(url) {
-  for (const [regexp, replacement] of ID_REGEXP_REPLACE) {
+  for (const [regexp, replacement, pageType] of ID_REGEXP_REPLACE) {
     if (regexp.test(url))
       return url.replace(regexp, replacement);
+  }
+  return null;
+}
+// Return the page type according to the URL.
+function getPageType(url) {
+  for (const [regexp, replacement, pageType] of ID_REGEXP_REPLACE) {
+    if (regexp.test(url))
+      return pageType;
   }
   return null;
 }
@@ -120,7 +129,7 @@ async function onMessageAsync(tab, sender, sendResponse) {
 async function mainAsync() {
   console.log(LOG_PREFIX, "Extension initialized.");
   const url = location.href;
-  const pageType = url.includes("abs") ? "Abstract" : "PDF";
+  const pageType = getPageType(url);
   const id = getId(url);
   if (!id) {
     console.error(LOG_PREFIX, "Error: Failed to get paper ID, aborted.");

@@ -153,6 +153,7 @@ Other functions should still be tested manually:
 - Disable and re-enabling the extension should not cause any errors.
 - Installing or re-enabling the extension should immediately update the title of existing tabs.
 - The help menu item in the context menu should link to this GitHub page.
+- ar5iv tabs should have renamed title, and support navigation.
 
 ### Interactive Testing
 
