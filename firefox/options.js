@@ -14,7 +14,7 @@ async function restoreOptionsAsync() {
   const result = await browser.storage.sync.get({
     'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'
   });
-  var filename_format = result.filename_format;
+  const filename_format = result.filename_format;
   document.querySelector("#filename-format").innerText = filename_format;
   document.querySelector("#new-filename-format").value = filename_format;
 }

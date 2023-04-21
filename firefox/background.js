@@ -8,8 +8,7 @@ const pdfViewerRelatedURL = "pdfviewer.html?target=";
 //       we capture only the last url (the one that ends with '.pdf').
 // Adding some extra parameter such as https://arxiv.org/pdf/<id>.pdf?download can bypass this capture.
 const redirectPatterns = [
-  "*://arxiv.org/*.pdf", "*://export.arxiv.org/*.pdf",
-  "*://arxiv.org/pdf/*/", "*://export.arxiv.org/pdf/*/"
+  "*://arxiv.org/*pdf*", "*://export.arxiv.org/*pdf*"
 ];
 // Regular expressions for parsing arXiv IDs from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
@@ -23,6 +22,12 @@ const LOG_PREFIX = "[arXiv-utils]";
 
 // Return the id parsed from the url.
 function getId(url) {
+  // Remove the prefix for the custom PDF page.
+  const prefix = browser.runtime.getURL(pdfViewerRelatedURL);
+  if (url.startsWith(prefix))
+    url = url.substr(prefix.length);
+  // Remove query string and anchor
+  url = url.split(/[?#]/)[0];
   for (const [regexp, replacement] of ID_REGEXP_REPLACE) {
     if (regexp.test(url))
       return url.replace(regexp, replacement);
@@ -68,6 +73,10 @@ function onBeforeWebRequest(requestDetails) {
     // Request from this plugin itself (the embedded PDF).
     return;
   }
+  if (requestDetails.url.endsWith("?download")) {
+    // Request from this plugin itself (download PDF).
+    return;
+  }
   // Force HTTPS to avoid CSP (Content Security Policy) violation.
   const targetRelatedURL = pdfViewerRelatedURL + requestDetails.url.replace("http:", "https:");
   const targetURL = browser.runtime.getURL(targetRelatedURL);
@@ -78,14 +87,14 @@ function onBeforeWebRequest(requestDetails) {
 }
 // If the custom PDF page is bookmarked, bookmark the original PDF link instead.
 function onCreateBookmarkAsync(id, bookmarkInfo) {
-  var prefix = browser.runtime.getURL(pdfViewerRelatedURL);
+  const prefix = browser.runtime.getURL(pdfViewerRelatedURL);
   if (!bookmarkInfo.url.startsWith(prefix)) {
     return;
   }
   console.log(LOG_PREFIX, "Updating bookmark with id: " + id + ", url: " + bookmarkInfo.url);
-  var url = bookmarkInfo.url.substr(prefix.length);
+  const url = bookmarkInfo.url.substr(prefix.length);
   browser.bookmarks.update(id, {
-    url: url
+    url
   }, () => {
     console.log(LOG_PREFIX, "Updated bookmark with id: " + id + " to URL: " + url);
   });

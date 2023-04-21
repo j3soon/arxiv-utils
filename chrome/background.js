@@ -13,6 +13,8 @@ const LOG_PREFIX = "[arXiv-utils]";
 
 // Return the id parsed from the url.
 function getId(url) {
+  // Remove query string and anchor
+  url = url.split(/[?#]/)[0];
   for (const [regexp, replacement] of ID_REGEXP_REPLACE) {
     if (regexp.test(url))
       return url.replace(regexp, replacement);
