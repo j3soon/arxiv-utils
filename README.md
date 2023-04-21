@@ -211,9 +211,13 @@ If you have further questions, please [open an issue](https://github.com/j3soon/
 
 ## Related Extensions
 
-- [musically-ut/arXiv-title-fixer](https://github.com/musically-ut/arXiv-title-fixer) that works well on Google Chrome.
-  This requires a button click to change the pdf title, but will be considered less intrusive than running in the background.
+- [musically-ut/arXiv-title-fixer](https://github.com/musically-ut/arXiv-title-fixer)
+  This requires a button click to change the pdf title, but will be considered less intrusive than running in the background. (Chrome Only)
 - [weakish/arxiv-url](https://github.com/weakish/arxiv-url)
   This claims to add a back button, but I can't get it working.
 - [imurray/redirectify](https://github.com/imurray/redirectify)
-  Automatically redirect PDF links to HTML index page for many academic paper sites.
+  Automatically redirect PDF links to HTML index page for many academic paper sites. (Compatible with arxiv-utils)
+- [AI/ML Papers with Code Everywhere - CatalyzeX](https://www.catalyzex.com/)
+  Find code links and inject them to a variety of websites. (Compatible with arxiv-utils)
+  [[chrome]](https://chrome.google.com/webstore/detail/aiml-papers-with-code-eve/aikkeehnlfpamidigaffhfmgbkdeheil?hl=en)
+  [[firefox]](https://addons.mozilla.org/en-US/firefox/addon/code-finder-catalyzex/)
