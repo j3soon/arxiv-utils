@@ -40,17 +40,18 @@ Alternatively, these 3 browsers can also load arxiv-utils directly from source. 
 
 ## Screenshots
 
-The paper id in the title has been removed automatically!
-A direct download link is added to download PDF with paper's title as the filename!
+The paper id in the title has been removed automatically!  
+A direct download link is added to download PDF with paper's title as the filename!  
+Open in extra services such as ar5iv!
 ![](screenshots/abstract.png)
 Finally... Meaningful paper title instead of paper id! (For Firefox, this is achieved through a custom PDF container.)
 ![](screenshots/pdf.png)
-Difficult to get back to abstract page...
+Difficult to get back to abstract page...  
 Click to get back to abstract page!
 ![](screenshots/pdf2.png)
 TADA~ The abstract page is shown at the right of the PDF page! Both with meaningful title!
 ![](screenshots/abstract2.png)
-The button is disabled if not in ArXiv's domain.
+The button is disabled if not in ArXiv's domain.  
 Meaningful bookmark titles.
 ![](screenshots/bookmarks.png)
 Meaningful OneTab entries! (Chrome & Edge only)
