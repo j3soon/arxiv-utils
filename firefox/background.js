@@ -20,10 +20,22 @@ const ID_REGEXP_REPLACE = [
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
 
+// Get PDF viewer URL prefix
+async function getPDFViewerURLPrefixAsync() {
+  const result = await browser.storage.sync.get({
+    'pdf_viewer_url_prefix': ''
+  });
+  var prefix;
+  if (result.pdf_viewer_url_prefix === '')
+    prefix = browser.runtime.getURL(pdfViewerRelatedURL);
+  else
+    prefix = result.pdf_viewer_url_prefix;
+  return prefix;
+}
 // Return the id parsed from the url.
-function getId(url) {
+async function getIdAsync(url) {
   // Remove the prefix for the custom PDF page.
-  const prefix = browser.runtime.getURL(pdfViewerRelatedURL);
+  const prefix = await getPDFViewerURLPrefixAsync();
   if (url.startsWith(prefix))
     url = url.substr(prefix.length);
   for (const [regexp, replacement] of ID_REGEXP_REPLACE) {
@@ -34,7 +46,7 @@ function getId(url) {
 }
 // Update the state of the extension button (i.e., browser action)
 async function updateActionStateAsync(tabId, url) {
-  const id = getId(url);
+  const id = await getIdAsync(url);
   if (!id) {
     await browser.browserAction.disable(tabId);
     // console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
@@ -51,7 +63,7 @@ function onTabUpdated(tabId, changeInfo, tab) {
 async function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Button clicked, opening abstract / PDF page.");
   const pageType = tab.url.includes("pdf") ? "PDF" : "Abstract";
-  const id = getId(tab.url);
+  const id = await getIdAsync(tab.url);
   if (!id) {
     console.error(LOG_PREFIX, "Error: Failed to get paper ID, aborted.");
     return;
@@ -66,7 +78,7 @@ async function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
 }
 // Redirect to custom PDF page.
-function onBeforeWebRequest(requestDetails) {
+async function onBeforeWebRequestAsync(requestDetails) {
   if (requestDetails.documentUrl !== undefined) {
     // Request from this plugin itself (the embedded PDF).
     return;
@@ -76,16 +88,17 @@ function onBeforeWebRequest(requestDetails) {
     return;
   }
   // Force HTTPS to avoid CSP (Content Security Policy) violation.
-  const targetRelatedURL = pdfViewerRelatedURL + requestDetails.url.replace("http:", "https:");
-  const targetURL = browser.runtime.getURL(targetRelatedURL);
+  const url = requestDetails.url.replace("http:", "https:");
+  // Redirect to custom PDF viewer or a external PDF viewer.
+  targetURL = await getPDFViewerURLPrefixAsync() + url;
   console.log(`${LOG_PREFIX} Redirecting: ${requestDetails.url} to ${targetURL}`);
   return {
     redirectUrl: targetURL
   };
 }
 // If the custom PDF page is bookmarked, bookmark the original PDF link instead.
-function onCreateBookmarkAsync(id, bookmarkInfo) {
-  const prefix = browser.runtime.getURL(pdfViewerRelatedURL);
+async function onCreateBookmarkAsync(id, bookmarkInfo) {
+  const prefix = await getPDFViewerURLPrefixAsync();
   if (!bookmarkInfo.url.startsWith(prefix)) {
     return;
   }
@@ -123,7 +136,7 @@ browser.contextMenus.create({
 
 // Redirect the PDF page to custom PDF container page.
 browser.webRequest.onBeforeRequest.addListener(
-  onBeforeWebRequest,
+  onBeforeWebRequestAsync,
   { urls: redirectPatterns },
   ["blocking"]
 );

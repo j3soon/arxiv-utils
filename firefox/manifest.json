@@ -6,7 +6,8 @@
     "scripts": [ "background.js" ]
   },
   "content_scripts": [{
-    "matches": [ "*://arxiv.org/abs/*", "*://export.arxiv.org/abs/*" ],
+    "matches": [ "*://arxiv.org/abs/*", "*://export.arxiv.org/abs/*",
+      "*://mozilla.github.io/pdf.js/web/viewer.html*" ],
     "js": [ "content.js" ],
     "run_at": "document_end"
   }],

@@ -54,8 +54,7 @@ async function addCustomLinksAsync(id, articleInfo) {
   const result = await chrome.storage.sync.get({
     'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'
   });
-  const fileNameFormat = result.filename_format;
-  const fileName = fileNameFormat
+  const fileName = result.filename_format
     .replace('${title}', articleInfo.escapedTitle)
     .replace('${firstAuthor}', articleInfo.firstAuthor)
     .replace('${publishedYear}', articleInfo.publishedYear);

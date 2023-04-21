@@ -6,13 +6,22 @@
   </head>
 
 <body>
-  <p>Current filename format: <b id="filename-format">${title}, ${firstAuthor} et al., ${publishedYear}.pdf</b></p>
   <form>
-      <label>New filename format:</label>
-      <input type="text" id="new-filename-format" style="margin: 2px; width:500px;" ><br>
-      <button type="submit">Update</button>
-      <button id="revert" type="submit">Revert to Default</button><br>
-      <p>You'll need to re-open the arXiv tabs for the new format to take effect.</p>
+    <p>Current filename format: <b id="filename-format">${title}, ${firstAuthor} et al., ${publishedYear}.pdf</b></p>
+    <label>New filename format:</label>
+    <input type="text" id="new-filename-format" style="margin: 2px; width:500px;" ><br>
+    <button id="update-filename-format" type="submit">Update</button>
+    <button id="revert-filename-format" type="submit">Revert to Default</button><br>
+    <p>Note: You'll need to re-open the arXiv tabs for the new format to take effect.</p>
+  </form>
+  <b>Experimental Features:</b>
+  <form>
+    <p>Current external PDF viewer URL prefix: <b id="pdf-viewer-url-prefix"></b></p>
+    <label>New external PDF viewer URL prefix:</label>
+    <input type="text" id="new-pdf-viewer-url-prefix" style="margin: 2px; width:400px;" value="https://mozilla.github.io/pdf.js/web/viewer.html?file="><br>
+    <button id="update-pdf-viewer-url-prefix" type="submit">Update</button>
+    <button id="revert-pdf-viewer-url-prefix" type="submit">Revert to Default</button><br>
+    <p>Note: Setting a external PDF viewer enables Screenshots and Go Back.</p>
   </form>
   <a href="https://github.com/j3soon/arxiv-utils">Help</a>
   <script src="options.js"></script>

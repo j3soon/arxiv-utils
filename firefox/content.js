@@ -8,6 +8,8 @@ const ID_REGEXP_REPLACE = [
   [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1"],
   [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "$1"],
   [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2"],
+  // For external PDF viewer
+  [/^.*:\/\/mozilla\.github\.io\/pdf\.js\/web\/viewer\.html\?file=https:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*$/, "$1"],
 ];
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
@@ -52,8 +54,7 @@ async function addCustomLinksAsync(id, articleInfo) {
   const result = await browser.storage.sync.get({
     'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'
   });
-  const fileNameFormat = result.filename_format;
-  const fileName = fileNameFormat
+  const fileName = result.filename_format
     .replace('${title}', articleInfo.escapedTitle)
     .replace('${firstAuthor}', articleInfo.firstAuthor)
     .replace('${publishedYear}', articleInfo.publishedYear);

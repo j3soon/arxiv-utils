@@ -8,13 +8,13 @@
 
 <body>
   <h1>Options for arxiv-utils </h1>
-  <p>Current filename format: <b id="filename-format">${title}, ${firstAuthor} et al., ${publishedYear}.pdf</b></p>
   <form>
-      <label>New filename format:</label>
-      <input type="text" id="new-filename-format" style="margin: 2px; width:500px;" ><br>
-      <button type="submit">Update</button>
-      <button id="revert" type="submit">Revert to Default</button><br>
-      <p>You'll need to re-open the arXiv tabs for the new format to take effect.</p>
+    <p>Current filename format: <b id="filename-format">${title}, ${firstAuthor} et al., ${publishedYear}.pdf</b></p>
+    <label>New filename format:</label>
+    <input type="text" id="new-filename-format" style="margin: 2px; width:500px;" ><br>
+    <button id="update-filename-format" type="submit">Update</button>
+    <button id="revert-filename-format" type="submit">Revert to Default</button><br>
+    <p>Note: You'll need to re-open the arXiv tabs for the new format to take effect.</p>
   </form>
   <a href="https://github.com/j3soon/arxiv-utils">Help</a>
   <script src="options.js"></script>

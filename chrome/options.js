@@ -1,7 +1,7 @@
 async function saveOptionsAsync(e) {
-  if (e.submitter.id === "revert") {
+  if (e.submitter.id === "revert-filename-format") {
     await chrome.storage.sync.remove('filename_format');
-  } else {
+  } else if (e.submitter.id === "update-filename-format") {
     await chrome.storage.sync.set({
       'filename_format': document.querySelector("#new-filename-format").value
     });
@@ -20,4 +20,7 @@ async function restoreOptionsAsync() {
 }
 
 document.addEventListener('DOMContentLoaded', restoreOptionsAsync);
-document.querySelector("form").addEventListener("submit", saveOptionsAsync);
+const forms = [...document.getElementsByTagName("form")]
+forms.forEach(element => {
+  element.addEventListener("submit", saveOptionsAsync);
+})
