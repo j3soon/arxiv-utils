@@ -80,6 +80,20 @@ For ArXiv PDF / abstract tabs:
   - [Enable Tab search on Chrome](https://www.howtogeek.com/722640/how-to-enable-or-disable-the-tab-search-icon-in-chrome/), [Tab search on Chrome](https://www.howtogeek.com/704212/how-to-search-open-tabs-on-google-chrome/)
   - [Enable Tab search on Edge](https://www.makeuseof.com/microsoft-edge-chrome-tab-search/)
 
+## Options
+
+- `filename format`:
+  - Default: `${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf`
+  - `${title}` is replaced with the paper title.
+  - `${firstAuthor}` is replaced with the first author of the paper.
+  - `${authors}` is replaced with all authors separated by commas.
+  - `${publishedYear}` is replaced with the published year of the paper.
+  - `${updatedYear}` is replaced with the updated year of the current paper version.
+  - `${version}` is replaced with the version of the current paper.
+- (Firefox, Experimental) `external PDF viewer URL prefix`:
+  - Default: (empty), uses the custom PDF container.
+  - Set to `https://mozilla.github.io/pdf.js/web/viewer.html?file=`, enables Screenshots and Go Back by using pdf.js as PDF viewer.
+
 ## Privacy Policy
 
 We do not gather your personal data. If in doubt, please refer to the source code.

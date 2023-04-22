@@ -42,31 +42,43 @@ async function getArticleInfoAsync(id, pageType) {
   }
   const xmlDoc = await response.text();
   const parsedXML = new DOMParser().parseFromString(xmlDoc, 'text/xml');
+  const entry = parsedXML.getElementsByTagName("entry")[0];
   // title[0] is query string, title[1] is paper name.
-  const title = parsedXML.getElementsByTagName("title")[1].textContent;
+  const title = entry.getElementsByTagName("title")[0].textContent;
   // Long titles will be split into multiple lines, with all lines except the first one starting with two spaces.
   const escapedTitle = title.replace("\n", "").replace("  ", " ");
   // TODO: May need to escape special characters in title?
   const newTitle = `${escapedTitle} | ${pageType}`;
-  const firstAuthor = parsedXML.getElementsByTagName("name")[0].textContent;
-  const publishedYear = parsedXML.getElementsByTagName("published")[0].textContent.split('-')[0];
+  const firstAuthor = entry.getElementsByTagName("name")[0].textContent;
+  const authors = [...entry.getElementsByTagName("name")].map((el) => el.textContent).join(", ");
+  const publishedYear = entry.getElementsByTagName("published")[0].textContent.split('-')[0];
+  const updatedYear = entry.getElementsByTagName("updated")[0].textContent.split('-')[0];
+  const versionRegexp = /^.*v([0-9]*)$/;
+  const version = entry.getElementsByTagName("link")[0].getAttribute("href").match(versionRegexp)[1];
   return {
     escapedTitle,
     newTitle,
     firstAuthor,
+    authors,
     publishedYear,
+    updatedYear,
+    version,
   }
 }
 // Add a custom links in abstract page.
 async function addCustomLinksAsync(id, articleInfo) {
   // Add direct download link.
   const result = await browser.storage.sync.get({
-    'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'
+    'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf'
   });
   const fileName = result.filename_format
     .replace('${title}', articleInfo.escapedTitle)
     .replace('${firstAuthor}', articleInfo.firstAuthor)
-    .replace('${publishedYear}', articleInfo.publishedYear);
+    .replace('${authors}', articleInfo.authors)
+    .replace('${publishedYear}', articleInfo.publishedYear)
+    .replace('${updatedYear}', articleInfo.updatedYear)
+    .replace('${version}', articleInfo.version)
+    ;
   const directURL = `https://arxiv.org/pdf/${id}.pdf?download`;
   const directDownloadId = "arxiv-utils-direct-download-li";
   document.getElementById(directDownloadId)?.remove();

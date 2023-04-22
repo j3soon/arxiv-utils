@@ -140,3 +140,5 @@ navigation:
   pdf_title: Designing Network Design Spaces | PDF
   pdf2abs: False
   description: with HTTP (for firefox)
+# TODO: Test download filename with: https://arxiv.org/abs/2209.12753
+# TODO: using `${title}, ${firstAuthor} et al., ${authors}, ${publishedYear}, ${updatedYear}, v${version}.pdf`

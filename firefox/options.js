@@ -18,7 +18,7 @@ async function saveOptionsAsync(e) {
 
 async function restoreOptionsAsync() {
   const result = await browser.storage.sync.get({
-    'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf',
+    'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf',
     'pdf_viewer_url_prefix': '',
   });
   const filename_format = result.filename_format;

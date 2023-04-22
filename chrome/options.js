@@ -12,7 +12,7 @@ async function saveOptionsAsync(e) {
 
 async function restoreOptionsAsync() {
   const result = await chrome.storage.sync.get({
-    'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}.pdf'
+    'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf'
   });
   const filename_format = result.filename_format;
   document.querySelector("#filename-format").innerText = filename_format;
