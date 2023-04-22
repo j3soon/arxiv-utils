@@ -53,9 +53,13 @@ async function getArticleInfoAsync(id, pageType) {
   const authors = [...entry.getElementsByTagName("name")].map((el) => el.textContent).join(", ");
   const publishedYear = entry.getElementsByTagName("published")[0].textContent.split('-')[0];
   const updatedYear = entry.getElementsByTagName("updated")[0].textContent.split('-')[0];
-  const versionRegexp = /^.*v([0-9]*)$/;
-  const version = entry.getElementsByTagName("link")[0].getAttribute("href").match(versionRegexp)[1];
-  return {
+  const versionRegexp = /^.*:\/\/(?:export\.)?arxiv\.org\/abs\/.*v([0-9]*)$/;
+  var version = '';
+  for (const el of entry.getElementsByTagName("link")) {
+    const match = el.getAttribute("href").match(versionRegexp);
+    if (match && match[1])
+      version = match[1];
+  }  return {
     escapedTitle,
     newTitle,
     firstAuthor,
