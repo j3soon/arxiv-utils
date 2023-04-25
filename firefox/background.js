@@ -4,11 +4,14 @@
 // For our PDF container.
 const pdfViewerRelatedURL = "pdfviewer.html?target=";
 // The match pattern for the URLs to redirect
-// Note: https://arxiv.org/pdf/<id> is the direct link, then the url is renamed to https://arxiv.org/pdf/<id>.pdf
-//       we capture only the last url (the one that ends with '.pdf').
-// Adding some extra parameter such as https://arxiv.org/pdf/<id>.pdf?download can bypass this capture.
+// Note: `https://arxiv.org/pdf/<id>` is the direct link, then the url is redirected to `https://arxiv.org/pdf/<id>.pdf`
+//       we capture only the last url (the one containing `.pdf`).
+//       However, if `https://arxiv.org/pdf/<id>/` is the direct link, no redirection will happen,
+//       we need to capture this too.
+// The direct download link such as `https://arxiv.org/pdf/<id>.pdf?download` will be checked afterwards.
 const redirectPatterns = [
-  "*://arxiv.org/*pdf*", "*://export.arxiv.org/*pdf*"
+  "*://arxiv.org/*.pdf*", "*://export.arxiv.org/*.pdf*",
+  "*://arxiv.org/*pdf*/", "*://export.arxiv.org/*pdf*/",
 ];
 // Regular expressions for parsing arXiv IDs from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
