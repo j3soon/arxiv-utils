@@ -90,6 +90,9 @@ For ArXiv PDF / abstract tabs:
   - `${publishedYear}` is replaced with the published year of the paper.
   - `${updatedYear}` is replaced with the updated year of the current paper version.
   - `${version}` is replaced with the version of the current paper.
+- (Firefox) `Enable PDF redirection`:
+  - Default: `true`
+  - Set to `false` to disable PDF redirection. This will disallow renaming for PDF tabs.
 - (Firefox, Experimental) `external PDF viewer URL prefix`:
   - Default: (empty), uses the custom PDF container.
   - Set to `https://mozilla.github.io/pdf.js/web/viewer.html?file=`, enables Screenshots and Go Back by using pdf.js as PDF viewer.
@@ -216,6 +219,14 @@ Download the signed `.crx` or `.xpi` files:
   - [Download CRX](https://edge.microsoft.com/extensionwebstorebase/v1/crx?response=redirect&x=id%3Dngjpcfjabahdoadnajbhnikbemhmemdg%26installsource%3Dondemand%26uc)
 
 ## Frequently Asked Questions (FAQ)
+
+- Q: Why redirect PDFs to a custom viewer in Firefox?
+
+  A: This is due to a bug in Firefox that disallows executing content scripts in the built-in pdf.js viewer, which disallows renaming for PDF tabs. See [Firefox Bug 1454760](https://bugzilla.mozilla.org/show_bug.cgi?id=1454760) for more details.
+
+- Q: Why do the custom PDF viewer in Firefox lacks many features?
+
+  A: Since these features cannot be enabled easily. See [#4](https://github.com/j3soon/arxiv-utils/issues/4) and [#13](https://github.com/j3soon/arxiv-utils/pull/13) for further details.
 
 - Q: Selenium (or WebDriver) has no API to click addon/extension buttons, how do the automated tests click the arxiv-utils button?
 

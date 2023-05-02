@@ -91,10 +91,17 @@ async function onBeforeWebRequestAsync(requestDetails) {
     // Request from this plugin itself (download PDF).
     return;
   }
+  const redirectPDF = (await browser.storage.sync.get({
+    'redirect_pdf': true
+  })).redirect_pdf;
+  if (!redirectPDF) {
+    // Redirection of PDF is disabled.
+    return;
+  }
   // Force HTTPS to avoid CSP (Content Security Policy) violation.
   const url = requestDetails.url.replace("http:", "https:");
   // Redirect to custom PDF viewer or a external PDF viewer.
-  targetURL = await getPDFViewerURLPrefixAsync() + url;
+  const targetURL = await getPDFViewerURLPrefixAsync() + url;
   console.log(`${LOG_PREFIX} Redirecting: ${requestDetails.url} to ${targetURL}`);
   return {
     redirectUrl: targetURL

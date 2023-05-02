@@ -10,9 +10,13 @@
     <p>Current filename format: <b id="filename-format">(To be loaded)</b></p>
     <label>New filename format:</label>
     <input type="text" id="new-filename-format" style="margin: 2px; width:500px;" ><br>
+    <p>Using PDF redirection: <b id="redirect-pdf"></b></p>
+    <input type="checkbox" id="new-redirect-pdf" name="new-redirect-pdf">
+    <label for="new-redirect-pdf">Enable PDF redirection</label><br><br>
     <button id="update-filename-format" type="submit">Update</button>
     <button id="revert-filename-format" type="submit">Revert to Default</button><br>
-    <p>Note: You'll need to re-open the arXiv tabs for the new format to take effect.</p>
+    <p>Note: You'll need to re-open the arXiv tabs for the new filename format to take effect.</p>
+    <p>Note: Disabling PDF redirection will disallow renaming for PDF tabs.</p>
   </form>
   <b>Experimental Features:</b>
   <form>
@@ -21,7 +25,7 @@
     <input type="text" id="new-pdf-viewer-url-prefix" style="margin: 2px; width:400px;" value="https://mozilla.github.io/pdf.js/web/viewer.html?file="><br>
     <button id="update-pdf-viewer-url-prefix" type="submit">Update</button>
     <button id="revert-pdf-viewer-url-prefix" type="submit">Revert to Default</button><br>
-    <p>Note: Setting a external PDF viewer enables Screenshots and Go Back.</p>
+    <p>Note: Setting an external PDF viewer enables Screenshots and Go Back.</p>
   </form>
   <a href="https://github.com/j3soon/arxiv-utils#options">Help</a>
   <script src="options.js"></script>
