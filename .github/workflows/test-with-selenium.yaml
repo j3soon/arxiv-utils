@@ -9,15 +9,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Start test containers
-      run: tests/scripts/docker/compose/up.sh -d
+      run: tests/scripts/docker-compose.sh up -d
     - name: Test selenium hub connection
-      run: tests/scripts/docker/utils/test-connection.sh http://selenium-hub:4444
+      run: tests/scripts/docker-utils/test-connection.sh http://selenium-hub:4444
     # Start testing
     - name: Test default
-      run: tests/scripts/docker/utils/exec-selenium.sh test_default.py
+      run: tests/scripts/docker-utils/exec-selenium.sh test_default.py
     - name: Test navigation
-      run: tests/scripts/docker/utils/exec-selenium.sh test_navigation.py
+      run: tests/scripts/docker-utils/exec-selenium.sh test_navigation.py
     # Clean up
     - name: Stop test containers
       if: always()
-      run: tests/scripts/docker/compose/shutdown.sh
+      run: tests/scripts/docker-compose.sh shutdown

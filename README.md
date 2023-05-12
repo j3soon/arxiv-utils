@@ -177,7 +177,7 @@ Other functions should still be tested manually:
 Install VSCode and [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) plugin.
 
 ```sh
-tests/scripts/docker/compose/up.sh -d
+tests/scripts/docker-compose.sh up -d
 ```
 
 Press `Ctrl + P` and select `>Dev Container: Attach to Running Container...`,
