@@ -8,6 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Pull docker images
+      run: tests/scripts/docker-compose.sh pull
+    # Cache docker images
+    - uses: satackey/action-docker-layer-caching@v0.0.11
+      continue-on-error: true
     - name: Start test containers
       run: tests/scripts/docker-compose.sh up -d
     - name: Test selenium hub connection
