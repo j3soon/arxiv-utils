@@ -140,5 +140,16 @@ navigation:
   pdf_title: Designing Network Design Spaces | PDF
   pdf2abs: False
   description: with HTTP (for firefox)
+# Below are testcases for external URLs
+- url: https://ar5iv.labs.arxiv.org/html/1512.03385
+  title: Deep Residual Learning for Image Recognition | HTML5
+  url2: https://arxiv.org/abs/1512.03385
+  title2: Deep Residual Learning for Image Recognition | Abstract
+  description: From ar5iv to arXiv
+- url: https://www.arxiv-vanity.com/papers/1512.03385/
+  title: Deep Residual Learning for Image Recognition – arXiv Vanity
+  url2: https://arxiv.org/abs/1512.03385
+  title2: Deep Residual Learning for Image Recognition | Abstract
+  description: From ar5iv to arXiv
 # TODO: Test download filename with: https://arxiv.org/abs/2209.12753
 # TODO: using `${title}, ${firstAuthor} et al., ${authors}, ${publishedYear}, ${updatedYear}, v${version}.pdf`
