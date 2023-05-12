@@ -1,20 +1,20 @@
 // This background script implements the extension button,
 // and triggers the content script upon tab title change.
 
-// Regular expressions for parsing arXiv IDs from URLs.
+// Regular expressions for parsing target navigation URL from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
-const ID_REGEXP_REPLACE = [
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "$1"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2"],
-  [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1"],
+const TARGET_URL_REGEXP_REPLACE = [
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/pdf/$1.pdf"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
+  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1$2"],
+  [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
 ];
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
 
-// Return the id parsed from the url.
-function getId(url) {
-  for (const [regexp, replacement] of ID_REGEXP_REPLACE) {
+// Return the target URL parsed from the url.
+function getTargetURL(url) {
+  for (const [regexp, replacement] of TARGET_URL_REGEXP_REPLACE) {
     if (regexp.test(url))
       return url.replace(regexp, replacement);
   }
@@ -22,7 +22,7 @@ function getId(url) {
 }
 // Update the state of the extension button (i.e., browser action)
 async function updateActionStateAsync(tabId, url) {
-  const id = getId(url);
+  const id = getTargetURL(url);
   if (!id) {
     await chrome.action.disable(tabId);
     // console.log(LOG_PREFIX, `Disabled browser action for tab ${tabId} with url: ${url}.`);
@@ -34,7 +34,7 @@ async function updateActionStateAsync(tabId, url) {
 // Update browser action state for the updated tab.
 function onTabUpdated(tabId, changeInfo, tab) {
   updateActionStateAsync(tabId, tab.url)
-  const id = getId(tab.url);
+  const id = getTargetURL(tab.url);
   if (!id) return;
   if (changeInfo.title && tab.status == "complete") {
     // Send title changed message to content script.
@@ -46,14 +46,11 @@ function onTabUpdated(tabId, changeInfo, tab) {
 // Open the abstract / PDF page according to the current URL.
 async function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Button clicked, opening abstract / PDF page.");
-  const pageType = tab.url.includes("abs") ? "Abstract" : "PDF";
-  const id = getId(tab.url);
-  if (!id) {
+  const targetURL = getTargetURL(tab.url);
+  if (!targetURL) {
     console.error(LOG_PREFIX, "Error: Failed to get paper ID, aborted.");
     return;
   }
-  // Construct the target URL.
-  const targetURL = (pageType === "Abstract") ? `https://arxiv.org/pdf/${id}.pdf` : `https://arxiv.org/abs/${id}`;
   // Create the abstract / PDF page in new tab.
   await chrome.tabs.create({
     url: targetURL,
