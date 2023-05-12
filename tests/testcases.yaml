@@ -145,11 +145,19 @@ navigation:
   title: Deep Residual Learning for Image Recognition | HTML5
   url2: https://arxiv.org/abs/1512.03385
   title2: Deep Residual Learning for Image Recognition | Abstract
-  description: From ar5iv to arXiv
+  description: ar5iv -> arXiv
 - url: https://www.arxiv-vanity.com/papers/1512.03385/
   title: Deep Residual Learning for Image Recognition – arXiv Vanity
   url2: https://arxiv.org/abs/1512.03385
   title2: Deep Residual Learning for Image Recognition | Abstract
-  description: From ar5iv to arXiv
+  description: arxiv-vanity -> arXiv
+- url: https://openreview.net/pdf?id=LcF-EEt8cCC
+  url2: https://openreview.net/forum?id=LcF-EEt8cCC
+  title2: Denoising Likelihood Score Matching for Conditional Score-based Data Generation | OpenReview
+  description: OpenReview pdf -> abs
+- url: https://openreview.net/forum?id=LcF-EEt8cCC
+  title: Denoising Likelihood Score Matching for Conditional Score-based Data Generation | OpenReview
+  url2: https://openreview.net/pdf?id=LcF-EEt8cCC
+  description: OpenReview abs -> pdf
 # TODO: Test download filename with: https://arxiv.org/abs/2209.12753
 # TODO: using `${title}, ${firstAuthor} et al., ${authors}, ${publishedYear}, ${updatedYear}, v${version}.pdf`

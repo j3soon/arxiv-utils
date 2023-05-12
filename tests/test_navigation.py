@@ -222,12 +222,13 @@ for browser in ['chrome', 'firefox', 'edge']:
             assert len(windows_stack) == 2
             assert len(driver.window_handles) == 2
             driver.get(url)
-            print(f"Checking (abs) title...")
-            try:
-                wait.until(EC.title_is(title))
-            except TimeoutException as e:
-                print(f"Title mismatch: `{driver.title}`; URL: `{driver.current_url}`.")
-            assert driver.title == title
+            if title:
+                print(f"Checking (abs) title...")
+                try:
+                    wait.until(EC.title_is(title))
+                except TimeoutException as e:
+                    print(f"Title mismatch: `{driver.title}`; URL: `{driver.current_url}`.")
+                assert driver.title == title
             meta_click_arxiv_utils()
             wait.until(EC.number_of_windows_to_be(3))
             print(f"Closing (abs) webpage...")

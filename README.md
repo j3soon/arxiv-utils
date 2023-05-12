@@ -17,10 +17,10 @@
 
 ![icon](icons/icon64.png)
 
-If you are a researcher that reads a lot on ArXiv, you'll benefit a lot from this web extension.
+A collection of features that enhance your reading experience on ArXiv (and some other sites):
 
 - Renames the title of PDF page to the paper's title.
-- Adds a button to navigate back to Abstract page.
+- Adds a button to navigate back to Abstract page for arXiv, OpenReview, and more.
 - Download PDF with paper's title as filename.
 - Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/) and [arXiv Vanity](https://www.arxiv-vanity.com/).
 - Works with Native Tab Search, and other plugins! (See the [Solution Descriptions](#solution-descriptions) section for more details)
