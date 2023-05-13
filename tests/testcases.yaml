@@ -163,5 +163,57 @@ navigation:
   title: Denoising Likelihood Score Matching for Conditional Score-based Data Generation | OpenReview
   url2: https://openreview.net/pdf?id=LcF-EEt8cCC
   description: OpenReview abs (with query strings) -> pdf
+- url: https://papers.nips.cc/paper_files/paper/1987/file/02e74f10e0327ad868d138f2b4fdd6f0-Paper.pdf
+  url2: https://papers.nips.cc/paper_files/paper/1987/hash/02e74f10e0327ad868d138f2b4fdd6f0-Abstract.html
+  title2: Bit-Serial Neural Networks
+  description: NIPS pdf -> abs (1987)
+- url: https://papers.nips.cc/paper_files/paper/1987/hash/02e74f10e0327ad868d138f2b4fdd6f0-Abstract.html
+  title: Bit-Serial Neural Networks
+  url2: https://papers.nips.cc/paper_files/paper/1987/file/02e74f10e0327ad868d138f2b4fdd6f0-Paper.pdf
+  description: NIPS abs -> pdf (1987)
+- url: https://papers.nips.cc/paper_files/paper/2019/file/0234c510bc6d908b28c70ff313743079-Paper.pdf
+  url2: https://papers.nips.cc/paper_files/paper/2019/hash/0234c510bc6d908b28c70ff313743079-Abstract.html
+  title2: Improved Precision and Recall Metric for Assessing Generative Models
+  description: NIPS pdf -> abs (2019)
+- url: https://papers.nips.cc/paper_files/paper/2019/file/0234c510bc6d908b28c70ff313743079-Reviews.html
+  url2: https://papers.nips.cc/paper_files/paper/2019/hash/0234c510bc6d908b28c70ff313743079-Abstract.html
+  title2: Improved Precision and Recall Metric for Assessing Generative Models
+  description: NIPS reviews -> abs (2019)
+- url: https://papers.nips.cc/paper_files/paper/2019/file/0234c510bc6d908b28c70ff313743079-Metadata.json
+  url2: https://papers.nips.cc/paper_files/paper/2019/hash/0234c510bc6d908b28c70ff313743079-Abstract.html
+  title2: Improved Precision and Recall Metric for Assessing Generative Models
+  description: NIPS metadata -> abs (2019)
+- url: https://papers.nips.cc/paper_files/paper/2019/file/0234c510bc6d908b28c70ff313743079-MetaReview.html
+  url2: https://papers.nips.cc/paper_files/paper/2019/hash/0234c510bc6d908b28c70ff313743079-Abstract.html
+  title2: Improved Precision and Recall Metric for Assessing Generative Models
+  description: NIPS meta-review -> abs (2019)
+- url: https://papers.nips.cc/paper_files/paper/2019/file/0234c510bc6d908b28c70ff313743079-AuthorFeedback.pdf
+  url2: https://papers.nips.cc/paper_files/paper/2019/hash/0234c510bc6d908b28c70ff313743079-Abstract.html
+  title2: Improved Precision and Recall Metric for Assessing Generative Models
+  description: NIPS author-feedback -> abs (2019)
+- url: https://papers.nips.cc/paper_files/paper/2019/hash/0234c510bc6d908b28c70ff313743079-Abstract.html
+  title: Improved Precision and Recall Metric for Assessing Generative Models
+  url2: https://papers.nips.cc/paper_files/paper/2019/file/0234c510bc6d908b28c70ff313743079-Paper.pdf
+  description: NIPS abs -> pdf (2019)
+- url: https://papers.nips.cc/paper_files/paper/2021/file/cba0a4ee5ccd02fda0fe3f9a3e7b89fe-Paper.pdf
+  url2: https://papers.nips.cc/paper_files/paper/2021/hash/cba0a4ee5ccd02fda0fe3f9a3e7b89fe-Abstract.html
+  title2: "MLP-Mixer: An all-MLP Architecture for Vision"
+  description: NIPS pdf -> abs (2021)
+- url: https://papers.nips.cc/paper_files/paper/2021/file/cba0a4ee5ccd02fda0fe3f9a3e7b89fe-Supplemental.pdf
+  url2: https://papers.nips.cc/paper_files/paper/2021/hash/cba0a4ee5ccd02fda0fe3f9a3e7b89fe-Abstract.html
+  title2: "MLP-Mixer: An all-MLP Architecture for Vision"
+  description: NIPS sup -> abs (2021)
+- url: https://papers.nips.cc/paper_files/paper/2021/hash/cba0a4ee5ccd02fda0fe3f9a3e7b89fe-Abstract.html
+  title: "MLP-Mixer: An all-MLP Architecture for Vision"
+  url2: https://papers.nips.cc/paper_files/paper/2021/file/cba0a4ee5ccd02fda0fe3f9a3e7b89fe-Paper.pdf
+  description: NIPS abs -> pdf (2021)
+- url: https://papers.nips.cc/paper_files/paper/2022/file/93f250215e4889119807b6fac3a57aec-Paper-Conference.pdf
+  url2: https://papers.nips.cc/paper_files/paper/2022/hash/93f250215e4889119807b6fac3a57aec-Abstract-Conference.html
+  title2: Decomposing NeRF for Editing via Feature Field Distillation
+  description: NIPS pdf -> abs (2022) with `Conference` suffix
+- url: https://papers.nips.cc/paper_files/paper/2022/hash/93f250215e4889119807b6fac3a57aec-Abstract-Conference.html
+  title: Decomposing NeRF for Editing via Feature Field Distillation
+  url2: https://papers.nips.cc/paper_files/paper/2022/file/93f250215e4889119807b6fac3a57aec-Paper-Conference.pdf
+  description: NIPS abs -> pdf (2022) with `Conference` suffix
 # TODO: Test download filename with: https://arxiv.org/abs/2209.12753
 # TODO: using `${title}, ${firstAuthor} et al., ${authors}, ${publishedYear}, ${updatedYear}, v${version}.pdf`

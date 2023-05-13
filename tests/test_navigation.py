@@ -72,6 +72,7 @@ for browser in ['chrome', 'firefox', 'edge']:
         command_executor=command_executor,
         options=options
     )
+    driver.set_page_load_timeout(3)
     wait = WebDriverWait(driver, 15)
 
     # The webdriver includes a default tab
@@ -221,7 +222,10 @@ for browser in ['chrome', 'firefox', 'edge']:
             windows_stack.append(driver.current_window_handle)
             assert len(windows_stack) == 2
             assert len(driver.window_handles) == 2
-            driver.get(url)
+            try:
+                driver.get(url)
+            except TimeoutException as e:
+                print(f"Page load timeout, continuing...")
             if title:
                 print(f"Checking (abs) title...")
                 try:
@@ -266,7 +270,7 @@ for browser in ['chrome', 'firefox', 'edge']:
                 # Outside arXiv domain
                 print(f"Checking (the second) url...")
                 try:
-                    wait.until(EC.url_to_be(pdf_url))
+                    wait.until(EC.url_to_be(url2))
                 except TimeoutException as e:
                     print(f"URL mismatch: `{driver.current_url}`.")
                 assert driver.current_url == url2
@@ -276,7 +280,10 @@ for browser in ['chrome', 'firefox', 'edge']:
             windows_stack.append(driver.current_window_handle)
             assert len(windows_stack) == 2
             assert len(driver.window_handles) == 2
-            driver.get(pdf_url)
+            try:
+                driver.get(pdf_url)
+            except TimeoutException as e:
+                print(f"Page load timeout, continuing...")
 
         if pdf_url:
             # Within arXiv domain
