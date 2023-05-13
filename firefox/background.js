@@ -21,8 +21,8 @@ const TARGET_URL_REGEXP_REPLACE = [
   [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1$2"],
   [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
   [/^.*:\/\/www\.arxiv-vanity\.com\/papers\/(\S*?)\/?(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
-  [/^.*:\/\/openreview\.net\/forum\?id=(\S*?)(\#.*?)?$/, "https://openreview.net/pdf?id=$1"],
-  [/^.*:\/\/openreview\.net\/pdf\?id=(\S*?)(\#.*?)?$/, "https://openreview.net/forum?id=$1"],
+  [/^.*:\/\/openreview\.net\/forum\?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/pdf?id=$1"],
+  [/^.*:\/\/openreview\.net\/pdf\?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/forum?id=$1"],
 ];
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
