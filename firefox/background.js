@@ -23,11 +23,13 @@ const TARGET_URL_REGEXP_REPLACE = [
   [/^.*:\/\/www\.arxiv-vanity\.com\/papers\/(\S*?)\/?(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
   [/^.*:\/\/openreview\.net\/forum\?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/pdf?id=$1"],
   [/^.*:\/\/openreview\.net\/pdf\?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/forum?id=$1"],
-  // Starting from 2022, NIPS may end with a `-Conference` suffix
+  // Starting from 2022, NIPS urls may end with a `-Conference` suffix
   [/^.*:\/\/papers\.nips\.cc\/paper_files\/paper\/(\d*)\/(?:[^\/]*)\/(.*?)-Abstract(-Conference)?\.html(\?.*?)?(\#.*?)?$/,
     "https://papers.nips.cc/paper_files/paper/$1/file/$2-Paper$3.pdf"],
   [/^.*:\/\/papers\.nips\.cc\/paper_files\/paper\/(\d*)\/(?:[^\/]*)\/(.*?)-.*?(-Conference)?\..*?(\?.*?)?(\#.*?)?$/,
     "https://papers.nips.cc/paper_files/paper/$1/hash/$2-Abstract$3.html"],
+  [/^.*:\/\/proceedings\.mlr\.press\/(.*?)\/(.*?)\.html(\?.*?)?(\#.*?)?$/, "https://proceedings.mlr.press/$1/$2/$2.pdf"],
+  [/^.*:\/\/proceedings\.mlr\.press\/(.*?)\/(.*?)\/.*?(\?.*?)?(\#.*?)?$/, "https://proceedings.mlr.press/$1/$2.html"],
 ];
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";

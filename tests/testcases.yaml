@@ -215,5 +215,17 @@ navigation:
   title: Decomposing NeRF for Editing via Feature Field Distillation
   url2: https://papers.nips.cc/paper_files/paper/2022/file/93f250215e4889119807b6fac3a57aec-Paper-Conference.pdf
   description: NIPS abs -> pdf (2022) with `Conference` suffix
+- url: https://proceedings.mlr.press/v139/sun21c/sun21c.pdf
+  url2: https://proceedings.mlr.press/v139/sun21c.html
+  title2: "DFAC Framework: Factorizing the Value Function via Quantile Mixture for Multi-Agent Distributional Q-Learning"
+  description: PMLR pdf -> abs (2021)
+- url: https://proceedings.mlr.press/v139/sun21c/sun21c-supp.pdf
+  url2: https://proceedings.mlr.press/v139/sun21c.html
+  title2: "DFAC Framework: Factorizing the Value Function via Quantile Mixture for Multi-Agent Distributional Q-Learning"
+  description: PMLR sup -> abs (2021)
+- url: https://proceedings.mlr.press/v139/sun21c.html
+  title: "DFAC Framework: Factorizing the Value Function via Quantile Mixture for Multi-Agent Distributional Q-Learning"
+  url2: https://proceedings.mlr.press/v139/sun21c/sun21c.pdf
+  description: PMLR abs -> pdf (2021)
 # TODO: Test download filename with: https://arxiv.org/abs/2209.12753
 # TODO: using `${title}, ${firstAuthor} et al., ${authors}, ${publishedYear}, ${updatedYear}, v${version}.pdf`
