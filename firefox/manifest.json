@@ -19,6 +19,13 @@
     },
     "default_title": "Open Abstract / PDF"
   },
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Alt+A"
+      }
+    }
+  },
   "permissions": [
     "tabs",
     "activeTab",
