@@ -194,6 +194,8 @@ for browser in ['chrome', 'firefox', 'edge']:
 
     meta_setup_arxiv_utils()
 
+    # Note: These tests are flaky due to delays, we may need to rerun them manually
+    # TODO: Tune the delays to make the tests more reliable (potentially increase the page load timeout?)
     for testcase in testcases['navigation']:
         url, title, pdf_url, pdf_title, url2, title2, description = \
             itemgetter('url', 'title', 'pdf_url', 'pdf_title', 'url2', 'title2', 'description')(

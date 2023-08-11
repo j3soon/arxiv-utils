@@ -12,8 +12,12 @@
     <p>Current filename format: <b id="filename-format">(To be loaded)</b></p>
     <label>New filename format:</label>
     <input type="text" id="new-filename-format" style="margin: 2px; width:500px;" ><br>
-    <button id="update-filename-format" type="submit">Update</button>
-    <button id="revert-filename-format" type="submit">Revert to Default</button><br>
+    <p>Will open in new tab: <b id="open-in-new-tab"></b></p>
+    <input type="checkbox" id="new-open-in-new-tab" name="new-open-in-new-tab">
+    <label for="new-open-in-new-tab">Open in new tab</label><br>
+    <br>
+    <button id="update" type="submit">Update</button>
+    <button id="revert" type="submit">Revert to Default</button><br>
     <p>Note: You'll need to re-open the arXiv tabs for the new filename format to take effect.</p>
   </form>
   <a href="https://github.com/j3soon/arxiv-utils#options">Help</a>

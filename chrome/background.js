@@ -61,12 +61,21 @@ async function onButtonClickedAsync(tab) {
     console.error(LOG_PREFIX, "Error: Failed to get paper ID, aborted.");
     return;
   }
-  // Create the abstract / PDF page in new tab.
-  await chrome.tabs.create({
-    url: targetURL,
-    index: tab.index + 1,
-  });
-  console.log(LOG_PREFIX, "Opened abstract / PDF page in new tab.");
+  // Create the abstract / PDF page in existing / new tab.
+  const openInNewTab = (await chrome.storage.sync.get({
+    'open_in_new_tab': true
+  })).open_in_new_tab;
+  if (openInNewTab) {
+    await chrome.tabs.create({
+      url: targetURL,
+      index: tab.index + 1,
+    });
+  } else {
+    await chrome.tabs.update({
+      url: targetURL,
+    });
+  }
+  console.log(LOG_PREFIX, "Opened abstract / PDF page in existing / new tab.");
 }
 function onContextClicked(info, tab) {
   if (info.menuItemId === 'help')
