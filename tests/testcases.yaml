@@ -227,5 +227,29 @@ navigation:
   title: "DFAC Framework: Factorizing the Value Function via Quantile Mixture for Multi-Agent Distributional Q-Learning"
   url2: https://proceedings.mlr.press/v139/sun21c/sun21c.pdf
   description: PMLR abs -> pdf (2021)
+- url: https://openaccess.thecvf.com/content_CVPR_2019/papers/Karras_A_Style-Based_Generator_Architecture_for_Generative_Adversarial_Networks_CVPR_2019_paper.pdf
+  url2: https://openaccess.thecvf.com/content_CVPR_2019/html/Karras_A_Style-Based_Generator_Architecture_for_Generative_Adversarial_Networks_CVPR_2019_paper.html
+  title2: "CVPR 2019 Open Access Repository"
+  description: CVF pdf -> abs (Conference)
+- url: https://openaccess.thecvf.com/content_CVPR_2019/html/Karras_A_Style-Based_Generator_Architecture_for_Generative_Adversarial_Networks_CVPR_2019_paper.html
+  title: "CVPR 2019 Open Access Repository"
+  url2: https://openaccess.thecvf.com/content_CVPR_2019/papers/Karras_A_Style-Based_Generator_Architecture_for_Generative_Adversarial_Networks_CVPR_2019_paper.pdf
+  description: CVF abs -> pdf (Conference)
+- url: https://openaccess.thecvf.com/content_CVPRW_2020/papers/w28/Wang_CSPNet_A_New_Backbone_That_Can_Enhance_Learning_Capability_of_CVPRW_2020_paper.pdf
+  url2: https://openaccess.thecvf.com/content_CVPRW_2020/html/w28/Wang_CSPNet_A_New_Backbone_That_Can_Enhance_Learning_Capability_of_CVPRW_2020_paper.html
+  title2: "CVPR 2020 Open Access Repository"
+  description: CVF pdf -> abs (Workshop with underscore)
+- url: https://openaccess.thecvf.com/content_CVPRW_2020/html/w28/Wang_CSPNet_A_New_Backbone_That_Can_Enhance_Learning_Capability_of_CVPRW_2020_paper.html
+  title: "CVPR 2020 Open Access Repository"
+  url2: https://openaccess.thecvf.com/content_CVPRW_2020/papers/w28/Wang_CSPNet_A_New_Backbone_That_Can_Enhance_Learning_Capability_of_CVPRW_2020_paper.pdf
+  description: CVF abs -> pdf (Workshop with underscore)
+- url: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/papers/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.pdf
+  url2: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/html/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.html
+  title2: "CVPR 2022 Open Access Repository"
+  description: CVF pdf -> abs (Workshop with slash)
+- url: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/html/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.html
+  title: "CVPR 2022 Open Access Repository"
+  url2: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/papers/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.pdf
+  description: CVF abs -> pdf (Workshop with slash)
 # TODO: Test download filename with: https://arxiv.org/abs/2209.12753
 # TODO: using `${title}, ${firstAuthor} et al., ${authors}, ${publishedYear}, ${updatedYear}, v${version}.pdf`

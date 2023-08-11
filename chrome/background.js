@@ -18,6 +18,8 @@ const TARGET_URL_REGEXP_REPLACE = [
     "https://papers.nips.cc/paper_files/paper/$1/hash/$2-Abstract$3.html"],
   [/^.*:\/\/proceedings\.mlr\.press\/(.*?)\/(.*?)\.html(\?.*?)?(\#.*?)?$/, "https://proceedings.mlr.press/$1/$2/$2.pdf"],
   [/^.*:\/\/proceedings\.mlr\.press\/(.*?)\/(.*?)\/.*?(\?.*?)?(\#.*?)?$/, "https://proceedings.mlr.press/$1/$2.html"],
+  [/^.*:\/\/openaccess\.thecvf\.com\/(.*?)\/html\/(.*?)\.html(\?.*?)?(\#.*?)?$/, "https://openaccess.thecvf.com/$1/papers/$2.pdf"],
+  [/^.*:\/\/openaccess\.thecvf\.com\/(.*?)\/papers\/(.*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://openaccess.thecvf.com/$1/html/$2.html"],
 ];
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
