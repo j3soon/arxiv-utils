@@ -113,6 +113,7 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `scripting`: Inject content scripts to existing tabs.
 - `*://export.arxiv.org/*`: Inject content scripts to existing tabs.
 - `*://arxiv.org/*`: Inject content scripts to existing tabs.
+- `*://ar5iv.labs.arxiv.org/*`: Inject content scripts to existing tabs.
 
 ### Firefox Permissions
 
