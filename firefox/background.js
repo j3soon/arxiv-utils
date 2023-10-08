@@ -8,7 +8,6 @@ const pdfViewerRelatedURL = "pdfviewer.html?target=";
 //       we capture only the last url (the one containing `.pdf`).
 //       However, if `https://arxiv.org/pdf/<id>/` is the direct link, no redirection will happen,
 //       we need to capture this too.
-// The direct download link such as `https://arxiv.org/pdf/<id>.pdf?download` will be checked afterwards.
 const redirectPatterns = [
   "*://arxiv.org/ftp/*.pdf*", "*://export.arxiv.org/*.pdf*", "*://browse.arxiv.org/*.pdf*",
   "*://arxiv.org/ftp/*pdf*/", "*://export.arxiv.org/*pdf*/", "*://browse.arxiv.org/*pdf*/",
@@ -111,10 +110,6 @@ async function onMessage(message) {
 async function onBeforeWebRequestAsync(requestDetails) {
   if (requestDetails.documentUrl !== undefined) {
     // Request from this plugin itself (the embedded PDF).
-    return;
-  }
-  if (requestDetails.url.endsWith("?download")) {
-    // Request from this plugin itself (download PDF).
     return;
   }
   const redirectPDF = (await browser.storage.sync.get({
