@@ -6,9 +6,13 @@
     "scripts": [ "background.js" ]
   },
   "content_scripts": [{
-    "matches": [ "*://arxiv.org/abs/*", "*://export.arxiv.org/abs/*",
+    "matches": [
+      "*://arxiv.org/abs/*",
+      "*://export.arxiv.org/abs/*",
+      "*://browse.arxiv.org/abs/*",
       "*://ar5iv.labs.arxiv.org/html/*",
-      "*://mozilla.github.io/pdf.js/web/viewer.html*" ],
+      "*://mozilla.github.io/pdf.js/web/viewer.html*"
+    ],
     "js": [ "content.js" ],
     "run_at": "document_end"
   }],
@@ -34,11 +38,12 @@
     "webRequest",
     "webRequestBlocking",
     "bookmarks",
+    "*://arxiv.org/*pdf*",
     "*://export.arxiv.org/*pdf*",
-    "*://arxiv.org/*pdf*"
+    "*://browse.arxiv.org/*pdf*"
   ],
   "content_security_policy":
-    "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;",
+    "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org https://browse.arxiv.org;",
   "web_accessible_resources": [
     "pdfviewer.html"
   ],

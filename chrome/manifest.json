@@ -6,9 +6,15 @@
     "service_worker": "background.js"
   },
   "content_scripts": [{
-    "matches": [ "*://arxiv.org/*pdf*", "*://arxiv.org/abs/*",
-      "*://export.arxiv.org/*pdf*", "*://export.arxiv.org/abs/*",
-      "*://ar5iv.labs.arxiv.org/html/*"],
+    "matches": [
+      "*://arxiv.org/*pdf*",
+      "*://arxiv.org/abs/*",
+      "*://export.arxiv.org/*pdf*",
+      "*://export.arxiv.org/abs/*",
+      "*://browse.arxiv.org/*pdf*",
+      "*://browse.arxiv.org/abs/*",
+      "*://ar5iv.labs.arxiv.org/html/*"
+    ],
     "js": [ "content.js" ],
     "run_at": "document_end"
   }],
@@ -36,6 +42,7 @@
   "host_permissions": [
     "*://arxiv.org/*",
     "*://export.arxiv.org/*",
+    "*://browse.arxiv.org/*",
     "*://ar5iv.labs.arxiv.org/*"
   ],
   "icons": {

@@ -5,9 +5,9 @@ var newTitle = undefined;
 // Regular expressions for parsing arXiv IDs from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
 const ID_REGEXP_REPLACE = [
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1", "Abstract"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "$1", "PDF"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2", "PDF"],
+  [/^.*:\/\/(?:export\.|browse\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1", "Abstract"],
+  [/^.*:\/\/(?:export\.|browse\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "$1", "PDF"],
+  [/^.*:\/\/(?:export\.|browse\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2", "PDF"],
   [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1", "HTML5"],
 ];
 // Define onMessage countdown for Chrome PDF viewer bug.
@@ -53,7 +53,7 @@ async function getArticleInfoAsync(id, pageType) {
   const authors = [...entry.getElementsByTagName("name")].map((el) => el.textContent).join(", ");
   const publishedYear = entry.getElementsByTagName("published")[0].textContent.split('-')[0];
   const updatedYear = entry.getElementsByTagName("updated")[0].textContent.split('-')[0];
-  const versionRegexp = /^.*:\/\/(?:export\.)?arxiv\.org\/abs\/.*v([0-9]*)$/;
+  const versionRegexp = /^.*:\/\/(?:export\.|browse\.)?arxiv\.org\/abs\/.*v([0-9]*)$/;
   var version = '';
   for (const el of entry.getElementsByTagName("link")) {
     const match = el.getAttribute("href").match(versionRegexp);

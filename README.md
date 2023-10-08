@@ -111,8 +111,9 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `storage`: Save extension configurations.
 - `contextMenus`: When right-click the extension button, show a help menu item.
 - `scripting`: Inject content scripts to existing tabs.
-- `*://export.arxiv.org/*`: Inject content scripts to existing tabs.
 - `*://arxiv.org/*`: Inject content scripts to existing tabs.
+- `*://export.arxiv.org/*`: Inject content scripts to existing tabs.
+- `*://browse.arxiv.org/*`: Inject content scripts to existing tabs.
 - `*://ar5iv.labs.arxiv.org/*`: Inject content scripts to existing tabs.
 
 ### Firefox Permissions
@@ -124,9 +125,10 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `webRequest`: Intercept ArXiv PDF request.
 - `webRequestBlocking`: Redirect the ArXiv PDF page to custom PDF container page.
 - `bookmarks`: When create a new bookmark of the PDF container page, bookmark the actual ArXiv PDF url instead.
-- `*://export.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `*://arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
-- `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org;"`: For embedding PDF in container.
+- `*://export.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
+- `*://browse.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
+- `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org https://browse.arxiv.org;"`: For embedding PDF in container.
 - `"web_accessible_resources": [ "pdfviewer.html" ]`: To redirect from HTTPS to extension custom page requires them to be visible.
 
 ## Developer Notes

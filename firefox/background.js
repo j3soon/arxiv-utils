@@ -10,15 +10,15 @@ const pdfViewerRelatedURL = "pdfviewer.html?target=";
 //       we need to capture this too.
 // The direct download link such as `https://arxiv.org/pdf/<id>.pdf?download` will be checked afterwards.
 const redirectPatterns = [
-  "*://arxiv.org/*.pdf*", "*://export.arxiv.org/*.pdf*",
-  "*://arxiv.org/*pdf*/", "*://export.arxiv.org/*pdf*/",
+  "*://arxiv.org/ftp/*.pdf*", "*://export.arxiv.org/*.pdf*", "*://browse.arxiv.org/*.pdf*",
+  "*://arxiv.org/ftp/*pdf*/", "*://export.arxiv.org/*pdf*/", "*://browse.arxiv.org/*pdf*/",
 ];
 // Regular expressions for parsing target navigation URL from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
 const TARGET_URL_REGEXP_REPLACE = [
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/pdf/$1.pdf"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
-  [/^.*:\/\/(?:export\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1$2"],
+  [/^.*:\/\/(?:export\.|browse\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/pdf/$1.pdf"],
+  [/^.*:\/\/(?:export\.|browse\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
+  [/^.*:\/\/(?:export\.|browse\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1$2"],
   [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
   [/^.*:\/\/www\.arxiv-vanity\.com\/papers\/(\S*?)\/?(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
   [/^.*:\/\/openreview\.net\/forum\?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/pdf?id=$1"],
