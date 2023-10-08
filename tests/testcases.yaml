@@ -227,6 +227,10 @@ navigation:
   title: "DFAC Framework: Factorizing the Value Function via Quantile Mixture for Multi-Agent Distributional Q-Learning"
   url2: https://proceedings.mlr.press/v139/sun21c/sun21c.pdf
   description: PMLR abs -> pdf (2021)
+- url: https://proceedings.mlr.press/v139/sun21c
+  title: "DFAC Framework: Factorizing the Value Function via Quantile Mixture for Multi-Agent Distributional Q-Learning"
+  url2: https://proceedings.mlr.press/v139/sun21c/sun21c.pdf
+  description: PMLR abs (no trailing html) -> pdf (2021)
 - url: https://openaccess.thecvf.com/content_CVPR_2019/papers/Karras_A_Style-Based_Generator_Architecture_for_Generative_Adversarial_Networks_CVPR_2019_paper.pdf
   url2: https://openaccess.thecvf.com/content_CVPR_2019/html/Karras_A_Style-Based_Generator_Architecture_for_Generative_Adversarial_Networks_CVPR_2019_paper.html
   title2: "CVPR 2019 Open Access Repository"

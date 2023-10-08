@@ -220,7 +220,7 @@ Download the signed `.crx` or `.xpi` files:
 - Chrome: [How to download a CRX file from the Chrome web store for a given ID?](https://stackoverflow.com/a/14099762)
   - [Download CRX](https://clients2.google.com/service/update2/crx?response=redirect&prodversion=31.0.1609.0&acceptformat=crx2,crx3&x=id%3Dmnhdpeipjhhkmlhlcljdjpgmilbmehij%26uc)
 - Firefox: [How to download Firefox extensions from addons.mozilla.org without installing them?](https://superuser.com/a/441011)
-  - [Download XPI](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/)
+  - [Download XPI](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/) by right-clicking `Add to Firefox` button and select `Save Link As...`.
 - Edge: [How to get CRX file of a published in Microsoft Edge Web Store (Chromium Based)](https://stackoverflow.com/a/76016563)
   - [Download CRX](https://edge.microsoft.com/extensionwebstorebase/v1/crx?response=redirect&x=id%3Dngjpcfjabahdoadnajbhnikbemhmemdg%26installsource%3Dondemand%26uc)
 

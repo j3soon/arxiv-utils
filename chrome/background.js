@@ -16,8 +16,8 @@ const TARGET_URL_REGEXP_REPLACE = [
     "https://papers.nips.cc/paper_files/paper/$1/file/$2-Paper$3.pdf"],
   [/^.*:\/\/papers\.nips\.cc\/paper_files\/paper\/(\d*)\/(?:[^\/]*)\/(.*?)-.*?(-Conference)?\..*?(\?.*?)?(\#.*?)?$/,
     "https://papers.nips.cc/paper_files/paper/$1/hash/$2-Abstract$3.html"],
-  [/^.*:\/\/proceedings\.mlr\.press\/(.*?)\/(.*?)\.html(\?.*?)?(\#.*?)?$/, "https://proceedings.mlr.press/$1/$2/$2.pdf"],
-  [/^.*:\/\/proceedings\.mlr\.press\/(.*?)\/(.*?)\/.*?(\?.*?)?(\#.*?)?$/, "https://proceedings.mlr.press/$1/$2.html"],
+  [/^.*:\/\/proceedings\.mlr\.press\/(.*?)\/(.*?)(?:\/.*?)?(?:-supp)?\.pdf$/, "https://proceedings.mlr.press/$1/$2.html"],
+  [/^.*:\/\/proceedings\.mlr\.press\/(.*?)\/(.*?)(?:\.html)?(\?.*?)?(\#.*?)?$/, "https://proceedings.mlr.press/$1/$2/$2.pdf"],
   [/^.*:\/\/openaccess\.thecvf\.com\/(.*?)\/html\/(.*?)\.html(\?.*?)?(\#.*?)?$/, "https://openaccess.thecvf.com/$1/papers/$2.pdf"],
   [/^.*:\/\/openaccess\.thecvf\.com\/(.*?)\/papers\/(.*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://openaccess.thecvf.com/$1/html/$2.html"],
 ];
