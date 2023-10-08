@@ -83,6 +83,7 @@ async function addCustomLinksAsync(id, articleInfo) {
     .replace('${publishedYear}', articleInfo.publishedYear)
     .replace('${updatedYear}', articleInfo.updatedYear)
     .replace('${version}', articleInfo.version)
+    .replace('${paperid}', id)
     ;
   const directURL = `https://arxiv.org/pdf/${id}.pdf?download`;
   const directDownloadId = "arxiv-utils-direct-download-li";

@@ -90,6 +90,7 @@ For ArXiv PDF / abstract tabs:
   - `${publishedYear}` is replaced with the published year of the paper.
   - `${updatedYear}` is replaced with the updated year of the current paper version.
   - `${version}` is replaced with the version of the current paper.
+  - `${paperid}` is replaced with the arXiv paper id.
 - `Open in new tab`:
   - Default: `true`
   - Set to `false` to open in existing tab when clicking the action button.
