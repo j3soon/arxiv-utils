@@ -112,6 +112,7 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `storage`: Save extension configurations.
 - `contextMenus`: When right-click the extension button, show a help menu item.
 - `scripting`: Inject content scripts to existing tabs.
+- `downloads`: Direct download PDF with paper's title as filename.
 - `*://arxiv.org/*`: Inject content scripts to existing tabs.
 - `*://export.arxiv.org/*`: Inject content scripts to existing tabs.
 - `*://browse.arxiv.org/*`: Inject content scripts to existing tabs.
@@ -126,6 +127,7 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `webRequest`: Intercept ArXiv PDF request.
 - `webRequestBlocking`: Redirect the ArXiv PDF page to custom PDF container page.
 - `bookmarks`: When create a new bookmark of the PDF container page, bookmark the actual ArXiv PDF url instead.
+- `downloads`: Direct download PDF with paper's title as filename.
 - `*://arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `*://export.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `*://browse.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
