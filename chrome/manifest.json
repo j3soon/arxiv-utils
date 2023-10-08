@@ -37,7 +37,8 @@
     "activeTab",
     "storage",
     "contextMenus",
-    "scripting"
+    "scripting",
+    "downloads"
   ],
   "host_permissions": [
     "*://arxiv.org/*",

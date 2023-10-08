@@ -79,6 +79,14 @@ async function onButtonClickedAsync(tab) {
   }
   console.log(LOG_PREFIX, "Opened abstract / PDF page in existing / new tab.");
 }
+async function onMessage(message) {
+  await chrome.downloads.download({
+    url: message.url,
+    filename: message.filename,
+    saveAs: false,
+  });
+  console.log(LOG_PREFIX, `Downloaded file: ${message.filename} from ${message.url}.`)
+}
 function onContextClicked(info, tab) {
   if (info.menuItemId === 'help')
     chrome.tabs.create({
@@ -129,6 +137,8 @@ chrome.tabs.onUpdated.addListener(onTabUpdated);
 chrome.action.onClicked.addListener(onButtonClickedAsync);
 // Listen to extension button right-click.
 chrome.contextMenus.onClicked.addListener(onContextClicked)
+// Listen to download request
+chrome.runtime.onMessage.addListener(onMessage);
 
 // Listen to on extension install event.
 chrome.runtime.onInstalled.addListener(onInstalled);

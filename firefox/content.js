@@ -83,14 +83,14 @@ async function addCustomLinksAsync(id, articleInfo) {
     .replace('${publishedYear}', articleInfo.publishedYear)
     .replace('${updatedYear}', articleInfo.updatedYear)
     .replace('${version}', articleInfo.version)
-    .replace('${paperid}', id)
     ;
   const directURL = `https://arxiv.org/pdf/${id}.pdf?download`;
-  const directDownloadId = "arxiv-utils-direct-download-li";
-  document.getElementById(directDownloadId)?.remove();
+  const directDownloadLiId = "arxiv-utils-direct-download-li";
+  const directDownloadAId = "arxiv-utils-direct-download-a";
+  document.getElementById(directDownloadLiId)?.remove();
   const directDownloadHTML = ` \
-    <li id="${directDownloadId}"> \
-      <a href="${directURL}" download="${fileName}" type="application/pdf">Direct Download</a> \
+    <li id="${directDownloadLiId}"> \
+      <a id="${directDownloadAId}" href="#">Direct Download</a> \
     </li>`;
   const downloadUL = document.querySelector(".full-text > ul");
   if (!downloadUL) {
@@ -99,6 +99,13 @@ async function addCustomLinksAsync(id, articleInfo) {
   }
   downloadUL.innerHTML += directDownloadHTML;
   console.log(LOG_PREFIX, "Added direct download link.")
+  document.getElementById(directDownloadAId).addEventListener('click', function(e) {
+    chrome.runtime.sendMessage({
+      url: directURL,
+      filename: fileName,
+    });
+    e.preventDefault();
+  });
   // Add extra services links.
   const elExtraRefCite = document.querySelector(".extra-ref-cite");
   if (!elExtraRefCite) {

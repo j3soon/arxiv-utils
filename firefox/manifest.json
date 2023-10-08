@@ -38,6 +38,7 @@
     "webRequest",
     "webRequestBlocking",
     "bookmarks",
+    "downloads",
     "*://arxiv.org/*pdf*",
     "*://export.arxiv.org/*pdf*",
     "*://browse.arxiv.org/*pdf*"
