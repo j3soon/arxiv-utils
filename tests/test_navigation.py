@@ -232,6 +232,7 @@ for browser in ['chrome', 'firefox', 'edge']:
                     wait.until(EC.title_is(title))
                 except TimeoutException as e:
                     print(f"Title mismatch: `{driver.title}`; URL: `{driver.current_url}`.")
+                # Please note that the tests may be flaky due to slow arxiv API response.
                 assert driver.title == title
             meta_click_arxiv_utils()
             wait.until(EC.number_of_windows_to_be(3))
