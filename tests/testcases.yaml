@@ -3,25 +3,25 @@ default:
 - url: https://arxiv.org/abs/2203.14206
   title: "[2203.14206] Denoising Likelihood Score Matching for Conditional Score-based Data Generation"
   description: basic testcase
-- url: https://browse.arxiv.org/pdf/2203.14206.pdf
+- url: https://arxiv.org/pdf/2203.14206.pdf
   title: 2203.14206.pdf
   description: basic testcase
 - url: https://arxiv.org/abs/1906.07413
   title: "[1906.07413] Learning Imbalanced Datasets with Label-Distribution-Aware Margin Loss"
   description: latex-defined pdf name 1 (for chrome)
-- url: https://browse.arxiv.org/pdf/1906.07413.pdf
+- url: https://arxiv.org/pdf/1906.07413.pdf
   title: Sharelatex Example
   description: latex-defined pdf name 1 (for chrome)
 - url: https://arxiv.org/abs/2003.01367
   title: "[2003.01367] Curriculum By Smoothing"
   description: latex-defined pdf name 2 (for chrome)
-- url: https://browse.arxiv.org/pdf/2003.01367.pdf
+- url: https://arxiv.org/pdf/2003.01367.pdf
   title: 2003.01367.pdf
   description: latex-defined pdf name 2 (for chrome)
 navigation:
 - url: https://arxiv.org/abs/2203.14206
   title: Denoising Likelihood Score Matching for Conditional Score-based Data Generation | Abstract
-  pdf_url: https://browse.arxiv.org/pdf/2203.14206.pdf
+  pdf_url: https://arxiv.org/pdf/2203.14206.pdf
   pdf_title: Denoising Likelihood Score Matching for Conditional Score-based Data Generation | PDF
   description: basic testcase
 - url: https://arxiv.org/abs/1110.2832
@@ -32,7 +32,7 @@ navigation:
   description: special ftp format
 - url: https://arxiv.org/abs/1110.2832
   title: Can apparent superluminal neutrino speeds be explained as a quantum weak measurement? | Abstract
-  pdf_url: https://browse.arxiv.org/pdf/1110.2832.pdf
+  pdf_url: https://arxiv.org/pdf/1110.2832.pdf
   pdf_title: Can apparent superluminal neutrino speeds be explained as a quantum weak measurement? | PDF
   description: special ftp format
 - url: https://arxiv.org/abs/2003.13678
@@ -43,7 +43,7 @@ navigation:
   description: pdf with export.arxiv.org subdomain
 - url: https://export.arxiv.org/abs/2003.13678
   title: Designing Network Design Spaces | Abstract
-  pdf_url: https://browse.arxiv.org/pdf/2003.13678.pdf
+  pdf_url: https://arxiv.org/pdf/2003.13678.pdf
   pdf_title: Designing Network Design Spaces | PDF
   pdf2abs: False
   description: abs with export.arxiv.org subdomain
@@ -61,7 +61,7 @@ navigation:
   description: pdf with trailing slash
 - url: https://arxiv.org/abs/2003.13678/
   title: Designing Network Design Spaces | Abstract
-  pdf_url: https://browse.arxiv.org/pdf/2003.13678.pdf
+  pdf_url: https://arxiv.org/pdf/2003.13678.pdf
   pdf_title: Designing Network Design Spaces | PDF
   pdf2abs: False
   description: abs with trailing slash
@@ -73,13 +73,13 @@ navigation:
   description: pdf with trailing double slash
 - url: https://arxiv.org/abs/2003.13678//
   title: Designing Network Design Spaces | Abstract
-  pdf_url: https://browse.arxiv.org/pdf/2003.13678.pdf
+  pdf_url: https://arxiv.org/pdf/2003.13678.pdf
   pdf_title: Designing Network Design Spaces | PDF
   pdf2abs: False
   description: abs with trailing double slash
 - url: https://arxiv.org/abs/cs/9605103
   title: "Reinforcement Learning: A Survey | Abstract"
-  pdf_url: https://browse.arxiv.org/pdf/cs/9605103.pdf
+  pdf_url: https://arxiv.org/pdf/cs/9605103.pdf
   pdf_title: "Reinforcement Learning: A Survey | PDF"
   description: old url basic testcase
 - url: https://arxiv.org/abs/cs/9605103
@@ -96,7 +96,7 @@ navigation:
   description: old url pdf with trailing slash
 - url: https://arxiv.org/abs/cs/9605103/
   title: "Reinforcement Learning: A Survey | Abstract"
-  pdf_url: https://browse.arxiv.org/pdf/cs/9605103.pdf
+  pdf_url: https://arxiv.org/pdf/cs/9605103.pdf
   pdf_title: "Reinforcement Learning: A Survey | PDF"
   pdf2abs: False
   description: old url abs with trailing slash
@@ -108,7 +108,7 @@ navigation:
   description: old url with special ftp format
 - url: https://arxiv.org/abs/1512.03385?query#anchor
   title: Deep Residual Learning for Image Recognition | Abstract
-  pdf_url: https://browse.arxiv.org/pdf/1512.03385.pdf
+  pdf_url: https://arxiv.org/pdf/1512.03385.pdf
   pdf_title: Deep Residual Learning for Image Recognition | PDF
   pdf2abs: False
   description: abs with query strings and fragments
@@ -120,12 +120,12 @@ navigation:
   description: pdf with query strings and fragments
 - url: https://arxiv.org/abs/1906.07413
   title: Learning Imbalanced Datasets with Label-Distribution-Aware Margin Loss | Abstract
-  pdf_url: https://browse.arxiv.org/pdf/1906.07413.pdf
+  pdf_url: https://arxiv.org/pdf/1906.07413.pdf
   pdf_title: Learning Imbalanced Datasets with Label-Distribution-Aware Margin Loss | PDF
   description: latex-defined pdf name 1 (for chrome)
 - url: https://arxiv.org/abs/2003.01367
   title: Curriculum By Smoothing | Abstract
-  pdf_url: https://browse.arxiv.org/pdf/2003.01367.pdf
+  pdf_url: https://arxiv.org/pdf/2003.01367.pdf
   pdf_title: Curriculum By Smoothing | PDF
   description: latex-defined pdf name 2 (for chrome)
 - url: https://arxiv.org/abs/2003.13678
@@ -136,7 +136,7 @@ navigation:
   description: with HTTP (for firefox)
 - url: http://arxiv.org/abs/2003.13678
   title: Designing Network Design Spaces | Abstract
-  pdf_url: https://browse.arxiv.org/pdf/2003.13678.pdf
+  pdf_url: https://arxiv.org/pdf/2003.13678.pdf
   pdf_title: Designing Network Design Spaces | PDF
   pdf2abs: False
   description: with HTTP (for firefox)
