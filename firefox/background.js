@@ -9,8 +9,8 @@ const pdfViewerRelatedURL = "pdfviewer.html?target=";
 //       However, if `https://arxiv.org/pdf/<id>/` is the direct link, no redirection will happen,
 //       we need to capture this too.
 const redirectPatterns = [
-  "*://arxiv.org/ftp/*.pdf*", "*://export.arxiv.org/*.pdf*", "*://browse.arxiv.org/*.pdf*",
-  "*://arxiv.org/ftp/*pdf*/", "*://export.arxiv.org/*pdf*/", "*://browse.arxiv.org/*pdf*/",
+  "*://arxiv.org/*.pdf*", "*://export.arxiv.org/*.pdf*", "*://browse.arxiv.org/*.pdf*",
+  "*://arxiv.org/*pdf*/", "*://export.arxiv.org/*pdf*/", "*://browse.arxiv.org/*pdf*/",
 ];
 // Regular expressions for parsing target navigation URL from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
