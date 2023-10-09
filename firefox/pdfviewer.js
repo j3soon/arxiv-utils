@@ -43,6 +43,12 @@ async function getArticleInfoAsync(id, pageType) {
 async function mainAsync() {
   // Extract the pdf url from 'pdfviewer.html?target=<pdfURL>'.
   const url = new URL(window.location.href).searchParams.get("target");
+  // Inject PDF before querying the API to load the PDF as soon as
+  // possible in the case of slow response from the API.
+  const elContainer = document.getElementById("container");
+  elContainer.innerHTML += `<iframe src="${url}"></iframe>`;
+  console.log(LOG_PREFIX, "Injected PDF: " + url);
+  // Query the API to get the title.
   const pageType = url.includes("abs") ? "Abstract" : "PDF";
   const id = getId(url);
   if (!id) {
@@ -52,9 +58,6 @@ async function mainAsync() {
   const articleInfo = await getArticleInfoAsync(id, pageType);
   document.title = articleInfo.newTitle;
   console.log(LOG_PREFIX, `Set document title to: ${articleInfo.newTitle}.`);
-  console.log(LOG_PREFIX, "Injecting PDF: " + url);
-  const elContainer = document.getElementById("container");
-  elContainer.innerHTML += `<iframe src="${url}"></iframe>`;
 }
 
 // Execute main logic.
