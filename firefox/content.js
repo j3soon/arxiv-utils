@@ -101,11 +101,12 @@ async function addCustomLinksAsync(id, articleInfo) {
   downloadUL.innerHTML += directDownloadHTML;
   console.log(LOG_PREFIX, "Added direct download link.")
   document.getElementById(directDownloadAId).addEventListener('click', function(e) {
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
       url: directURL,
       filename: fileName,
     });
     e.preventDefault();
+    console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`)
   });
   // Add extra services links.
   const elExtraRefCite = document.querySelector(".extra-ref-cite");

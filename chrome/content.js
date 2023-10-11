@@ -105,6 +105,7 @@ async function addCustomLinksAsync(id, articleInfo) {
       filename: fileName,
     });
     e.preventDefault();
+    console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`)
   });
   // Add extra services links.
   const elExtraRefCite = document.querySelector(".extra-ref-cite");

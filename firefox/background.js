@@ -99,12 +99,12 @@ async function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Opened abstract / PDF page in existing / new tab.");
 }
 async function onMessage(message) {
-  await chrome.downloads.download({
+  await browser.downloads.download({
     url: message.url,
     filename: message.filename,
     saveAs: false,
   });
-  console.log(LOG_PREFIX, `Downloaded file: ${message.filename} from ${message.url}.`)
+  console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
 }
 // Redirect to custom PDF page.
 async function onBeforeWebRequestAsync(requestDetails) {
@@ -166,7 +166,7 @@ browser.contextMenus.create({
   }
 });
 // Listen to download request
-chrome.runtime.onMessage.addListener(onMessage);
+browser.runtime.onMessage.addListener(onMessage);
 
 // Redirect the PDF page to custom PDF container page.
 browser.webRequest.onBeforeRequest.addListener(

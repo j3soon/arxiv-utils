@@ -85,7 +85,7 @@ async function onMessage(message) {
     filename: message.filename,
     saveAs: false,
   });
-  console.log(LOG_PREFIX, `Downloaded file: ${message.filename} from ${message.url}.`)
+  console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
 }
 function onContextClicked(info, tab) {
   if (info.menuItemId === 'help')
