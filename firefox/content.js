@@ -84,6 +84,9 @@ async function addCustomLinksAsync(id, articleInfo) {
     .replace('${updatedYear}', articleInfo.updatedYear)
     .replace('${version}', articleInfo.version)
     .replace('${paperid}', id)
+    // Ref: https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
+    // Ref: https://stackoverflow.com/a/42210346
+    .replace(/[/\\?*:|"<>]/g, '_'); // Replace invalid characters.
     ;
   const directURL = `https://arxiv.org/pdf/${id}.pdf`;
   const directDownloadLiId = "arxiv-utils-direct-download-li";

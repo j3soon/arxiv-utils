@@ -291,5 +291,9 @@ navigation:
   title: "CVPR 2022 Open Access Repository"
   url2: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/papers/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.pdf
   description: CVF abs -> pdf (Workshop with slash)
-# TODO: Test download filename with: https://arxiv.org/abs/2209.12753
+# TODO: Test download filenames:
+#       - Title with colon: https://arxiv.org/abs/2102.07936
+#       - Title with hash symbol: https://arxiv.org/abs/1611.04717
+#       - Title with question mark: https://arxiv.org/abs/1811.02553v3
+#       - Title with dollar sign and carat sign: https://arxiv.org/abs/1611.02779
 # TODO: using `${title}, ${firstAuthor} et al., ${authors}, ${publishedYear}, ${updatedYear}, v${version}.pdf`
