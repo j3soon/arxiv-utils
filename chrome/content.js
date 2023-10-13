@@ -1,7 +1,5 @@
 // This content script modifies the title of the abstract / PDF page once it has finished loading.
 
-// Store new title for onMessage.
-var newTitle = undefined;
 // Regular expressions for parsing arXiv IDs from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
 const ID_REGEXP_REPLACE = [
@@ -10,10 +8,16 @@ const ID_REGEXP_REPLACE = [
   [/^.*:\/\/(?:export\.|browse\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2", "PDF"],
   [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1", "HTML5"],
 ];
+// Store new title for onMessage to deal with Chrome PDF viewer bug.
+var newTitle = undefined;
 // Define onMessage countdown for Chrome PDF viewer bug.
 var messageCallbackCountdown = 3;
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
+// Element IDs for injected links
+const DIRECT_DOWNLOAD_LI_ID = "arxiv-utils-direct-download-li";
+const DIRECT_DOWNLOAD_A_ID = "arxiv-utils-direct-download-a";
+const EXTRA_SERVICES_DIV_ID = "arxiv-utils-extra-services-div";
 
 // Return the id parsed from the url.
 function getId(url) {
@@ -59,7 +63,8 @@ async function getArticleInfoAsync(id, pageType) {
     const match = el.getAttribute("href").match(versionRegexp);
     if (match && match[1])
       version = match[1];
-  }  return {
+  }
+  return {
     escapedTitle,
     newTitle,
     firstAuthor,
@@ -69,8 +74,42 @@ async function getArticleInfoAsync(id, pageType) {
     version,
   }
 }
-// Add a custom links in abstract page.
-async function addCustomLinksAsync(id, articleInfo) {
+// Add custom links in abstract page.
+function addCustomLinksAsync(id) {
+  document.getElementById(DIRECT_DOWNLOAD_LI_ID)?.remove();
+  const directDownloadHTML = ` \
+    <li id="${DIRECT_DOWNLOAD_LI_ID}"> \
+      <a id="${DIRECT_DOWNLOAD_A_ID}">Direct Download</a> \
+    </li>`;
+  const downloadUL = document.querySelector(".full-text > ul");
+  if (!downloadUL) {
+    console.error(LOG_PREFIX, "Error: Cannot find the unordered list inside the Download section at the right side of the abstract page.");
+    return;
+  }
+  downloadUL.innerHTML += directDownloadHTML;
+  console.log(LOG_PREFIX, "Added direct download link.")
+  // Add extra services links.
+  const elExtraRefCite = document.querySelector(".extra-ref-cite");
+  if (!elExtraRefCite) {
+    console.error(LOG_PREFIX, "Error: Cannot find the References & Citations section at the right side of the abstract page.");
+    return;
+  }
+  document.getElementById(EXTRA_SERVICES_DIV_ID)?.remove();
+  const extraServicesDiv = document.createElement("div");
+  extraServicesDiv.classList.add('extra-ref-cite');
+  extraServicesDiv.id = EXTRA_SERVICES_DIV_ID;
+  extraServicesDiv.innerHTML = ` \
+    <h3>Extra Services</h3> \
+    <ul> \
+      <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
+      <li><a href="https://www.arxiv-vanity.com/papers/${id}">arXiv Vanity</a></li> \
+      <li><a href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
+    </ul>`;
+  elExtraRefCite.after(extraServicesDiv);
+  console.log(LOG_PREFIX, "Added extra services links.")
+}
+
+async function enableDirectDownload(id, articleInfo) {
   // Add direct download link.
   const result = await chrome.storage.sync.get({
     'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf'
@@ -88,21 +127,8 @@ async function addCustomLinksAsync(id, articleInfo) {
     .replace(/[/\\?*:|"<>]/g, '_'); // Replace invalid characters.
     ;
   const directURL = `https://arxiv.org/pdf/${id}.pdf`;
-  const directDownloadLiId = "arxiv-utils-direct-download-li";
-  const directDownloadAId = "arxiv-utils-direct-download-a";
-  document.getElementById(directDownloadLiId)?.remove();
-  const directDownloadHTML = ` \
-    <li id="${directDownloadLiId}"> \
-      <a id="${directDownloadAId}" href="#">Direct Download</a> \
-    </li>`;
-  const downloadUL = document.querySelector(".full-text > ul");
-  if (!downloadUL) {
-    console.error(LOG_PREFIX, "Error: Cannot find the unordered list inside the Download section at the right side of the abstract page.");
-    return;
-  }
-  downloadUL.innerHTML += directDownloadHTML;
-  console.log(LOG_PREFIX, "Added direct download link.")
-  document.getElementById(directDownloadAId).addEventListener('click', function(e) {
+  const downloadA = document.getElementById(DIRECT_DOWNLOAD_A_ID)
+  downloadA.addEventListener('click', function(e) {
     chrome.runtime.sendMessage({
       url: directURL,
       filename: fileName,
@@ -110,25 +136,8 @@ async function addCustomLinksAsync(id, articleInfo) {
     e.preventDefault();
     console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`)
   });
-  // Add extra services links.
-  const elExtraRefCite = document.querySelector(".extra-ref-cite");
-  if (!elExtraRefCite) {
-    console.error(LOG_PREFIX, "Error: Cannot find the References & Citations section at the right side of the abstract page.");
-    return;
-  }
-  const extraServicesId = "arxiv-utils-extra-services-div";
-  document.getElementById(extraServicesId)?.remove();
-  const extraServicesDiv = document.createElement("div");
-  extraServicesDiv.classList.add('extra-ref-cite');
-  extraServicesDiv.id = extraServicesId;
-  extraServicesDiv.innerHTML = ` \
-    <h3>Extra Services</h3> \
-    <ul> \
-      <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
-      <li><a href="https://www.arxiv-vanity.com/papers/${id}">arXiv Vanity</a></li> \
-      <li><a href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
-    </ul>`;
-  elExtraRefCite.after(extraServicesDiv);
+  downloadA.href = "#";
+  console.log(LOG_PREFIX, "Enabled direct download.")
 }
 
 // The PDF viewer in Chrome has a bug that will overwrite the title of the page after loading the PDF.
@@ -165,11 +174,13 @@ async function mainAsync() {
     console.error(LOG_PREFIX, "Error: Failed to get paper ID, aborted.");
     return;
   }
+  if (pageType === "Abstract")
+    addCustomLinksAsync(id);
   const articleInfo = await getArticleInfoAsync(id, pageType);
   document.title = articleInfo.newTitle;
   console.log(LOG_PREFIX, `Set document title to: ${articleInfo.newTitle}.`);
   if (pageType === "Abstract")
-    addCustomLinksAsync(id, articleInfo);
+    await enableDirectDownload(id, articleInfo);
   // Store new title for onMessage.
   newTitle = articleInfo.newTitle
 }
