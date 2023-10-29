@@ -245,13 +245,15 @@ If you have further questions, please [open an issue](https://github.com/j3soon/
 
 ## Related Extensions
 
-- [musically-ut/arXiv-title-fixer](https://github.com/musically-ut/arXiv-title-fixer)
+- [musically-ut/arXiv-title-fixer](https://github.com/musically-ut/arXiv-title-fixer)  
   This requires a button click to change the pdf title, but will be considered less intrusive than running in the background. (Chrome Only)
-- [weakish/arxiv-url](https://github.com/weakish/arxiv-url)
+- [weakish/arxiv-url](https://github.com/weakish/arxiv-url)  
   This claims to add a back button, but I can't get it working.
-- [imurray/redirectify](https://github.com/imurray/redirectify)
+- [imurray/redirectify](https://github.com/imurray/redirectify)  
   Automatically redirect PDF links to HTML index page for many academic paper sites. (Compatible with arxiv-utils)
+- [vict0rsch/PaperMemory](https://github.com/vict0rsch/PaperMemory)  
+  If you're looking for an extension with a wider range of useful features, this extension offers just that. Although its UI modifications are slightly more intrusive than arxiv-utils, it is totally acceptable considering that it has so many extra features. (Compatible with arxiv-utils)
 - [AI/ML Papers with Code Everywhere - CatalyzeX](https://www.catalyzex.com/)
-  Find code links and inject them to a variety of websites. (Compatible with arxiv-utils)
   [[chrome]](https://chrome.google.com/webstore/detail/aiml-papers-with-code-eve/aikkeehnlfpamidigaffhfmgbkdeheil?hl=en)
-  [[firefox]](https://addons.mozilla.org/en-US/firefox/addon/code-finder-catalyzex/)
+  [[firefox]](https://addons.mozilla.org/en-US/firefox/addon/code-finder-catalyzex/)  
+  Find code links and inject them to a variety of websites. (Compatible with arxiv-utils)
