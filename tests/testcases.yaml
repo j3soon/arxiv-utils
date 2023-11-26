@@ -291,6 +291,14 @@ navigation:
   title: "CVPR 2022 Open Access Repository"
   url2: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/papers/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.pdf
   description: CVF abs -> pdf (Workshop with slash)
+- url: https://www.jmlr.org/papers/v12/pedregosa11a.html
+  url2: https://www.jmlr.org/papers/volume12/pedregosa11a/pedregosa11a.pdf
+  title: "Scikit-learn: Machine Learning in Python"
+  description: JMLR abs -> pdf
+- url: https://www.jmlr.org/papers/volume12/pedregosa11a/pedregosa11a.pdf
+  url2: https://www.jmlr.org/papers/v12/pedregosa11a.html
+  title: "Scikit-learn: Machine Learning in Python"
+  description: JMLR pdf -> abs
 # TODO: Test download filenames:
 #       - Title with colon: https://arxiv.org/abs/2102.07936
 #       - Title with hash symbol: https://arxiv.org/abs/1611.04717
