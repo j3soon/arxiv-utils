@@ -102,7 +102,6 @@ function addCustomLinksAsync(id) {
     <h3>Extra Services</h3> \
     <ul> \
       <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
-      <li><a href="https://www.arxiv-vanity.com/papers/${id}">arXiv Vanity</a></li> \
       <li><a href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
     </ul>`;
   elExtraRefCite.after(extraServicesDiv);
