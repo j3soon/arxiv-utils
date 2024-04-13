@@ -194,166 +194,182 @@ for browser in ['chrome', 'firefox', 'edge']:
 
     meta_setup_arxiv_utils()
 
-    for testcase in testcases['navigation']:
-        url, title, pdf_url, pdf_title, url2, title2, description = \
-            itemgetter('url', 'title', 'pdf_url', 'pdf_title', 'url2', 'title2', 'description')(
-            defaultdict(lambda: None, testcase))
-        abs2pdf = testcase.get('abs2pdf', True)
-        pdf2abs = testcase.get('pdf2abs', True)
+    global_exception = None
+    try:
+        for testcase in testcases['navigation']:
+            url, title, pdf_url, pdf_title, url2, title2, description = \
+                itemgetter('url', 'title', 'pdf_url', 'pdf_title', 'url2', 'title2', 'description')(
+                defaultdict(lambda: None, testcase))
+            abs2pdf = testcase.get('abs2pdf', True)
+            pdf2abs = testcase.get('pdf2abs', True)
 
-        if not abs2pdf and not pdf2abs:
-            raise ValueError("Both `abs2pdf` and `pdf2abs` are False.")
+            if not abs2pdf and not pdf2abs:
+                raise ValueError("Both `abs2pdf` and `pdf2abs` are False.")
 
-        print(f"Running navigation testcase:")
-        print(f"- URL: {url}")
-        print(f"- Title: `{title}`")
-        print(f"- PDF URL: {pdf_url}")
-        print(f"- PDF Title: `{pdf_title}`")
-        print(f"- URL2: {url2}")
-        print(f"- Title2: `{title2}`")
-        print(f"- Description: {description}")
-        print(f"- Tests")
-        print(f"  - Test abs2pdf? {abs2pdf}")
-        print(f"  - Test pdf2abs? {pdf2abs}")
+            print(f"Running navigation testcase:")
+            print(f"- URL: {url}")
+            print(f"- Title: `{title}`")
+            print(f"- PDF URL: {pdf_url}")
+            print(f"- PDF Title: `{pdf_title}`")
+            print(f"- URL2: {url2}")
+            print(f"- Title2: `{title2}`")
+            print(f"- Description: {description}")
+            print(f"- Tests")
+            print(f"  - Test abs2pdf? {abs2pdf}")
+            print(f"  - Test pdf2abs? {pdf2abs}")
 
-        if abs2pdf:
-            print(f"Opening (abs) webpage...")
-            driver.switch_to.new_window('tab')
-            windows_stack.append(driver.current_window_handle)
-            assert len(windows_stack) == 2
-            assert len(driver.window_handles) == 2
-            try:
-                driver.get(url)
-            except TimeoutException as e:
-                print(f"Page load timeout, continuing...")
-            if title:
+            if abs2pdf:
+                print(f"Opening (abs) webpage...")
+                driver.switch_to.new_window('tab')
+                windows_stack.append(driver.current_window_handle)
+                assert len(windows_stack) == 2
+                assert len(driver.window_handles) == 2
+                try:
+                    driver.get(url)
+                except TimeoutException as e:
+                    print(f"Page load timeout, continuing...")
+                    raise e
+                if title:
+                    print(f"Checking (abs) title...")
+                    try:
+                        wait.until(EC.title_is(title))
+                    except TimeoutException as e:
+                        print(f"Title mismatch: `{driver.title}`; URL: `{driver.current_url}`.")
+                        raise e
+                    # Please note that the tests may be flaky due to slow arxiv API response.
+                    assert driver.title == title
+                meta_click_arxiv_utils()
+                wait.until(EC.number_of_windows_to_be(3))
+                print(f"Closing (abs) webpage...")
+                driver.close()
+                windows_stack.pop()
+                assert len(windows_stack) == 1
+                assert len(driver.window_handles) == 2
+                for window_handle in driver.window_handles:
+                    if window_handle not in windows_stack:
+                        driver.switch_to.window(window_handle)
+                        break
+                windows_stack.append(driver.current_window_handle)
+                assert len(windows_stack) == 2
+                assert len(driver.window_handles) == 2
+                if pdf_url:
+                    # Within arXiv domain
+                    print(f"Checking (pdf) url...")
+                    try:
+                        if browser == 'firefox':
+                            suffix = f"/pdfviewer.html?target={pdf_url}"
+                            wait.until(EC.url_contains(suffix))
+                        else:
+                            wait.until(EC.url_to_be(pdf_url))
+                    except TimeoutException as e:
+                        print(f"URL mismatch: `{driver.current_url}`.")
+                        raise e
+                    if browser == 'firefox':
+                        assert driver.current_url.startswith("moz-extension://")
+                        assert driver.current_url.endswith(suffix)
+                        xpath = '//*[@id="container"]/iframe'
+                        element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+                        assert element.get_attribute('src') == pdf_url
+                    else:
+                        assert driver.current_url == pdf_url
+                elif url2:
+                    # Outside arXiv domain
+                    print(f"Checking (the second) url...")
+                    try:
+                        wait.until(EC.url_to_be(url2))
+                    except TimeoutException as e:
+                        print(f"URL mismatch: `{driver.current_url}`.")
+                        raise e
+                    assert driver.current_url == url2
+            else:
+                print(f"Opening (pdf) webpage...")
+                driver.switch_to.new_window('tab')
+                windows_stack.append(driver.current_window_handle)
+                assert len(windows_stack) == 2
+                assert len(driver.window_handles) == 2
+                try:
+                    driver.get(pdf_url)
+                except TimeoutException as e:
+                    print(f"Page load timeout, continuing...")
+                    raise e
+
+            if pdf_url:
+                # Within arXiv domain
+                print(f"Current state is an empty tab and an active pdf tab.")
+                print(f"Checking (pdf) title...")
+                try:
+                    wait.until(EC.title_is(pdf_title))
+                except TimeoutException as e:
+                    print(f"Title mismatch: `{driver.title}`; URL: `{driver.current_url}`.")
+                    raise e
+                assert driver.title == pdf_title
+            elif url2:
+                if title2:
+                    # Outside arXiv domain
+                    print(f"Current state is an empty tab and an active url2 tab.")
+                    print(f"Checking (url2) title...")
+                    try:
+                        wait.until(EC.title_is(title2))
+                    except TimeoutException as e:
+                        print(f"Title mismatch: `{driver.title}`; URL: `{driver.current_url}`.")
+                        raise e
+                    assert driver.title == title2
+
+            if pdf_url and pdf2abs:
+                meta_click_arxiv_utils()
+                wait.until(EC.number_of_windows_to_be(3))
+                print(f"Closing (pdf) webpage...")
+                driver.close()
+                windows_stack.pop()
+                assert len(windows_stack) == 1
+                assert len(driver.window_handles) == 2
+                for window_handle in driver.window_handles:
+                    if window_handle not in windows_stack:
+                        driver.switch_to.window(window_handle)
+                        break
+                windows_stack.append(driver.current_window_handle)
+                assert len(windows_stack) == 2
+                assert len(driver.window_handles) == 2
+                print(f"Checking (abs) url...")
+                try:
+                    wait.until(EC.url_to_be(url))
+                except TimeoutException as e:
+                    print(f"URL mismatch: `{driver.current_url}`.")
+                    raise e
+                assert driver.current_url == url
                 print(f"Checking (abs) title...")
                 try:
                     wait.until(EC.title_is(title))
                 except TimeoutException as e:
                     print(f"Title mismatch: `{driver.title}`; URL: `{driver.current_url}`.")
-                # Please note that the tests may be flaky due to slow arxiv API response.
+                    raise e
                 assert driver.title == title
-            meta_click_arxiv_utils()
-            wait.until(EC.number_of_windows_to_be(3))
-            print(f"Closing (abs) webpage...")
-            driver.close()
-            windows_stack.pop()
+                print(f"Closing (abs) webpage...")
+                driver.close()
+                windows_stack.pop()
+            else:
+                print(f"Closing (pdf) webpage...")
+                driver.close()
+                windows_stack.pop()
+
             assert len(windows_stack) == 1
-            assert len(driver.window_handles) == 2
-            for window_handle in driver.window_handles:
-                if window_handle not in windows_stack:
-                    driver.switch_to.window(window_handle)
-                    break
-            windows_stack.append(driver.current_window_handle)
-            assert len(windows_stack) == 2
-            assert len(driver.window_handles) == 2
-            if pdf_url:
-                # Within arXiv domain
-                print(f"Checking (pdf) url...")
-                try:
-                    if browser == 'firefox':
-                        suffix = f"/pdfviewer.html?target={pdf_url}"
-                        wait.until(EC.url_contains(suffix))
-                    else:
-                        wait.until(EC.url_to_be(pdf_url))
-                except TimeoutException as e:
-                    print(f"URL mismatch: `{driver.current_url}`.")
-                if browser == 'firefox':
-                    assert driver.current_url.startswith("moz-extension://")
-                    assert driver.current_url.endswith(suffix)
-                    xpath = '//*[@id="container"]/iframe'
-                    element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
-                    assert element.get_attribute('src') == pdf_url
-                else:
-                    assert driver.current_url == pdf_url
-            elif url2:
-                # Outside arXiv domain
-                print(f"Checking (the second) url...")
-                try:
-                    wait.until(EC.url_to_be(url2))
-                except TimeoutException as e:
-                    print(f"URL mismatch: `{driver.current_url}`.")
-                assert driver.current_url == url2
-        else:
-            print(f"Opening (pdf) webpage...")
-            driver.switch_to.new_window('tab')
-            windows_stack.append(driver.current_window_handle)
-            assert len(windows_stack) == 2
-            assert len(driver.window_handles) == 2
-            try:
-                driver.get(pdf_url)
-            except TimeoutException as e:
-                print(f"Page load timeout, continuing...")
+            assert len(driver.window_handles) == 1
+            driver.switch_to.window(windows_stack[-1])
 
-        if pdf_url:
-            # Within arXiv domain
-            print(f"Current state is an empty tab and an active pdf tab.")
-            print(f"Checking (pdf) title...")
-            try:
-                wait.until(EC.title_is(pdf_title))
-            except TimeoutException as e:
-                print(f"Title mismatch: `{driver.title}`; URL: `{driver.current_url}`.")
-            assert driver.title == pdf_title
-        elif url2:
-            if title2:
-                # Outside arXiv domain
-                print(f"Current state is an empty tab and an active url2 tab.")
-                print(f"Checking (url2) title...")
-                try:
-                    wait.until(EC.title_is(title2))
-                except TimeoutException as e:
-                    print(f"Title mismatch: `{driver.title}`; URL: `{driver.current_url}`.")
-                assert driver.title == title2
-
-        if pdf_url and pdf2abs:
-            meta_click_arxiv_utils()
-            wait.until(EC.number_of_windows_to_be(3))
-            print(f"Closing (pdf) webpage...")
-            driver.close()
-            windows_stack.pop()
-            assert len(windows_stack) == 1
-            assert len(driver.window_handles) == 2
-            for window_handle in driver.window_handles:
-                if window_handle not in windows_stack:
-                    driver.switch_to.window(window_handle)
-                    break
-            windows_stack.append(driver.current_window_handle)
-            assert len(windows_stack) == 2
-            assert len(driver.window_handles) == 2
-            print(f"Checking (abs) url...")
-            try:
-                wait.until(EC.url_to_be(url))
-            except TimeoutException as e:
-                print(f"URL mismatch: `{driver.current_url}`.")
-            assert driver.current_url == url
-            print(f"Checking (abs) title...")
-            try:
-                wait.until(EC.title_is(title))
-            except TimeoutException as e:
-                print(f"Title mismatch: `{driver.title}`; URL: `{driver.current_url}`.")
-            assert driver.title == title
-            print(f"Closing (abs) webpage...")
-            driver.close()
-            windows_stack.pop()
-        else:
-            print(f"Closing (pdf) webpage...")
-            driver.close()
-            windows_stack.pop()
-
-        assert len(windows_stack) == 1
-        assert len(driver.window_handles) == 1
-        driver.switch_to.window(windows_stack[-1])
-
-        print("Testcase Succeeded")
-        n_success += 1
-
-    meta_setup_arxiv_utils(restore=True)
-    print(f"Closing webdriver...")
-    driver.quit()
-    print(f"(Meta) Closing webdriver...")
-    meta_driver.quit()
-    print(f"{browser.capitalize()} Tests Succeeded")
+            print("Testcase Succeeded")
+            n_success += 1
+    except Exception as e:
+        print(f"Exception: {e}")
+        global_exception = e
+    finally:
+        meta_setup_arxiv_utils(restore=True)
+        print(f"Closing webdriver...")
+        driver.quit()
+        print(f"(Meta) Closing webdriver...")
+        meta_driver.quit()
+        if global_exception:
+            raise global_exception
+        print(f"{browser.capitalize()} Tests Succeeded")
 
 print("All tests passed successfully!")
 print(f"Success: {n_success}/{n_success}")
