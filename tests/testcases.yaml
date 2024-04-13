@@ -294,6 +294,11 @@ navigation:
   url2: https://www.jmlr.org/papers/v12/pedregosa11a.html
   title2: "Scikit-learn: Machine Learning in Python"
   description: JMLR pdf -> abs
+- url: https://arxiv.org/html/2403.17537v1
+  title: "NeRF-HuGS: Improved Neural Radiance Fields in Non-static Scenes Using Heuristics-Guided Segmentation"
+  url2: https://arxiv.org/abs/2403.17537v1
+  title2: "NeRF-HuGS: Improved Neural Radiance Fields in Non-static Scenes Using Heuristics-Guided Segmentation | Abstract"
+  description: arXiv HTML -> arXiv
 # TODO: Test download filenames:
 #       - Title with colon: https://arxiv.org/abs/2102.07936
 #       - Title with hash symbol: https://arxiv.org/abs/1611.04717
