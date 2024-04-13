@@ -181,6 +181,39 @@ Other functions should still be tested manually:
 - The help menu item in the context menu should link to this GitHub page.
 - ar5iv tabs should have renamed title, and support navigation.
 
+### Run Tests Locally
+
+Launch the docker containers:
+
+```sh
+cd tests
+docker compose up -d
+```
+
+Then run the tests:
+
+```sh
+docker exec -t tests-selenium-tests-1 \
+    python "/app/tests/test_navigation.py"
+```
+
+> If the test logs stuck at launching the webdriver, you may need to restart the containers.
+
+View the logs or open the following URLs for more details:
+- [Selenium Grid](http://localhost:4444/ui)
+- [noVNC for Chrome](http://localhost:7900)
+- [noVNC for Edge](http://localhost:7901)
+- [noVNC for Firefox](http://localhost:7902)
+
+> The default password for noVNC is `secret`.
+
+When done, stop the containers:
+
+```sh
+cd tests
+docker compose down
+```
+
 ### Interactive Testing
 
 Install VSCode and [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) plugin.
