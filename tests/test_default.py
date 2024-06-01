@@ -39,7 +39,7 @@ for browser in ['chrome', 'firefox', 'edge']:
         print(f"- Title: `{title}`")
         print(f"- Description: {description}")
 
-        if url.endswith('.pdf'):
+        if 'pdf' in url:
             # The current page title is `about:blank` with `application/pdf` as the content type.
             # The pdf is stored in a embed frame `/html/body/embed`.
             # However, I don't think it's possible to switch to that frame, since the PDF viewer itself is an extension.
