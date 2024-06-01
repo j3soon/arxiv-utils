@@ -197,6 +197,8 @@ docker exec -t tests-selenium-tests-1 \
     python "/app/tests/test_navigation.py"
 ```
 
+When adding new test cases, it is often convenient to comment out existing test cases in [tests/testcases.yaml](tests/testcases.yaml); When testing specific browsers, you can modify the `for browser in [...]` part in [tests/test_navigation.py](tests/test_navigation.py) to only run tests for the desired browser.
+
 > If the test logs stuck at launching the webdriver, you may need to restart the containers.
 
 View the logs or open the following URLs for more details:
@@ -285,7 +287,7 @@ If you have further questions, please [open an issue](https://github.com/j3soon/
 - [imurray/redirectify](https://github.com/imurray/redirectify)  
   Automatically redirect PDF links to HTML index page for many academic paper sites. (Compatible with arxiv-utils)
 - [vict0rsch/PaperMemory](https://github.com/vict0rsch/PaperMemory)  
-  If you're looking for an extension with a wider range of useful features, this extension offers just that. Although its UI modifications are slightly more intrusive than arxiv-utils, it is totally acceptable considering that it has so many extra features. (Compatible with arxiv-utils)
+  If you're looking for an extension with a wider range of useful features, this extension offers just that. Although its UI modifications are slightly more intrusive than arxiv-utils, it is totally acceptable considering that it has so many extra features. It's also worth noting that arxiv-utils does not automatically invoke APIs from external services, which is a difference in design philosophy.
 - [AI/ML Papers with Code Everywhere - CatalyzeX](https://www.catalyzex.com/)
   [[chrome]](https://chrome.google.com/webstore/detail/aiml-papers-with-code-eve/aikkeehnlfpamidigaffhfmgbkdeheil?hl=en)
   [[firefox]](https://addons.mozilla.org/en-US/firefox/addon/code-finder-catalyzex/)  

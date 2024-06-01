@@ -368,6 +368,8 @@ for browser in ['chrome', 'firefox', 'edge']:
         print(f"(Meta) Closing webdriver...")
         meta_driver.quit()
         if global_exception:
+            print("The tests have failed, but has terminated gracefully. Re-raising the exception...")
+            print("")
             raise global_exception
         print(f"{browser.capitalize()} Tests Succeeded")
 
