@@ -1,6 +1,6 @@
 {
   "name": "arxiv-utils",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "Easy access on ArXiv! Rename the title to the paper's title. Add a button to navigate easily. Download PDF with meaningful filename.",
   "background": {
     "service_worker": "background.js"
