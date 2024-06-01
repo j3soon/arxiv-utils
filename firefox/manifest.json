@@ -10,6 +10,7 @@
       "*://arxiv.org/abs/*",
       "*://export.arxiv.org/abs/*",
       "*://browse.arxiv.org/abs/*",
+      "*://www.arxiv.org/abs/*",
       "*://ar5iv.labs.arxiv.org/html/*",
       "*://mozilla.github.io/pdf.js/web/viewer.html*"
     ],
@@ -41,10 +42,11 @@
     "downloads",
     "*://arxiv.org/*pdf*",
     "*://export.arxiv.org/*pdf*",
-    "*://browse.arxiv.org/*pdf*"
+    "*://browse.arxiv.org/*pdf*",
+    "*://www.arxiv.org/*pdf*"
   ],
   "content_security_policy":
-    "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org https://browse.arxiv.org;",
+    "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org https://browse.arxiv.org https://www.arxiv.org;",
   "web_accessible_resources": [
     "pdfviewer.html"
   ],

@@ -13,6 +13,8 @@
       "*://export.arxiv.org/abs/*",
       "*://browse.arxiv.org/*pdf*",
       "*://browse.arxiv.org/abs/*",
+      "*://www.arxiv.org/*pdf*",
+      "*://www.arxiv.org/abs/*",
       "*://ar5iv.labs.arxiv.org/html/*"
     ],
     "js": [ "content.js" ],
@@ -44,6 +46,7 @@
     "*://arxiv.org/*",
     "*://export.arxiv.org/*",
     "*://browse.arxiv.org/*",
+    "*://www.arxiv.org/*",
     "*://ar5iv.labs.arxiv.org/*"
   ],
   "icons": {

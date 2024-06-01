@@ -116,6 +116,7 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `*://arxiv.org/*`: Inject content scripts to existing tabs.
 - `*://export.arxiv.org/*`: Inject content scripts to existing tabs.
 - `*://browse.arxiv.org/*`: Inject content scripts to existing tabs.
+- `*://www.arxiv.org/*`: Inject content scripts to existing tabs.
 - `*://ar5iv.labs.arxiv.org/*`: Inject content scripts to existing tabs.
 
 ### Firefox Permissions
@@ -131,7 +132,8 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `*://arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `*://export.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `*://browse.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
-- `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org https://browse.arxiv.org;"`: For embedding PDF in container.
+- `*://www.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
+- `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org https://browse.arxiv.org https://www.arxiv.org;"`: For embedding PDF in container.
 - `"web_accessible_resources": [ "pdfviewer.html" ]`: To redirect from HTTPS to extension custom page requires them to be visible.
 
 ## Developer Notes
