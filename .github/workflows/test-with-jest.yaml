@@ -1,0 +1,25 @@
+name: unit-tests
+on:
+  push:
+    paths:
+      - .github/workflows/test-with-jest.yaml
+      - tests/testcases/**
+      - tests/unit-test/**
+  pull_request:
+jobs:
+  test-with-jest:
+    name: Unit Test with Jest
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Pull docker images
+      run: docker compose -f tests/unit-test/compose.yml pull
+    - name: Start test containers
+      run: docker compose -f tests/unit-test/compose.yml up -d
+    # Start testing
+    - name: Test navigation
+      run: docker exec -t unit-test-jest-tests-1 /app/tests/unit-test/install-and-run.sh
+    # Clean up
+    - name: Stop test containers
+      if: always()
+      run: docker compose -f tests/unit-test/compose.yml down

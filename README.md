@@ -1,6 +1,7 @@
 # arxiv-utils
 
-[![tests](https://img.shields.io/github/actions/workflow/status/j3soon/arxiv-utils/test-with-selenium.yaml?label=tests)](https://github.com/j3soon/arxiv-utils/actions/workflows/test-with-selenium.yaml)
+[![tests](https://img.shields.io/github/actions/workflow/status/j3soon/arxiv-utils/test-with-jest.yaml?label=unit-tests)](https://github.com/j3soon/arxiv-utils/actions/workflows/test-with-jest.yaml)
+[![tests](https://img.shields.io/github/actions/workflow/status/j3soon/arxiv-utils/test-with-selenium.yaml?label=end-to-end-tests)](https://github.com/j3soon/arxiv-utils/actions/workflows/test-with-selenium.yaml)
 [![build](https://img.shields.io/github/actions/workflow/status/j3soon/arxiv-utils/build-and-publish.yaml)](https://github.com/j3soon/arxiv-utils/actions/workflows/build-and-publish.yaml)
 
 [![](https://img.shields.io/chrome-web-store/v/mnhdpeipjhhkmlhlcljdjpgmilbmehij.svg)](https://chrome.google.com/webstore/detail/arxiv-utils/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
