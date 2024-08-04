@@ -102,6 +102,7 @@ function addCustomLinksAsync(id) {
     <h3>Extra Services</h3> \
     <ul> \
       <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
+      <li><a href="https://alphaxiv.org/abs/${id}">alphaXiv</a></li> \
       <li><a href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
     </ul>`;
   elExtraRefCite.after(extraServicesDiv);
@@ -124,10 +125,10 @@ async function enableDirectDownload(id, articleInfo) {
     // Ref: https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
     // Ref: https://stackoverflow.com/a/42210346
     .replace(/[/\\?*:|"<>]/g, '_'); // Replace invalid characters.
-    ;
+  ;
   const directURL = `https://arxiv.org/pdf/${id}.pdf`;
   const downloadA = document.getElementById(DIRECT_DOWNLOAD_A_ID)
-  downloadA.addEventListener('click', function(e) {
+  downloadA.addEventListener('click', function (e) {
     chrome.runtime.sendMessage({
       url: directURL,
       filename: fileName,
