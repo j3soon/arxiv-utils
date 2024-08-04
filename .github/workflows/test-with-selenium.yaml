@@ -1,7 +1,13 @@
 name: tests
 on:
-  - push
-  - pull_request
+  push:
+    paths:
+      - .github/workflows/test-with-selenium.yaml
+      - chrome/**
+      - firefox/**
+      - tests/scripts/**
+      - tests/end-to-end-test/**
+  pull_request:
 jobs:
   test-with-selenium:
     name: Test with Selenium
