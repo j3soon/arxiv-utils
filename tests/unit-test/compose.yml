@@ -1,0 +1,6 @@
+services:
+  jest-tests:
+    build: .
+    volumes:
+      - "../..:/app:rw" # Source code
+  # docker exec -it unit-test-jest-tests-1 sh
