@@ -245,6 +245,14 @@ You can now begin interactive testing!
 
 Reference: [Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers)
 
+### arXiv API
+
+```sh
+curl "https://export.arxiv.org/api/query?id_list=<ARXIV_ID>"
+```
+
+Reference: [arXiv API User's Manual](https://info.arxiv.org/help/api/user-manual.html#332-entry-metadata)
+
 ### Build and Publish
 
 Store dashboards:

@@ -122,9 +122,12 @@ async function enableDirectDownload(id, articleInfo) {
     .replace('${updatedYear}', articleInfo.updatedYear)
     .replace('${version}', articleInfo.version)
     .replace('${paperid}', id)
+    // Replace invalid characters.
     // Ref: https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
     // Ref: https://stackoverflow.com/a/42210346
-    .replace(/[/\\?*:|"<>]/g, '_'); // Replace invalid characters.
+    .replace(/[/:]/g, ',')
+    .replace(/[/\\?*|"<>]/g, '_')
+    .replace(/\n/g, '') // Replace newline, which exists in some titles that are too long.
   ;
   const directURL = `https://arxiv.org/pdf/${id}.pdf`;
   const downloadA = document.getElementById(DIRECT_DOWNLOAD_A_ID)

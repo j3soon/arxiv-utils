@@ -164,6 +164,11 @@ navigation:
   pdf_title: Designing Network Design Spaces | PDF
   pdf2abs: False
   description: with HTTP (for firefox)
+- url: https://arxiv.org/abs/2407.10603
+  title: "Leave No Knowledge Behind During Knowledge Distillation: Towards Practical and Effective Knowledge Distillation for Code-Switching ASR Using Realistic Data | Abstract"
+  pdf_url: https://arxiv.org/pdf/2407.10603
+  pdf_title: "Leave No Knowledge Behind During Knowledge Distillation: Towards Practical and Effective Knowledge Distillation for Code-Switching ASR Using Realistic Data | PDF"
+  description: long paper title
 # Below are testcases for external URLs
 - url: https://ar5iv.labs.arxiv.org/html/1512.03385
   title: Deep Residual Learning for Image Recognition | HTML5
