@@ -1,14 +1,19 @@
 // Regular expressions for parsing target navigation URL from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
 // Note: `https://arxiv.org/pdf/<id>.pdf` will be redirected to `https://arxiv.org/pdf/<id>` by arXiv.
+// Regexp info:
+// - Leading `^.*:\/\/` matches the protocol part of the URL such as `http://` or `https://`.
+// - Trailing `(\?.*?)?(\#.*?)?$` matches the query string and fragment
+// - Trailing `\?(?:.*?&)?` matches the leading extra query strings
+// - Trailing `(&.*?)?` matches the extra query strings
 export default [
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/pdf/$1"],
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1$2"],
   [/^.*:\/\/(?:browse\.|www\.)?arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
   [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
-  [/^.*:\/\/openreview\.net\/forum\?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/pdf?id=$1"],
-  [/^.*:\/\/openreview\.net\/pdf\?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/forum?id=$1"],
+  [/^.*:\/\/openreview\.net\/forum\?(?:.*?&)?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/pdf?id=$1"],
+  [/^.*:\/\/openreview\.net\/pdf\?(?:.*?&)?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/forum?id=$1"],
   // Starting from 2022, NIPS urls may end with a `-Conference` suffix
   [/^.*:\/\/(papers|proceedings)\.(nips|neurips)\.cc\/paper_files\/paper\/(\d*)\/(?:[^\/]*)\/(.*?)-Abstract(-Conference)?\.html(\?.*?)?(\#.*?)?$/,
     "https://$1.$2.cc/paper_files/paper/$3/file/$4-Paper$5.pdf"],
@@ -20,4 +25,6 @@ export default [
   [/^.*:\/\/openaccess\.thecvf\.com\/(.*?)\/papers\/(.*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://openaccess.thecvf.com/$1/html/$2.html"],
   [/^.*:\/\/www\.jmlr\.org\/papers\/v(\d+)\/(.*?)\.html(\?.*?)?(\#.*?)?$/, "https://www.jmlr.org/papers/volume$1/$2/$2.pdf"],
   [/^.*:\/\/www\.jmlr\.org\/papers\/volume(\d+)\/(.*?)\/(.*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://www.jmlr.org/papers/v$1/$2.html"],
+  [/^.*:\/\/ieeexplore\.ieee\.org\/document\/(\d+)(\?.*?)?(\#.*?)?$/, "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=$1"],
+  [/^.*:\/\/ieeexplore\.ieee\.org\/stamp\/stamp\.jsp\?(?:.*?&)?arnumber=(\d+)(&.*?)?(\#.*?)?$/, "https://ieeexplore.ieee.org/document/$1"],
 ];

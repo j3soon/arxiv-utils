@@ -18,6 +18,7 @@ with open(testcases_path, "r") as f:
 command_executor = 'http://selenium-hub:4444/wd/hub'
 
 n_success = 0
+n_skipped = 0
 
 for browser in ['chrome', 'firefox', 'edge']:
     print(f"Testing with browser: {browser}")
@@ -197,8 +198,8 @@ for browser in ['chrome', 'firefox', 'edge']:
     global_exception = None
     try:
         for testcase in testcases['navigation']:
-            url, title, pdf_url, pdf_title, url2, title2, description = \
-                itemgetter('url', 'title', 'pdf_url', 'pdf_title', 'url2', 'title2', 'description')(
+            url, title, pdf_url, pdf_title, url2, title2, skip_selenium, description = \
+                itemgetter('url', 'title', 'pdf_url', 'pdf_title', 'url2', 'title2', 'skip_selenium', 'description')(
                 defaultdict(lambda: None, testcase))
             abs2pdf = testcase.get('abs2pdf', True)
             pdf2abs = testcase.get('pdf2abs', True)
@@ -217,6 +218,12 @@ for browser in ['chrome', 'firefox', 'edge']:
             print(f"- Tests")
             print(f"  - Test abs2pdf? {abs2pdf}")
             print(f"  - Test pdf2abs? {pdf2abs}")
+            print(f"  - skip_selenium? {skip_selenium}")
+
+            if skip_selenium:
+                print("Testcase Skipped")
+                n_skipped += 1
+                continue
 
             if abs2pdf:
                 print(f"Opening (abs) webpage...")
@@ -374,4 +381,5 @@ for browser in ['chrome', 'firefox', 'edge']:
         print(f"{browser.capitalize()} Tests Succeeded")
 
 print("All tests passed successfully!")
-print(f"Success: {n_success}/{n_success}")
+n = n_success + n_skipped
+print(f"Success: {n_success}/{n}; Skipped: {n_skipped}/{n}")
