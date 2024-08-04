@@ -175,6 +175,11 @@ navigation:
   url2: https://arxiv.org/abs/1512.03385
   title2: Deep Residual Learning for Image Recognition | Abstract
   description: ar5iv -> arXiv
+- url: https://huggingface.co/papers/2408.00714
+  title: "Paper page - SAM 2: Segment Anything in Images and Videos"
+  url2: https://arxiv.org/abs/2408.00714
+  title2: "SAM 2: Segment Anything in Images and Videos | Abstract"
+  description: ar5iv -> arXiv
 - url: https://openreview.net/pdf?id=LcF-EEt8cCC
   url2: https://openreview.net/forum?id=LcF-EEt8cCC
   title2: Denoising Likelihood Score Matching for Conditional Score-based Data Generation | OpenReview
@@ -321,11 +326,10 @@ navigation:
   pdf_url: https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=10412086
   skip_selenium: True # skipped due to paywall
   description: IEEE
-- url: https://ieeexplore.ieee.org/document/10412086
-  pdf_url: https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10412086&tag=1
-  abs2pdf: False
+- url: https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10412086&tag=1
+  url2: https://ieeexplore.ieee.org/document/10412086
   skip_selenium: True # skipped due to paywall
-  description: IEEE (with extra query strings)
+  description: IEEE pdf -> abs (with extra query strings)
 
 # TODO: Test download filenames:
 #       - Title with colon: https://arxiv.org/abs/2102.07936
