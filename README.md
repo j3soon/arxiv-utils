@@ -183,12 +183,35 @@ Other functions should still be tested manually:
 - The help menu item in the context menu should link to this GitHub page.
 - ar5iv tabs should have renamed title, and support navigation.
 
-### Run Tests Locally
+### Run Unit Tests Locally
 
 Launch the docker containers:
 
 ```sh
-cd tests
+cd tests/unit-test
+docker compose up -d
+```
+
+Then run the tests:
+
+```sh
+docker exec -t unit-test-jest-tests-1 \
+    /app/tests/unit-test/install-and-run.sh
+```
+
+When done, stop the containers:
+
+```sh
+cd tests/unit-test
+docker compose down
+```
+
+### Run End-to-End Tests Locally
+
+Launch the docker containers:
+
+```sh
+cd tests/end-to-end-test
 docker compose up -d
 ```
 
@@ -214,11 +237,11 @@ View the logs or open the following URLs for more details:
 When done, stop the containers:
 
 ```sh
-cd tests
+cd tests/end-to-end-test
 docker compose down
 ```
 
-### Interactive Testing
+### Interactive End-to-End Testing
 
 Install VSCode and [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) plugin.
 
@@ -239,7 +262,7 @@ Launch a Terminal inside the dev container and run:
 apk add build-base linux-headers
 ```
 
-Open `tests/test_interactive.py`, select the first cell and press `Shift + Enter` and click `Install` (Install the `ipykernel`).
+Open `tests/end-to-end-test/test_interactive.py`, select the first cell and press `Shift + Enter` and click `Install` (Install the `ipykernel`).
 
 You can now begin interactive testing!
 
