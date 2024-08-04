@@ -68,7 +68,7 @@ services:
       - "../..:/app:ro" # Source code
       - "data:/data" # For testing downloads
   # Attach to the container with:
-  # docker exec -it tests_selenium-tests_1 bash
+  # docker exec -it end-to-end-test-selenium-tests-1 sh
 
 volumes:
   data: # For testing downloads

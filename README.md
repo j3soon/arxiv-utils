@@ -227,7 +227,7 @@ tests/scripts/docker-compose.sh up -d
 ```
 
 Press `Ctrl + P` and select `>Dev Container: Attach to Running Container...`,
-then select `/tests_selenium-tests_1`.
+then select `/end-to-end-test-selenium-tests-1`.
 
 In the new VSCode window, click `Open Folders` and select `/app`.
 
