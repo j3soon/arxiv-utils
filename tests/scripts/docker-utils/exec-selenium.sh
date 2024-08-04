@@ -1,4 +1,4 @@
 #!/bin/bash -e
 
-docker exec -t tests_selenium-tests_1 \
+docker exec -t tests-selenium-tests-1 \
     python "/app/tests/$@"
