@@ -11,7 +11,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-testcases_path = "/app/tests/testcases.yaml"
+testcases_path = "/app/tests/testcases/testcases.yaml"
 with open(testcases_path, "r") as f:
     testcases = yaml.safe_load(f)
 

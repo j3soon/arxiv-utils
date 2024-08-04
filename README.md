@@ -158,7 +158,7 @@ The automated tests currently include the following:
 - **Default tests**: Test the default title name of arXiv abstract/PDF pages.
 - **Navigation tests**: Test the arxiv-utils button can switch between arXiv abstract/PDF pages, and the title is modified.
 
-The testcases along with their description is stored in [tests/testcases.yaml](tests/testcases.yaml).
+The testcases along with their description is stored in [tests/testcases/testcases.yaml](tests/testcases/testcases.yaml).
 
 Other functions should still be tested manually:
 
@@ -195,11 +195,11 @@ docker compose up -d
 Then run the tests:
 
 ```sh
-docker exec -t tests-selenium-tests-1 \
-    python "/app/tests/test_navigation.py"
+docker exec -t end-to-end-test-selenium-tests-1 \
+    python "/app/tests/end-to-end-test/test_navigation.py"
 ```
 
-When adding new test cases, it is often convenient to comment out existing test cases in [tests/testcases.yaml](tests/testcases.yaml); When testing specific browsers, you can modify the `for browser in [...]` part in [tests/test_navigation.py](tests/test_navigation.py) to only run tests for the desired browser.
+When adding new test cases, it is often convenient to comment out existing test cases in [tests/testcases/testcases.yaml](tests/testcases/testcases.yaml); When testing specific browsers, you can modify the `for browser in [...]` part in [tests/test_navigation.py](tests/test_navigation.py) to only run tests for the desired browser.
 
 > If the test logs stuck at launching the webdriver, you may need to restart the containers.
 

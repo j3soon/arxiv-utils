@@ -2,7 +2,6 @@
 # To execute this docker-compose yml file use `docker-compose -f docker-compose-v3.yml up`
 # Add the `-d` flag at the end for detached execution
 # To stop the execution, hit Ctrl+C, and then `docker-compose -f docker-compose-v3.yml down`
-version: "3"
 services:
   chrome-node:
     image: selenium/node-chrome:4.8.3-20230404
@@ -15,7 +14,7 @@ services:
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
       # - VNC_NO_PASSWORD=1
     volumes:
-      - "..:/app:ro" # Source code
+      - "../..:/app:ro" # Source code
       - "data:/data" # For testing downloads
     ports:
       - "6900:5900" # VNC port, default password: secret
@@ -32,7 +31,7 @@ services:
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
       # - VNC_NO_PASSWORD=1
     volumes:
-      - "..:/app:ro" # Source code
+      - "../..:/app:ro" # Source code
       - "data:/data" # For testing downloads
     ports:
       - "6901:5900" # VNC port, default password: secret
@@ -49,7 +48,7 @@ services:
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
       # - VNC_NO_PASSWORD=1
     volumes:
-      - "..:/app:ro" # Source code
+      - "../..:/app:ro" # Source code
       - "data:/data" # For testing downloads
     ports:
       - "6902:5900" # VNC port, default password: secret
@@ -66,7 +65,7 @@ services:
   selenium-tests:
     build: .
     volumes:
-      - "..:/app:ro" # Source code
+      - "../..:/app:ro" # Source code
       - "data:/data" # For testing downloads
   # Attach to the container with:
   # docker exec -it tests_selenium-tests_1 bash
