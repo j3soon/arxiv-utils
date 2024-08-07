@@ -75,38 +75,39 @@ async function getArticleInfoAsync(id, pageType) {
   }
 }
 // Add custom links in abstract page.
-function addCustomLinksAsync(id) {
-  document.getElementById(DIRECT_DOWNLOAD_LI_ID)?.remove();
+function addCustomLinksAsync(id) {  
+  document.getElementById(DIRECT_DOWNLOAD_LI_ID)?.remove();  
   const directDownloadHTML = ` \
     <li id="${DIRECT_DOWNLOAD_LI_ID}"> \
       <a id="${DIRECT_DOWNLOAD_A_ID}">Direct Download</a> \
-    </li>`;
-  const downloadUL = document.querySelector(".full-text > ul");
-  if (!downloadUL) {
-    console.error(LOG_PREFIX, "Error: Cannot find the unordered list inside the Download section at the right side of the abstract page.");
-    return;
-  }
-  downloadUL.innerHTML += directDownloadHTML;
-  console.log(LOG_PREFIX, "Added direct download link.")
-  // Add extra services links.
-  const elExtraRefCite = document.querySelector(".extra-ref-cite");
-  if (!elExtraRefCite) {
-    console.error(LOG_PREFIX, "Error: Cannot find the References & Citations section at the right side of the abstract page.");
-    return;
-  }
-  document.getElementById(EXTRA_SERVICES_DIV_ID)?.remove();
-  const extraServicesDiv = document.createElement("div");
-  extraServicesDiv.classList.add('extra-ref-cite');
-  extraServicesDiv.id = EXTRA_SERVICES_DIV_ID;
+    </li>`;  
+  const downloadUL = document.querySelector(".full-text > ul");  
+  if (!downloadUL) {  
+    console.error(LOG_PREFIX, "Error: Cannot find the unordered list inside the Download section at the right side of the abstract page.");  
+    return;  
+  }  
+  downloadUL.innerHTML += directDownloadHTML;  
+  console.log(LOG_PREFIX, "Added direct download link.")  
+
+  // Add extra services links.  
+  const elExtraRefCite = document.querySelector(".extra-ref-cite");  
+  if (!elExtraRefCite) {  
+    console.error(LOG_PREFIX, "Error: Cannot find the References & Citations section at the right side of the abstract page.");  
+    return;  
+  }  
+  document.getElementById(EXTRA_SERVICES_DIV_ID)?.remove();  
+  const extraServicesDiv = document.createElement("div");  
+  extraServicesDiv.classList.add('extra-ref-cite');  
+  extraServicesDiv.id = EXTRA_SERVICES_DIV_ID;  
   extraServicesDiv.innerHTML = ` \
     <h3>Extra Services</h3> \
     <ul> \
       <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
       <li><a href="https://alphaxiv.org/abs/${id}">alphaXiv</a></li> \
       <li><a href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
-    </ul>`;
-  elExtraRefCite.after(extraServicesDiv);
-  console.log(LOG_PREFIX, "Added extra services links.")
+    </ul>`;  
+  elExtraRefCite.after(extraServicesDiv);  
+  console.log(LOG_PREFIX, "Added extra services links.")  
 }
 
 async function enableDirectDownload(id, articleInfo) {
@@ -192,3 +193,4 @@ async function mainAsync() {
 mainAsync();
 // Listen for title-change messages from the background script.
 chrome.runtime.onMessage.addListener(onMessageAsync);
+
