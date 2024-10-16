@@ -122,6 +122,7 @@ async function enableDirectDownload(id, articleInfo) {
     .replace('${updatedYear}', articleInfo.updatedYear)
     .replace('${version}', articleInfo.version)
     .replace('${paperid}', id)
+    .replace('${publishedYearMonth}', '20' + id.substring(0, 4))
     // Replace invalid characters.
     // Ref: https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
     // Ref: https://stackoverflow.com/a/42210346
