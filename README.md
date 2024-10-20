@@ -150,7 +150,7 @@ For viewing the content script logs, open the Inspector of the arXiv webpage (as
 For viewing background script logs, open the Inspector of the plugin in the `Extensions` page.
 - Firefox: Go to `about:debugging#/runtime/this-firefox` and click `Inspect` on the temporarily loaded extension.
 - Chrome: Go to `chrome://extensions/` and click `Inspect views: background page` on the loaded (unpacked) extension.
-- Edge: Go to `edge://extensions/` and click `Inspect views: service workder` on the loaded (unpacked) extension.
+- Edge: Go to `edge://extensions/` and click `Inspect views: service worker` on the loaded (unpacked) extension.
 
 ### Tests
 
