@@ -28,4 +28,6 @@ export default [
   [/^.*:\/\/www\.jmlr\.org\/papers\/volume(\d+)\/(.*?)\/(.*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://www.jmlr.org/papers/v$1/$2.html"],
   [/^.*:\/\/ieeexplore\.ieee\.org\/document\/(\d+)(\?.*?)?(\#.*?)?$/, "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=$1"],
   [/^.*:\/\/ieeexplore\.ieee\.org\/stamp\/stamp\.jsp\?(?:.*?&)?arnumber=(\d+)(&.*?)?(\#.*?)?$/, "https://ieeexplore.ieee.org/document/$1"],
+  [/^.*:\/\/aclanthology\.org\/([^\/]+)\.pdf(\?.*?)?(\#.*?)?$/, "https://aclanthology.org/$1/"],
+  [/^.*:\/\/aclanthology\.org\/([^\/]+)\/(\?.*?)?(\#.*?)?$/, "https://aclanthology.org/$1.pdf"],
 ];

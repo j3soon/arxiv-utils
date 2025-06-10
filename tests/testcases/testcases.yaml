@@ -330,6 +330,22 @@ navigation:
   url2: https://ieeexplore.ieee.org/document/10412086
   skip_selenium: True # skipped due to paywall
   description: IEEE pdf -> abs (with extra query strings)
+- url: https://aclanthology.org/N19-1423.pdf
+  url2: https://aclanthology.org/N19-1423/
+  title2: ACL Anthology Paper
+  description: ACL pdf -> abs
+- url: https://aclanthology.org/N19-1423/
+  url2: https://aclanthology.org/N19-1423.pdf
+  title: ACL Anthology Paper
+  description: ACL abs -> pdf
+- url: https://aclanthology.org/2024.acl-long.800.pdf
+  url2: https://aclanthology.org/2024.acl-long.800/
+  title2: ACL Anthology Paper
+  description: ACL pdf -> abs
+- url: https://aclanthology.org/2024.acl-long.800/
+  url2: https://aclanthology.org/2024.acl-long.800.pdf
+  title: ACL Anthology Paper
+  description: ACL abs -> pdf
 
 # TODO: Test download filenames:
 #       - Title with colon: https://arxiv.org/abs/2102.07936
