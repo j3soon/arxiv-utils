@@ -47,18 +47,20 @@ navigation:
   pdf_title: Designing Network Design Spaces | PDF
   pdf2abs: False
   description: abs with export.arxiv.org subdomain
-- url: https://arxiv.org/abs/2003.13678
-  title: Designing Network Design Spaces | Abstract
-  pdf_url: https://browse.arxiv.org/pdf/2003.13678
-  pdf_title: Designing Network Design Spaces | PDF
-  abs2pdf: False
-  description: pdf with browse.arxiv.org subdomain
-- url: https://browse.arxiv.org/abs/2003.13678
-  title: Designing Network Design Spaces | Abstract
-  pdf_url: https://arxiv.org/pdf/2003.13678
-  pdf_title: Designing Network Design Spaces | PDF
-  pdf2abs: False
-  description: abs with browse.arxiv.org subdomain
+# browse.arxiv.org currently has `SSL_ERROR_BAD_CERT_DOMAIN` error, disabling for now
+# TODO: Add this back when the issue is fixed
+# - url: https://arxiv.org/abs/2003.13678
+#   title: Designing Network Design Spaces | Abstract
+#   pdf_url: https://browse.arxiv.org/pdf/2003.13678
+#   pdf_title: Designing Network Design Spaces | PDF
+#   abs2pdf: False
+#   description: pdf with browse.arxiv.org subdomain
+# - url: https://browse.arxiv.org/abs/2003.13678
+#   title: Designing Network Design Spaces | Abstract
+#   pdf_url: https://arxiv.org/pdf/2003.13678
+#   pdf_title: Designing Network Design Spaces | PDF
+#   pdf2abs: False
+#   description: abs with browse.arxiv.org subdomain
 - url: https://arxiv.org/abs/2003.13678
   title: Designing Network Design Spaces | Abstract
   pdf_url: https://www.arxiv.org/pdf/2003.13678
