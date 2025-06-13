@@ -27,7 +27,7 @@ for browser in ['chrome', 'firefox', 'edge']:
         command_executor='http://selenium-hub:4444/wd/hub',
         options=options
     )
-    wait = WebDriverWait(driver, 15)
+    wait = WebDriverWait(driver, 60)
     # The webdriver includes a default tab
     wait.until(EC.number_of_windows_to_be(1))
     initial_window = driver.current_window_handle

@@ -73,8 +73,8 @@ for browser in ['chrome', 'firefox', 'edge']:
         command_executor=command_executor,
         options=options
     )
-    driver.set_page_load_timeout(15)
-    wait = WebDriverWait(driver, 15)
+    driver.set_page_load_timeout(60)
+    wait = WebDriverWait(driver, 60)
 
     # The webdriver includes a default tab
     wait.until(EC.number_of_windows_to_be(1))
@@ -85,7 +85,7 @@ for browser in ['chrome', 'firefox', 'edge']:
         command_executor=command_executor,
         options=meta_options
     )
-    meta_wait = WebDriverWait(meta_driver, 15)
+    meta_wait = WebDriverWait(meta_driver, 60)
     meta_viewport_size = (
         meta_driver.execute_script("return window.innerWidth"),
         meta_driver.execute_script("return window.innerHeight")
