@@ -55,8 +55,14 @@ async function getArticleInfoAsync(id, pageType) {
   const newTitle = `${escapedTitle} | ${pageType}`;
   const firstAuthor = entry.getElementsByTagName("name")[0].textContent;
   const authors = [...entry.getElementsByTagName("name")].map((el) => el.textContent).join(", ");
-  const publishedYear = entry.getElementsByTagName("published")[0].textContent.split('-')[0];
-  const updatedYear = entry.getElementsByTagName("updated")[0].textContent.split('-')[0];
+  const publishedDateSplit = entry.getElementsByTagName("published")[0].textContent.split('-');
+  const updatedDateSplit = entry.getElementsByTagName("updated")[0].textContent.split('-');
+  const publishedYear = publishedDateSplit[0];
+  const updatedYear = updatedDateSplit[0];
+  const publishedMonth = publishedDateSplit[1];
+  const updatedMonth = updatedDateSplit[1];
+  const publishedDay = publishedDateSplit[2].split('T')[0];
+  const updatedDay = updatedDateSplit[2].split('T')[0];
   const versionRegexp = /^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/abs\/.*v([0-9]*)$/;
   var version = '';
   for (const el of entry.getElementsByTagName("link")) {
@@ -71,6 +77,10 @@ async function getArticleInfoAsync(id, pageType) {
     authors,
     publishedYear,
     updatedYear,
+    publishedMonth,
+    updatedMonth,
+    publishedDay,
+    updatedDay,
     version,
   }
 }
@@ -120,9 +130,12 @@ async function enableDirectDownload(id, articleInfo) {
     .replace('${authors}', articleInfo.authors)
     .replace('${publishedYear}', articleInfo.publishedYear)
     .replace('${updatedYear}', articleInfo.updatedYear)
+    .replace('${publishedMonth}', articleInfo.publishedMonth)
+    .replace('${updatedMonth}', articleInfo.updatedMonth)
+    .replace('${publishedDay}', articleInfo.publishedDay)
+    .replace('${updatedDay}', articleInfo.updatedDay)
     .replace('${version}', articleInfo.version)
     .replace('${paperid}', id)
-    .replace('${publishedYearMonth}', '20' + id.substring(0, 4))
     // Replace invalid characters.
     // Ref: https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
     // Ref: https://stackoverflow.com/a/42210346

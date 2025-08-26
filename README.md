@@ -88,8 +88,12 @@ For ArXiv PDF / abstract tabs:
   - `${title}` is replaced with the paper title.
   - `${firstAuthor}` is replaced with the first author of the paper.
   - `${authors}` is replaced with all authors separated by commas.
-  - `${publishedYear}` is replaced with the published year of the paper.
-  - `${updatedYear}` is replaced with the updated year of the current paper version.
+  - `${publishedYear}` is replaced with the published year of the paper. (e.g., "2025")
+  - `${updatedYear}` is replaced with the updated year of the current paper version. (e.g., "2025")
+  - `${publishedMonth}` is replaced with the published month of the paper (e.g., "12").
+  - `${updatedMonth}` is replaced with the updated month of the current paper version (e.g., "12").
+  - `${publishedDay}` is replaced with the published day of the paper (e.g., "25").
+  - `${updatedDay}` is replaced with the updated day of the current paper version (e.g., "25").
   - `${version}` is replaced with the version of the current paper.
   - `${paperid}` is replaced with the arXiv paper id.
 - `Open in new tab`:
