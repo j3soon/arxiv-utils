@@ -44,27 +44,27 @@ Alternatively, these 3 browsers can also load arxiv-utils directly from source. 
 The paper id in the title has been removed automatically!  
 A direct download link is added to download PDF with paper's title as the filename!  
 Open in extra services such as ar5iv!
-![](screenshots/abstract.png)
+![](screenshots/01-abstract.png)
 Finally... Meaningful paper title instead of paper id! (For Firefox, this is achieved through a custom PDF container.)
-![](screenshots/pdf.png)
+![](screenshots/02-pdf.png)
 Difficult to get back to abstract page...  
 Click to get back to abstract page!
-![](screenshots/pdf2.png)
+![](screenshots/03-pdf2.png)
 TADA~ The abstract page is shown at the right of the PDF page! Both with meaningful title!
-![](screenshots/abstract2.png)
+![](screenshots/04-abstract2.png)
 The button is disabled if not in ArXiv's domain.  
 Meaningful bookmark titles.
-![](screenshots/bookmarks.png)
+![](screenshots/05-bookmarks.png)
 Meaningful OneTab entries! (Chrome & Edge only)
-![](screenshots/onetab.png)
+![](screenshots/06-onetab.png)
 Opened too many tabs? Search in terms of the paper title!
-![](screenshots/search.png)
+![](screenshots/07-search.png)
 Works well with vertical tabs.
-![](screenshots/vertical-tabs.png)
+![](screenshots/08-vertical-tabs.png)
 Right-click the extension icon and select `Options` to set your preference. (Chrome & Edge)
-![](screenshots/filename-format-chrome.png)
+![](screenshots/09-filename-format-chrome.png)
 Go to add-ons page, click the extension select `Options` to set your preference. (Firefox)
-![](screenshots/filename-format-firefox.png)
+![](screenshots/10-filename-format-firefox.png)
 
 ## Solution Descriptions
 
