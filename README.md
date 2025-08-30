@@ -87,6 +87,8 @@ For ArXiv PDF / abstract tabs:
   - Default: `${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf`
   - `${title}` is replaced with the paper title.
   - `${firstAuthor}` is replaced with the first author of the paper.
+  - `${firstAuthorFamilyName}` is replaced with the family name of the first author.
+  - `${firstAuthorFamilyNameLowerCase}` is replaced with the family name of the first author in lowercase.
   - `${authors}` is replaced with all authors separated by commas.
   - `${publishedYear}` is replaced with the published year of the paper. (e.g., "2025")
   - `${updatedYear}` is replaced with the updated year of the current paper version. (e.g., "2025")

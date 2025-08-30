@@ -54,6 +54,8 @@ async function getArticleInfoAsync(id, pageType) {
   // TODO: May need to escape special characters in title?
   const newTitle = `${escapedTitle} | ${pageType}`;
   const firstAuthor = entry.getElementsByTagName("name")[0].textContent;
+  const firstAuthorFamilyName = firstAuthor.split(' ').pop();
+  const firstAuthorFamilyNameLowerCase = firstAuthorFamilyName.toLowerCase();
   const authors = [...entry.getElementsByTagName("name")].map((el) => el.textContent).join(", ");
   const publishedDateSplit = entry.getElementsByTagName("published")[0].textContent.split('-');
   const updatedDateSplit = entry.getElementsByTagName("updated")[0].textContent.split('-');
@@ -76,6 +78,8 @@ async function getArticleInfoAsync(id, pageType) {
     escapedTitle,
     newTitle,
     firstAuthor,
+    firstAuthorFamilyName,
+    firstAuthorFamilyNameLowerCase,
     authors,
     publishedYear,
     updatedYear,
@@ -131,6 +135,8 @@ async function enableDirectDownload(id, articleInfo) {
   const fileName = result.filename_format
     .replace('${title}', articleInfo.escapedTitle)
     .replace('${firstAuthor}', articleInfo.firstAuthor)
+    .replace('${firstAuthorFamilyName}', articleInfo.firstAuthorFamilyName)
+    .replace('${firstAuthorFamilyNameLowerCase}', articleInfo.firstAuthorFamilyNameLowerCase)
     .replace('${authors}', articleInfo.authors)
     .replace('${publishedYear}', articleInfo.publishedYear)
     .replace('${updatedYear}', articleInfo.updatedYear)
