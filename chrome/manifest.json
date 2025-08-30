@@ -1,7 +1,7 @@
 {
   "name": "arxiv-utils",
   "version": "1.8.5",
-  "description": "Easy access on ArXiv! Rename the title to the paper's title. Add a button to navigate easily. Download PDF with meaningful filename.",
+  "description": "Easy access on ArXiv! Auto-rename tabs to paper title, Quick navigation via button/hotkey, Save PDFs by paper title, and more.",
   "background": {
     "service_worker": "background.js",
     "type": "module"
