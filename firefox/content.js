@@ -59,6 +59,8 @@ async function getArticleInfoAsync(id, pageType) {
   const updatedDateSplit = entry.getElementsByTagName("updated")[0].textContent.split('-');
   const publishedYear = publishedDateSplit[0];
   const updatedYear = updatedDateSplit[0];
+  const publishedYear2Digits = publishedYear.slice(-2);
+  const updatedYear2Digits = updatedYear.slice(-2);
   const publishedMonth = publishedDateSplit[1];
   const updatedMonth = updatedDateSplit[1];
   const publishedDay = publishedDateSplit[2].split('T')[0];
@@ -77,6 +79,8 @@ async function getArticleInfoAsync(id, pageType) {
     authors,
     publishedYear,
     updatedYear,
+    publishedYear2Digits,
+    updatedYear2Digits,
     publishedMonth,
     updatedMonth,
     publishedDay,
@@ -130,6 +134,8 @@ async function enableDirectDownload(id, articleInfo) {
     .replace('${authors}', articleInfo.authors)
     .replace('${publishedYear}', articleInfo.publishedYear)
     .replace('${updatedYear}', articleInfo.updatedYear)
+    .replace('${publishedYear2Digits}', articleInfo.publishedYear2Digits)
+    .replace('${updatedYear2Digits}', articleInfo.updatedYear2Digits)
     .replace('${publishedMonth}', articleInfo.publishedMonth)
     .replace('${updatedMonth}', articleInfo.updatedMonth)
     .replace('${publishedDay}', articleInfo.publishedDay)

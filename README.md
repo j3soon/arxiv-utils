@@ -90,6 +90,8 @@ For ArXiv PDF / abstract tabs:
   - `${authors}` is replaced with all authors separated by commas.
   - `${publishedYear}` is replaced with the published year of the paper. (e.g., "2025")
   - `${updatedYear}` is replaced with the updated year of the current paper version. (e.g., "2025")
+  - `${publishedYear2Digits}` is replaced with the last two digits of the published year. (e.g., "25")
+  - `${updatedYear2Digits}` is replaced with the last two digits of the updated year. (e.g., "25")
   - `${publishedMonth}` is replaced with the published month of the paper (e.g., "12").
   - `${updatedMonth}` is replaced with the updated month of the current paper version (e.g., "12").
   - `${publishedDay}` is replaced with the published day of the paper (e.g., "25").
