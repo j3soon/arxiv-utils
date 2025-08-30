@@ -1,6 +1,6 @@
 {
   "name": "arxiv-utils",
-  "version": "1.8.5",
+  "version": "1.8.6",
   "description": "Easy access on ArXiv! Auto-rename tabs to paper title, Quick navigation via button/hotkey, Save PDFs by paper title, and more.",
   "background": {
     "service_worker": "background.js",
