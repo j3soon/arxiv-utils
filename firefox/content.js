@@ -10,7 +10,7 @@ const ID_REGEXP_REPLACE = [
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2", "PDF"],
   [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1", "HTML5"],
   // For external PDF viewer
-  [/^.*:\/\/mozilla\.github\.io\/pdf\.js\/web\/viewer\.html\?file=https:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*$/, "$1"],
+  [/^.*:\/\/mozilla\.github\.io\/pdf\.js\/web\/viewer\.html\?file=https:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(?:#zoom=.*)?$/, "$1"],
 ];
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";

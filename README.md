@@ -105,6 +105,11 @@ For ArXiv PDF / abstract tabs:
 - (Firefox, Experimental) `external PDF viewer URL prefix`:
   - Default: (empty), uses the custom PDF container.
   - Set to `https://mozilla.github.io/pdf.js/web/viewer.html?file=`, enables Screenshots and Go Back by using pdf.js as PDF viewer.
+- (Firefox, Experimental) `PDF viewer default zoom`:
+  - Default: `auto`
+  - Set the default zoom level for PDF viewers (PDF.js).
+  - Supported values: `auto`, `page-fit`, `page-width`, or percentage values like `50`, `75`, `100`, `125`, `150`, `200`, `300`, `400`, or custom values.
+  - This setting only applies when `Enable PDF redirection` is set to `true`.
 
 ## Privacy Policy
 

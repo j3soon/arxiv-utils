@@ -43,11 +43,24 @@ async function getArticleInfoAsync(id, pageType) {
 async function mainAsync() {
   // Extract the pdf url from 'pdfviewer.html?target=<pdfURL>'.
   const url = new URL(window.location.href).searchParams.get("target");
+
+  // Get zoom setting from storage
+  const result = await browser.storage.sync.get({
+    'pdf_viewer_default_zoom': 'auto'
+  });
+  const zoom = result.pdf_viewer_default_zoom;
+
+  // Construct the final URL with zoom parameter
+  let finalUrl = url;
+  if (zoom !== 'auto') {
+    finalUrl += '#zoom=' + zoom;
+  }
+
   // Inject PDF before querying the API to load the PDF as soon as
   // possible in the case of slow response from the API.
   const elContainer = document.getElementById("container");
-  elContainer.innerHTML += `<iframe src="${url}"></iframe>`;
-  console.log(LOG_PREFIX, "Injected PDF: " + url);
+  elContainer.innerHTML += `<iframe src="${finalUrl}"></iframe>`;
+  console.log(LOG_PREFIX, "Injected PDF: " + finalUrl);
   // Query the API to get the title.
   const pageType = url.includes("abs") ? "Abstract" : "PDF";
   const id = getId(url);

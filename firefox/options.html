@@ -30,6 +30,31 @@
     <button id="revert-pdf-viewer-url-prefix" type="submit">Revert to Default</button><br>
     <p>Note: Setting an external PDF viewer enables Screenshots and Go Back.</p>
   </form>
+  <form>
+    <p>Current PDF viewer default zoom: <b id="pdf-viewer-default-zoom"></b></p>
+    <label>New PDF viewer default zoom:</label>
+    <select id="new-pdf-viewer-default-zoom" style="margin: 2px;">
+      <option value="auto">Auto</option>
+      <option value="page-fit">Page Fit</option>
+      <option value="page-width">Page Width</option>
+      <option value="50">50%</option>
+      <option value="75">75%</option>
+      <option value="100">100%</option>
+      <option value="125">125%</option>
+      <option value="150">150%</option>
+      <option value="200">200%</option>
+      <option value="300">300%</option>
+      <option value="400">400%</option>
+      <option value="custom">Custom</option>
+    </select><br>
+    <div id="custom-zoom-container" style="display: none; margin-top: 5px;">
+      <label>Custom zoom (%):</label>
+      <input type="number" id="custom-pdf-viewer-zoom" style="margin: 2px; width: 80px;" min="10" max="500" step="5">%
+    </div>
+    <button id="update-pdf-viewer-default-zoom" type="submit">Update</button>
+    <button id="revert-pdf-viewer-default-zoom" type="submit">Revert to Default</button><br>
+    <p>Note: This setting only applies when "Using PDF redirection" is enabled.</p>
+  </form>
   <a href="https://github.com/j3soon/arxiv-utils#options">Help</a>
   <script src="options.js"></script>
 </body>

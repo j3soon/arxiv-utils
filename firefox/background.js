@@ -24,12 +24,43 @@ async function getPDFViewerURLPrefixAsync() {
     prefix = result.pdf_viewer_url_prefix;
   return prefix;
 }
+// Construct PDF viewer URL with zoom parameter
+async function constructPDFViewerURLAsync(pdfURL) {
+  const result = await browser.storage.sync.get({
+    'pdf_viewer_url_prefix': '',
+    'pdf_viewer_default_zoom': 'auto'
+  });
+  var prefix;
+  if (result.pdf_viewer_url_prefix === '') {
+    // Using custom PDF container, no zoom parameter needed
+    prefix = browser.runtime.getURL(pdfViewerRelatedURL);
+    return prefix + pdfURL;
+  } else {
+    // Using external PDF viewer, append zoom parameter
+    prefix = result.pdf_viewer_url_prefix;
+    const zoom = result.pdf_viewer_default_zoom;
+    if (zoom === 'auto') {
+      return prefix + pdfURL;
+    } else {
+      return prefix + pdfURL + '#zoom=' + zoom;
+    }
+  }
+}
+// Helper function to remove zoom suffix from URL
+function removeZoomSuffix(url) {
+  // Remove #zoom=<value> from the end of the URL
+  return url.replace(/#zoom=.*$/, '');
+}
+
 // Return the target URL parsed from the url.
 async function getTargetURLAsync(url) {
   // Remove the prefix for the custom PDF page.
   const prefix = await getPDFViewerURLPrefixAsync();
-  if (url.startsWith(prefix))
+  if (url.startsWith(prefix)) {
     url = url.substr(prefix.length);
+    // Remove zoom suffix if present
+    url = removeZoomSuffix(url);
+  }
   for (const [regexp, replacement] of TARGET_URL_REGEXP_REPLACE) {
     if (regexp.test(url))
       return url.replace(regexp, replacement);
@@ -99,7 +130,7 @@ async function onBeforeWebRequestAsync(requestDetails) {
   // Force HTTPS to avoid CSP (Content Security Policy) violation.
   const url = requestDetails.url.replace("http:", "https:");
   // Redirect to custom PDF viewer or a external PDF viewer.
-  const targetURL = await getPDFViewerURLPrefixAsync() + url;
+  const targetURL = await constructPDFViewerURLAsync(url);
   console.log(`${LOG_PREFIX} Redirecting: ${requestDetails.url} to ${targetURL}`);
   return {
     redirectUrl: targetURL
@@ -112,7 +143,9 @@ async function onCreateBookmarkAsync(id, bookmarkInfo) {
     return;
   }
   console.log(LOG_PREFIX, "Updating bookmark with id: " + id + ", url: " + bookmarkInfo.url);
-  const url = bookmarkInfo.url.substr(prefix.length);
+  let url = bookmarkInfo.url.substr(prefix.length);
+  // Remove zoom suffix if present
+  url = removeZoomSuffix(url);
   browser.bookmarks.update(id, {
     url
   }, () => {
