@@ -60,13 +60,48 @@ async function onButtonClickedAsync(tab) {
   }
   console.log(LOG_PREFIX, "Opened abstract / PDF page in existing / new tab.");
 }
-async function onMessage(message) {
-  await chrome.downloads.download({
-    url: message.url,
-    filename: message.filename,
-    saveAs: false,
-  });
-  console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
+function onMessage(message, sender, sendResponse) {
+  // 1. Handle arXiv info request from content.js
+  if (message && message.type === "GET_ARXIV_INFO" && message.id) {
+    (async () => {
+      try {
+        const response = await fetch(
+          `https://export.arxiv.org/api/query?id_list=${message.id}`
+        );
+        const text = await response.text();
+        sendResponse({
+          ok: response.ok,
+          status: response.status,
+          text: text,
+        });
+      } catch (e) {
+        console.error(LOG_PREFIX, "Error fetching ArXiv API in background:", e);
+        sendResponse({
+          ok: false,
+          error: e && e.toString ? e.toString() : String(e),
+        });
+      }
+    })();
+
+    // Tell Chrome we will send the response asynchronously
+    return true;
+  }
+
+  // 2. Handle legacy download request (used by content.js)
+  if (message && message.url && message.filename) {
+    chrome.downloads.download({
+      url: message.url,
+      filename: message.filename,
+      saveAs: false,
+    });
+    console.log(
+      LOG_PREFIX,
+      `Downloading file: ${message.filename} from ${message.url}.`
+    );
+  }
+
+  // Return false/undefined for non-async responses
+  return false;
 }
 function onContextClicked(info, tab) {
   if (info.menuItemId === 'help')
