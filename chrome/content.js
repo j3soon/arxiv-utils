@@ -1,8 +1,10 @@
 // This content script modifies the title of the abstract / PDF page once it has finished loading.
 
+// We intentionally use global `var` instead of `const` to prevent 'Identifier already declared' errors when Chrome injects the content script multiple times.
+
 // Regular expressions for parsing arXiv IDs from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
-const ID_REGEXP_REPLACE = [
+var ID_REGEXP_REPLACE = [
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/abs\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1", "Abstract"],
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "$1", "PDF"],
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2", "PDF"],
@@ -13,11 +15,11 @@ var newTitle = undefined;
 // Define onMessage countdown for Chrome PDF viewer bug.
 var messageCallbackCountdown = 3;
 // All console logs should start with this prefix.
-const LOG_PREFIX = "[arXiv-utils]";
+var LOG_PREFIX = "[arXiv-utils]";
 // Element IDs for injected links
-const DIRECT_DOWNLOAD_LI_ID = "arxiv-utils-direct-download-li";
-const DIRECT_DOWNLOAD_A_ID = "arxiv-utils-direct-download-a";
-const EXTRA_SERVICES_DIV_ID = "arxiv-utils-extra-services-div";
+var DIRECT_DOWNLOAD_LI_ID = "arxiv-utils-direct-download-li";
+var DIRECT_DOWNLOAD_A_ID = "arxiv-utils-direct-download-a";
+var EXTRA_SERVICES_DIV_ID = "arxiv-utils-extra-services-div";
 
 // Return the id parsed from the url.
 function getId(url) {
@@ -38,14 +40,18 @@ function getPageType(url) {
 // Get article information through arXiv API asynchronously.
 // Ref: https://info.arxiv.org/help/api/user-manual.html#31-calling-the-api
 async function getArticleInfoAsync(id, pageType) {
-  console.log(LOG_PREFIX, "Retrieving title through ArXiv API request...");
-  const response = await fetch(`https://export.arxiv.org/api/query?id_list=${id}`);
-  if (!response.ok) {
-    console.error(LOG_PREFIX, "Error: ArXiv API request failed.");
+  console.log(LOG_PREFIX, "Retrieving title through ArXiv API request (via background)...");
+  // Request article info from background script to avoid Chrome's stricter CORS restrictions
+  const result = await chrome.runtime.sendMessage({
+    type: 'fetchArticleInfo',
+    id: id
+  });
+  if (!result.success) {
+    console.error(LOG_PREFIX, "Error: ArXiv API request failed in background.", result.error);
     return;
   }
-  const xmlDoc = await response.text();
-  const parsedXML = new DOMParser().parseFromString(xmlDoc, 'text/xml');
+  const xmlDoc = result.data;
+  const parsedXML = new DOMParser().parseFromString(xmlDoc, "text/xml");
   const entry = parsedXML.getElementsByTagName("entry")[0];
   // title[0] is query string, title[1] is paper name.
   const title = entry.getElementsByTagName("title")[0].textContent;
@@ -54,26 +60,29 @@ async function getArticleInfoAsync(id, pageType) {
   // TODO: May need to escape special characters in title?
   const newTitle = `${escapedTitle} | ${pageType}`;
   const firstAuthor = entry.getElementsByTagName("name")[0].textContent;
-  const firstAuthorFamilyName = firstAuthor.split(' ').pop();
+  const firstAuthorFamilyName = firstAuthor.split(" ").pop();
   const firstAuthorFamilyNameLowerCase = firstAuthorFamilyName.toLowerCase();
   const authors = [...entry.getElementsByTagName("name")].map((el) => el.textContent).join(", ");
-  const publishedDateSplit = entry.getElementsByTagName("published")[0].textContent.split('-');
-  const updatedDateSplit = entry.getElementsByTagName("updated")[0].textContent.split('-');
+  const publishedDateSplit = entry.getElementsByTagName("published")[0].textContent.split("-");
+  const updatedDateSplit = entry.getElementsByTagName("updated")[0].textContent.split("-");
   const publishedYear = publishedDateSplit[0];
   const updatedYear = updatedDateSplit[0];
   const publishedYear2Digits = publishedYear.slice(-2);
   const updatedYear2Digits = updatedYear.slice(-2);
   const publishedMonth = publishedDateSplit[1];
   const updatedMonth = updatedDateSplit[1];
-  const publishedDay = publishedDateSplit[2].split('T')[0];
-  const updatedDay = updatedDateSplit[2].split('T')[0];
+  const publishedDay = publishedDateSplit[2].split("T")[0];
+  const updatedDay = updatedDateSplit[2].split("T")[0];
   const versionRegexp = /^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/abs\/.*v([0-9]*)$/;
-  var version = '';
+  var version = "";
   for (const el of entry.getElementsByTagName("link")) {
     const match = el.getAttribute("href").match(versionRegexp);
-    if (match && match[1])
+    if (match && match[1]) {
       version = match[1];
+      break;
+    }
   }
+
   return {
     escapedTitle,
     newTitle,
@@ -90,8 +99,9 @@ async function getArticleInfoAsync(id, pageType) {
     publishedDay,
     updatedDay,
     version,
-  }
+  };
 }
+
 // Add custom links in abstract page.
 function addCustomLinksAsync(id) {
   document.getElementById(DIRECT_DOWNLOAD_LI_ID)?.remove();
@@ -159,6 +169,7 @@ async function enableDirectDownload(id, articleInfo) {
   const downloadA = document.getElementById(DIRECT_DOWNLOAD_A_ID)
   downloadA.addEventListener('click', function (e) {
     chrome.runtime.sendMessage({
+      type: 'downloadFile',
       url: directURL,
       filename: fileName,
     });
