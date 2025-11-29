@@ -60,40 +60,40 @@ async function onButtonClickedAsync(tab) {
   }
   console.log(LOG_PREFIX, "Opened abstract / PDF page in existing / new tab.");
 }
-async function onMessage(message, sender, sendResponse) {
+function onMessage(message, sender, sendResponse) {
   // Handle API query requests from content script (to avoid Chrome's CORS restrictions)
   if (message.type === 'fetchArticleInfo') {
-    try {
-      console.log(LOG_PREFIX, `Fetching article info for id: ${message.id}`);
-      const response = await fetch(`https://export.arxiv.org/api/query?id_list=${message.id}`);
-      if (!response.ok) {
-        console.error(LOG_PREFIX, "Error: ArXiv API request failed.");
-        sendResponse({ success: false, error: 'API request failed' });
-        return;
+    (async () => {
+      try {
+        console.log(LOG_PREFIX, `Fetching article info for id: ${message.id}`);
+        const response = await fetch(`https://export.arxiv.org/api/query?id_list=${message.id}`);
+        if (!response.ok) {
+          console.error(LOG_PREFIX, "Error: ArXiv API request failed.");
+          sendResponse({ success: false, error: 'API request failed' });
+          return;
+        }
+        const xmlDoc = await response.text();
+        console.log(LOG_PREFIX, "Successfully retrieved article info from ArXiv API.");
+        sendResponse({ success: true, data: xmlDoc });
+      } catch (error) {
+        console.error(LOG_PREFIX, "Error fetching article info:", error);
+        sendResponse({ success: false, error: error.message });
       }
-      const xmlDoc = await response.text();
-      console.log(LOG_PREFIX, "Successfully retrieved article info from ArXiv API.");
-      sendResponse({ success: true, data: xmlDoc });
-    } catch (error) {
-      console.error(LOG_PREFIX, "Error fetching article info:", error);
-      sendResponse({ success: false, error: error.message });
-    }
+    })();
     // Tell Chrome we will send the response asynchronously
     return true;
   }
 
   // Handle download requests
   if (message.type === 'downloadFile') {
-    await chrome.downloads.download({
+    chrome.downloads.download({
       url: message.url,
       filename: message.filename,
       saveAs: false,
+    }).then(() => {
+      console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
     });
-    console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
   }
-
-  // Return false/undefined for non-async responses
-  return false;
 }
 function onContextClicked(info, tab) {
   if (info.menuItemId === 'help')
