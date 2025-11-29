@@ -1,5 +1,7 @@
 // This content script modifies the title of the abstract / PDF page once it has finished loading.
 
+// We intentionally use global `var` instead of `const` to prevent 'Identifier already declared' errors when Chrome injects the content script multiple times.
+
 // Regular expressions for parsing arXiv IDs from URLs.
 // Ref: https://info.arxiv.org/help/arxiv_identifier_for_services.html#urls-for-standard-arxiv-functions
 var ID_REGEXP_REPLACE = [
@@ -39,19 +41,16 @@ function getPageType(url) {
 // Ref: https://info.arxiv.org/help/api/user-manual.html#31-calling-the-api
 async function getArticleInfoAsync(id, pageType) {
   console.log(LOG_PREFIX, "Retrieving title through ArXiv API request (via background)...");
-
-  // get information via background.
-  const resp = await chrome.runtime.sendMessage({
-    type: "GET_ARXIV_INFO",
-    id: id,
+  // Request article info from background script to avoid Chrome's stricter CORS restrictions
+  const result = await chrome.runtime.sendMessage({
+    type: 'fetchArticleInfo',
+    id: id
   });
-
-  if (!resp || !resp.ok) {
-    console.error(LOG_PREFIX, "Error: ArXiv API request failed in background.", resp && resp.error);
+  if (!result.success) {
+    console.error(LOG_PREFIX, "Error: ArXiv API request failed in background.", result.error);
     return;
   }
-
-  const xmlDoc = resp.text;
+  const xmlDoc = result.data;
   const parsedXML = new DOMParser().parseFromString(xmlDoc, "text/xml");
   const entry = parsedXML.getElementsByTagName("entry")[0];
   // title[0] is query string, title[1] is paper name.
@@ -170,6 +169,7 @@ async function enableDirectDownload(id, articleInfo) {
   const downloadA = document.getElementById(DIRECT_DOWNLOAD_A_ID)
   downloadA.addEventListener('click', function (e) {
     chrome.runtime.sendMessage({
+      type: 'downloadFile',
       url: directURL,
       filename: fileName,
     });

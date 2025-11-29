@@ -60,44 +60,36 @@ async function onButtonClickedAsync(tab) {
   }
   console.log(LOG_PREFIX, "Opened abstract / PDF page in existing / new tab.");
 }
-function onMessage(message, sender, sendResponse) {
-  // 1. Handle arXiv info request from content.js
-  if (message && message.type === "GET_ARXIV_INFO" && message.id) {
-    (async () => {
-      try {
-        const response = await fetch(
-          `https://export.arxiv.org/api/query?id_list=${message.id}`
-        );
-        const text = await response.text();
-        sendResponse({
-          ok: response.ok,
-          status: response.status,
-          text: text,
-        });
-      } catch (e) {
-        console.error(LOG_PREFIX, "Error fetching ArXiv API in background:", e);
-        sendResponse({
-          ok: false,
-          error: e && e.toString ? e.toString() : String(e),
-        });
+async function onMessage(message, sender, sendResponse) {
+  // Handle API query requests from content script (to avoid Chrome's CORS restrictions)
+  if (message.type === 'fetchArticleInfo') {
+    try {
+      console.log(LOG_PREFIX, `Fetching article info for id: ${message.id}`);
+      const response = await fetch(`https://export.arxiv.org/api/query?id_list=${message.id}`);
+      if (!response.ok) {
+        console.error(LOG_PREFIX, "Error: ArXiv API request failed.");
+        sendResponse({ success: false, error: 'API request failed' });
+        return;
       }
-    })();
-
+      const xmlDoc = await response.text();
+      console.log(LOG_PREFIX, "Successfully retrieved article info from ArXiv API.");
+      sendResponse({ success: true, data: xmlDoc });
+    } catch (error) {
+      console.error(LOG_PREFIX, "Error fetching article info:", error);
+      sendResponse({ success: false, error: error.message });
+    }
     // Tell Chrome we will send the response asynchronously
     return true;
   }
 
-  // 2. Handle legacy download request (used by content.js)
-  if (message && message.url && message.filename) {
-    chrome.downloads.download({
+  // Handle download requests
+  if (message.type === 'downloadFile') {
+    await chrome.downloads.download({
       url: message.url,
       filename: message.filename,
       saveAs: false,
     });
-    console.log(
-      LOG_PREFIX,
-      `Downloading file: ${message.filename} from ${message.url}.`
-    );
+    console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
   }
 
   // Return false/undefined for non-async responses
