@@ -177,6 +177,11 @@ navigation:
   url2: https://arxiv.org/abs/1512.03385
   title2: Deep Residual Learning for Image Recognition | Abstract
   description: ar5iv -> arXiv
+- url: https://papers.cool/arxiv/search?highlight=1&query=1512.03385
+  title: "Search papers with code highlights by query: 1512.03385"
+  url2: https://arxiv.org/abs/1512.03385
+  title2: Deep Residual Learning for Image Recognition | Abstract
+  description: papers.cool -> arXiv
 - url: https://huggingface.co/papers/2408.00714
   title: "Paper page - SAM 2: Segment Anything in Images and Videos"
   url2: https://arxiv.org/abs/2408.00714
