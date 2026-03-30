@@ -10,6 +10,7 @@ const ID_REGEXP_REPLACE = [
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2", "PDF"],
   [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1", "HTML5"],
   [/^.*:\/\/papers\.cool\/arxiv\/search\?(?:.*?&)?query=(\S*?)(&.*?)?(\#.*?)?$/, "$1", "papers.cool"],
+  [/^.*:\/\/papers\.cool\/arxiv\/([^\/\?\#]+)\/*(\?.*?)?(\#.*?)?$/, "$1", "papers.cool"],
   // For external PDF viewer
   [/^.*:\/\/mozilla\.github\.io\/pdf\.js\/web\/viewer\.html\?file=https:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(?:#zoom=.*)?$/, "$1"],
 ];
@@ -121,7 +122,7 @@ function addCustomLinksAsync(id) {
     <h3>Extra Services</h3> \
     <ul> \
       <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
-      <li><a href="https://papers.cool/arxiv/search?highlight=1&query=${id}">papers.cool</a></li> \
+      <li><a href="https://papers.cool/arxiv/${id}">papers.cool</a></li> \
       <li><a href="https://alphaxiv.org/abs/${id}">alphaXiv</a></li> \
       <li><a href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
     </ul>`;
