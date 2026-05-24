@@ -182,6 +182,9 @@ navigation:
   url2: https://arxiv.org/abs/2408.00714
   title2: "SAM 2: Segment Anything in Images and Videos | Abstract"
   description: ar5iv -> arXiv
+- url: https://www.alphaxiv.org/abs/1706.03762
+  url2: https://arxiv.org/abs/1706.03762
+  description: alphaXiv -> arXiv
 - url: https://openreview.net/pdf?id=LcF-EEt8cCC
   url2: https://openreview.net/forum?id=LcF-EEt8cCC
   title2: Denoising Likelihood Score Matching for Conditional Score-based Data Generation | OpenReview
