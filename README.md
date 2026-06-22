@@ -39,6 +39,16 @@ Supports Chrome, Firefox, Edge, Firefox on Android. (Not tested on Android)
 
 Alternatively, these 3 browsers can also load arxiv-utils directly from source. First, download the source code release from [Releases](https://github.com/j3soon/arxiv-utils/releases), and then load the extension as an unpacked extension following the [Development Section](#development).
 
+## Standalone usenix-utils Extension
+
+This repository also ships a small standalone extension, [`usenix-utils/`](usenix-utils/), that is **built on top of arxiv-utils** (it reuses the same content/background script structure and is derived from this project). It **only** touches `usenix.org`, so it can be installed alongside arxiv-utils without any overlap.
+
+- Renames USENIX presentation/PDF tab titles to the paper's title.
+- Adds `Alt+A` navigation between the presentation page and the PDF.
+- Minimal permissions (only `usenix.org`), and a distinct maroon icon to tell it apart from arxiv-utils.
+
+See [usenix-utils/README.md](usenix-utils/README.md) for install instructions. Note that USENIX support is *also* available directly inside arxiv-utils itself — `usenix-utils` simply packages that subset as a separate, lighter extension.
+
 ## Screenshots
 
 The paper id in the title has been removed automatically!  

@@ -1,6 +1,8 @@
 # usenix-utils
 
-A small standalone browser extension that enhances reading [USENIX](https://www.usenix.org/) papers. It is a focused spin-off of [arxiv-utils](https://github.com/j3soon/arxiv-utils) that **only** touches `usenix.org`, so it can be installed alongside arxiv-utils without overlap.
+> **Built on arxiv-utils.** This extension is **derived from and built on top of [arxiv-utils](https://github.com/j3soon/arxiv-utils)** — it reuses the same content-script / background-script structure and the USENIX logic that was first implemented inside arxiv-utils. It is **not** an independent rewrite; it is the USENIX subset of arxiv-utils repackaged as a separate, lighter extension. It lives in the [`usenix-utils/`](.) folder of the arxiv-utils repository.
+
+A small standalone browser extension that enhances reading [USENIX](https://www.usenix.org/) papers. Because it **only** touches `usenix.org`, it can be installed alongside arxiv-utils without overlap.
 
 ## Features
 
@@ -34,4 +36,4 @@ Self-built extensions are unsigned, so load it unpacked:
 
 ## Credits
 
-Based on [j3soon/arxiv-utils](https://github.com/j3soon/arxiv-utils) (Apache-2.0).
+Built on / derived from [j3soon/arxiv-utils](https://github.com/j3soon/arxiv-utils) (Apache-2.0). The USENIX title-renaming and navigation logic was originally developed inside arxiv-utils; this extension reuses that code as a standalone package.
