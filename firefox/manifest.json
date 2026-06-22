@@ -43,10 +43,12 @@
     "*://arxiv.org/*pdf*",
     "*://export.arxiv.org/*pdf*",
     "*://browse.arxiv.org/*pdf*",
-    "*://www.arxiv.org/*pdf*"
+    "*://www.arxiv.org/*pdf*",
+    "*://usenix.org/system/files/*.pdf*",
+    "*://www.usenix.org/system/files/*.pdf*"
   ],
   "content_security_policy":
-    "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org https://browse.arxiv.org https://www.arxiv.org;",
+    "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org https://browse.arxiv.org https://www.arxiv.org https://usenix.org https://www.usenix.org;",
   "web_accessible_resources": [
     "pdfviewer.html"
   ],

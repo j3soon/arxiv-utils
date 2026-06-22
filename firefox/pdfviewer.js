@@ -6,6 +6,8 @@ const ID_REGEXP_REPLACE = [
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/pdf\/(\S*?)(?:\.pdf)?\/*(\?.*?)?(\#.*?)?$/, "$1"],
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2"],
 ];
+// Regular expression for parsing USENIX PDF URLs.
+const USENIX_PDF_REGEXP = /^.*:\/\/(?:www\.)?usenix\.org\/system\/files\/([a-z]+\d+)-(.+?)\.pdf(\?.*?)?(\#.*?)?$/;
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
 
@@ -16,6 +18,43 @@ function getId(url) {
       return url.replace(regexp, replacement);
   }
   return null;
+}
+// Return USENIX page info parsed from the URL.
+function getUsenixInfo(url) {
+  const match = url.match(USENIX_PDF_REGEXP);
+  if (match) return { conference: match[1], slug: match[2] };
+  return null;
+}
+// Get USENIX article information by scraping the presentation page.
+async function getUsenixArticleInfoAsync(conference, slug, pageType) {
+  const presentationURL = `https://www.usenix.org/conference/${conference}/presentation/${slug}`;
+  console.log(LOG_PREFIX, `Retrieving title from USENIX page: ${presentationURL}`);
+  const response = await fetch(presentationURL);
+  if (!response.ok) {
+    console.error(LOG_PREFIX, "Error: USENIX page request failed.");
+    return null;
+  }
+  const html = await response.text();
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+  var title = "";
+  var el = doc.querySelector('meta[name="citation_title"]');
+  if (el) title = el.getAttribute('content') || "";
+  if (!title) {
+    el = doc.querySelector('.page-title');
+    if (el) title = el.textContent.trim();
+  }
+  if (!title) {
+    el = doc.querySelector('article h1');
+    if (el) title = el.textContent.trim();
+  }
+  if (!title) {
+    console.error(LOG_PREFIX, "Error: Could not extract title from USENIX page.");
+    return null;
+  }
+  const escapedTitle = title.replace(/\n/g, "").replace(/\s+/g, " ").trim();
+  const newTitle = `${escapedTitle} | ${pageType}`;
+  return { escapedTitle, newTitle };
 }
 // Get article information through arXiv API asynchronously.
 // Ref: https://info.arxiv.org/help/api/user-manual.html#31-calling-the-api
@@ -61,7 +100,17 @@ async function mainAsync() {
   const elContainer = document.getElementById("container");
   elContainer.innerHTML += `<iframe src="${finalUrl}"></iframe>`;
   console.log(LOG_PREFIX, "Injected PDF: " + finalUrl);
-  // Query the API to get the title.
+  // Check if USENIX URL.
+  const usenixInfo = getUsenixInfo(url);
+  if (usenixInfo) {
+    const usenixArticleInfo = await getUsenixArticleInfoAsync(usenixInfo.conference, usenixInfo.slug, "PDF");
+    if (usenixArticleInfo) {
+      document.title = usenixArticleInfo.newTitle;
+      console.log(LOG_PREFIX, `Set document title to: ${usenixArticleInfo.newTitle}.`);
+    }
+    return;
+  }
+  // Query the arXiv API to get the title.
   const pageType = url.includes("abs") ? "Abstract" : "PDF";
   const id = getId(url);
   if (!id) {

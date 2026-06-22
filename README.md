@@ -21,7 +21,7 @@
 A collection of features that enhance your reading experience on ArXiv (and some other sites):
 
 - Renames the title of PDF page to the paper's title.
-- Adds a button and hotkey (`Alt+A`) to navigate back to Abstract page for arXiv, OpenReview, and more.
+- Adds a button and hotkey (`Alt+A`) to navigate back to Abstract page for arXiv, OpenReview, USENIX, and more.
 - Download PDF with paper's title as filename.
 - Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/).
 - Works with Native Tab Search, and other plugins! (See the [Solution Descriptions](#solution-descriptions) section for more details)
@@ -132,6 +132,8 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `*://browse.arxiv.org/*`: Inject content scripts to existing tabs.
 - `*://www.arxiv.org/*`: Inject content scripts to existing tabs.
 - `*://ar5iv.labs.arxiv.org/*`: Inject content scripts to existing tabs.
+- `*://usenix.org/*`: Inject content scripts to existing tabs and fetch the presentation page to retrieve the paper title.
+- `*://www.usenix.org/*`: Inject content scripts to existing tabs and fetch the presentation page to retrieve the paper title.
 
 ### Firefox Permissions
 
@@ -147,7 +149,9 @@ We do not gather your personal data. If in doubt, please refer to the source cod
 - `*://export.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `*://browse.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
 - `*://www.arxiv.org/*pdf*`: Redirect PDF pages to custom PDF container.
-- `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org https://browse.arxiv.org https://www.arxiv.org;"`: For embedding PDF in container.
+- `*://usenix.org/system/files/*.pdf*`: Redirect USENIX PDF pages to custom PDF container.
+- `*://www.usenix.org/system/files/*.pdf*`: Redirect USENIX PDF pages to custom PDF container.
+- `"content_security_policy": "script-src 'self'; object-src 'self' https://arxiv.org https://export.arxiv.org https://browse.arxiv.org https://www.arxiv.org https://usenix.org https://www.usenix.org;"`: For embedding PDF in container.
 - `"web_accessible_resources": [ "pdfviewer.html" ]`: To redirect from HTTPS to extension custom page requires them to be visible.
 
 ## Developer Notes
@@ -196,6 +200,7 @@ Other functions should still be tested manually:
 - Installing or re-enabling the extension should immediately update the title of existing tabs.
 - The help menu item in the context menu should link to this GitHub page.
 - ar5iv tabs should have renamed title, and support navigation.
+- USENIX presentation/PDF tabs should have renamed title, and support navigation between the presentation page and PDF.
 
 ### Run Unit Tests Locally
 

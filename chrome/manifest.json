@@ -16,7 +16,9 @@
       "*://browse.arxiv.org/abs/*",
       "*://www.arxiv.org/*pdf*",
       "*://www.arxiv.org/abs/*",
-      "*://ar5iv.labs.arxiv.org/html/*"
+      "*://ar5iv.labs.arxiv.org/html/*",
+      "*://usenix.org/system/files/*",
+      "*://www.usenix.org/system/files/*"
     ],
     "js": [ "content.js" ],
     "run_at": "document_end"
@@ -48,7 +50,9 @@
     "*://export.arxiv.org/*",
     "*://browse.arxiv.org/*",
     "*://www.arxiv.org/*",
-    "*://ar5iv.labs.arxiv.org/*"
+    "*://ar5iv.labs.arxiv.org/*",
+    "*://usenix.org/*",
+    "*://www.usenix.org/*"
   ],
   "icons": {
     "16": "icon16.png",

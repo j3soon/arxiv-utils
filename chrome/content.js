@@ -10,6 +10,9 @@ var ID_REGEXP_REPLACE = [
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "$1$2", "PDF"],
   [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "$1", "HTML5"],
 ];
+// Regular expressions for parsing USENIX URLs.
+var USENIX_PDF_REGEXP = /^.*:\/\/(?:www\.)?usenix\.org\/system\/files\/([a-z]+\d+)-(.+?)\.pdf(\?.*?)?(\#.*?)?$/;
+var USENIX_ABS_REGEXP = /^.*:\/\/(?:www\.)?usenix\.org\/conference\/([^\/]+)\/presentation\/([^\/\?#]+)\/*(\?.*?)?(\#.*?)?$/;
 // Store new title for onMessage to deal with Chrome PDF viewer bug.
 var newTitle = undefined;
 // Define onMessage countdown for Chrome PDF viewer bug.
@@ -180,6 +183,48 @@ async function enableDirectDownload(id, articleInfo) {
   console.log(LOG_PREFIX, "Enabled direct download.")
 }
 
+// Return USENIX page info parsed from the URL.
+function getUsenixInfo(url) {
+  var match = url.match(USENIX_PDF_REGEXP);
+  if (match) return { conference: match[1], slug: match[2], pageType: "PDF" };
+  match = url.match(USENIX_ABS_REGEXP);
+  if (match) return { conference: match[1], slug: match[2], pageType: "Abstract" };
+  return null;
+}
+// Get USENIX article information by scraping the presentation page.
+async function getUsenixArticleInfoAsync(conference, slug, pageType) {
+  var presentationURL = `https://www.usenix.org/conference/${conference}/presentation/${slug}`;
+  console.log(LOG_PREFIX, `Retrieving title from USENIX page: ${presentationURL}`);
+  var result = await chrome.runtime.sendMessage({
+    type: 'fetchPageHTML',
+    url: presentationURL
+  });
+  if (!result.success) {
+    console.error(LOG_PREFIX, "Error: USENIX page request failed.", result.error);
+    return null;
+  }
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(result.data, 'text/html');
+  var title = "";
+  var el = doc.querySelector('meta[name="citation_title"]');
+  if (el) title = el.getAttribute('content') || "";
+  if (!title) {
+    el = doc.querySelector('.page-title');
+    if (el) title = el.textContent.trim();
+  }
+  if (!title) {
+    el = doc.querySelector('article h1');
+    if (el) title = el.textContent.trim();
+  }
+  if (!title) {
+    console.error(LOG_PREFIX, "Error: Could not extract title from USENIX page.");
+    return null;
+  }
+  var escapedTitle = title.replace(/\n/g, "").replace(/\s+/g, " ").trim();
+  var usenixNewTitle = `${escapedTitle} | ${pageType}`;
+  return { escapedTitle, newTitle: usenixNewTitle };
+}
+
 // The PDF viewer in Chrome has a bug that will overwrite the title of the page after loading the PDF.
 // Change the PDF page title again if the loading process is long enough for this bug to occur.
 // Ref: https://stackoverflow.com/a/69408967
@@ -208,6 +253,18 @@ async function onMessageAsync(tab, sender, sendResponse) {
 async function mainAsync() {
   console.log(LOG_PREFIX, "Extension initialized.");
   const url = location.href;
+  // Check for USENIX URLs.
+  const usenixInfo = getUsenixInfo(url);
+  if (usenixInfo) {
+    const usenixArticleInfo = await getUsenixArticleInfoAsync(usenixInfo.conference, usenixInfo.slug, usenixInfo.pageType);
+    if (usenixArticleInfo) {
+      document.title = usenixArticleInfo.newTitle;
+      newTitle = usenixArticleInfo.newTitle;
+      console.log(LOG_PREFIX, `Set document title to: ${usenixArticleInfo.newTitle}.`);
+    }
+    return;
+  }
+  // Handle arXiv URLs.
   const pageType = getPageType(url);
   const id = getId(url);
   if (!id) {

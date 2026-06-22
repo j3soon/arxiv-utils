@@ -8,6 +8,7 @@ const pdfViewerRelatedURL = "pdfviewer.html?target=";
 const redirectPatterns = [
   "*://arxiv.org/*.pdf*", "*://export.arxiv.org/*.pdf*", "*://browse.arxiv.org/*.pdf*", "*://www.arxiv.org/*.pdf*",
   "*://arxiv.org/*pdf*/*", "*://export.arxiv.org/*pdf*/*", "*://browse.arxiv.org/*pdf*/*", "*://www.arxiv.org/*pdf*/*",
+  "*://usenix.org/system/files/*.pdf*", "*://www.usenix.org/system/files/*.pdf*",
 ];
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";

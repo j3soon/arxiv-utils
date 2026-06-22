@@ -352,6 +352,20 @@ navigation:
   url2: https://aclanthology.org/2024.acl-long.800.pdf
   description: ACL abs -> pdf
 
+# Below are testcases for USENIX
+- url: https://www.usenix.org/conference/nsdi26/presentation/luo
+  url2: https://www.usenix.org/system/files/nsdi26-luo.pdf
+  description: USENIX abs -> pdf (NSDI'26)
+- url: https://www.usenix.org/system/files/nsdi26-luo.pdf
+  url2: https://www.usenix.org/conference/nsdi26/presentation/luo
+  description: USENIX pdf -> abs (NSDI'26)
+- url: https://www.usenix.org/conference/osdi24/presentation/zhong_ziqi
+  url2: https://www.usenix.org/system/files/osdi24-zhong_ziqi.pdf
+  description: USENIX abs -> pdf (OSDI'24, underscore in slug)
+- url: https://www.usenix.org/system/files/osdi24-zhong_ziqi.pdf
+  url2: https://www.usenix.org/conference/osdi24/presentation/zhong_ziqi
+  description: USENIX pdf -> abs (OSDI'24, underscore in slug)
+
 # TODO: Test download filenames:
 #       - Title with colon: https://arxiv.org/abs/2102.07936
 #       - Title with hash symbol: https://arxiv.org/abs/1611.04717

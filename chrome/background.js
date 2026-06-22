@@ -84,6 +84,28 @@ function onMessage(message, sender, sendResponse) {
     return true;
   }
 
+  // Handle generic page HTML fetch requests (e.g., for USENIX title extraction)
+  if (message.type === 'fetchPageHTML') {
+    (async () => {
+      try {
+        console.log(LOG_PREFIX, `Fetching page: ${message.url}`);
+        const response = await fetch(message.url);
+        if (!response.ok) {
+          console.error(LOG_PREFIX, "Error: Page request failed.");
+          sendResponse({ success: false, error: 'Page request failed' });
+          return;
+        }
+        const html = await response.text();
+        console.log(LOG_PREFIX, "Successfully retrieved page HTML.");
+        sendResponse({ success: true, data: html });
+      } catch (error) {
+        console.error(LOG_PREFIX, "Error fetching page:", error);
+        sendResponse({ success: false, error: error.message });
+      }
+    })();
+    return true;
+  }
+
   // Handle download requests
   if (message.type === 'downloadFile') {
     chrome.downloads.download({

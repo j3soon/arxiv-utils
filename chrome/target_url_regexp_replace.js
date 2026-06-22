@@ -31,4 +31,6 @@ export default [
   [/^.*:\/\/ieeexplore\.ieee\.org\/stamp\/stamp\.jsp\?(?:.*?&)?arnumber=(\d+)(&.*?)?(\#.*?)?$/, "https://ieeexplore.ieee.org/document/$1"],
   [/^.*:\/\/aclanthology\.org\/([^\/]+)\.pdf(\?.*?)?(\#.*?)?$/, "https://aclanthology.org/$1/"],
   [/^.*:\/\/aclanthology\.org\/([^\/]+)\/(\?.*?)?(\#.*?)?$/, "https://aclanthology.org/$1.pdf"],
+  [/^.*:\/\/(?:www\.)?usenix\.org\/conference\/([^\/]+)\/presentation\/([^\/\?#]+)\/*(\?.*?)?(\#.*?)?$/, "https://www.usenix.org/system/files/$1-$2.pdf"],
+  [/^.*:\/\/(?:www\.)?usenix\.org\/system\/files\/([a-z]+\d+)-(.+?)\.pdf(\?.*?)?(\#.*?)?$/, "https://www.usenix.org/conference/$1/presentation/$2"],
 ];
