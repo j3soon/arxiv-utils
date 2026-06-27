@@ -31,4 +31,25 @@ export default [
   [/^.*:\/\/ieeexplore\.ieee\.org\/stamp\/stamp\.jsp\?(?:.*?&)?arnumber=(\d+)(&.*?)?(\#.*?)?$/, "https://ieeexplore.ieee.org/document/$1"],
   [/^.*:\/\/aclanthology\.org\/([^\/]+)\.pdf(\?.*?)?(\#.*?)?$/, "https://aclanthology.org/$1/"],
   [/^.*:\/\/aclanthology\.org\/([^\/]+)\/(\?.*?)?(\#.*?)?$/, "https://aclanthology.org/$1.pdf"],
+  // USENIX legacy technical-sessions format (subdir PDFs, ~2012-2018), listed before the
+  // flat format so these more specific patterns match first.
+  // presentation -> PDF is calibrated to the NSDI-style `-paper-` infix (e.g. nsdi14).
+  [/^.*:\/\/(?:www\.)?usenix\.org\/conference\/([^\/]+)\/technical-sessions\/presentation\/([^\/?#]+)\/*(?:\?.*?)?(?:\#.*?)?$/,
+    "https://www.usenix.org/system/files/conference/$1/$1-paper-$2.pdf"],
+  // PDF -> presentation: the conference code comes from the subdir, so a differing file
+  // prefix (e.g. `sec<NN>` for USENIX Security) is irrelevant; tolerate an optional
+  // paper-/papers- infix.
+  [/^.*:\/\/(?:www\.)?usenix\.org\/system\/files\/conference\/([^\/]+)\/[^\/]+?-(?:papers?-)?([^\/]+?)\.pdf(?:\?.*?)?(?:\#.*?)?$/,
+    "https://www.usenix.org/conference/$1/technical-sessions/presentation/$2"],
+  // USENIX Security flat PDFs use a `sec<NN>` prefix (~2019-2022) while the conference path
+  // code is `usenixsecurity<NN>`. Map it explicitly; must precede the generic flat rule.
+  [/^.*:\/\/(?:www\.)?usenix\.org\/system\/files\/sec(\d+)-([^\/]+?)\.pdf(?:\?.*?)?(?:\#.*?)?$/,
+    "https://www.usenix.org/conference/usenixsecurity$1/presentation/$2"],
+  // USENIX flat format (~2018+, e.g. nsdi26, fast26, usenixsecurity24):
+  // `/conference/<conf>/presentation/<slug>` <-> `/system/files/<conf>-<slug>.pdf`.
+  [/^.*:\/\/(?:www\.)?usenix\.org\/conference\/([^\/]+)\/presentation\/([^\/?#]+)\/*(?:\?.*?)?(?:\#.*?)?$/,
+    "https://www.usenix.org/system/files/$1-$2.pdf"],
+  // PDF -> presentation: tolerate an optional `paper-` infix some flat files carry (e.g. nsdi20).
+  [/^.*:\/\/(?:www\.)?usenix\.org\/system\/files\/([^\/]+?)-(?:paper-)?([^\/]+?)\.pdf(?:\?.*?)?(?:\#.*?)?$/,
+    "https://www.usenix.org/conference/$1/presentation/$2"],
 ];
