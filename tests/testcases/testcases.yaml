@@ -446,11 +446,18 @@ navigation:
 - url: https://www.usenix.org/system/files/conference/fast16/fast16-papers-andersen.pdf
   url2: https://www.usenix.org/conference/fast16/technical-sessions/presentation/andersen
   description: USENIX FAST'16 legacy pdf (papers- infix) -> presentation
-# USENIX Security flat files use a `sec<NN>` prefix mapped back to `usenixsecurity<NN>`:
+# USENIX Security flat files use a `sec<NN>` prefix (2019-2022) mapped to/from the
+# `usenixsecurity<NN>` path code (both directions):
+- url: https://www.usenix.org/conference/usenixsecurity20/presentation/afek
+  url2: https://www.usenix.org/system/files/sec20-afek.pdf
+  description: USENIX Security'20 presentation -> flat pdf (sec prefix)
 - url: https://www.usenix.org/system/files/sec20-afek.pdf
   url2: https://www.usenix.org/conference/usenixsecurity20/presentation/afek
   description: USENIX Security'20 flat pdf (sec prefix) -> presentation
-# USENIX Security legacy subdir: conference code recovered from the subdir, not the sec prefix:
+# USENIX Security legacy subdir uses the `sec<NN>` prefix too (both directions):
+- url: https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/alexopoulos
+  url2: https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-alexopoulos.pdf
+  description: USENIX Security'17 legacy presentation -> pdf (sec prefix in subdir)
 - url: https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-alexopoulos.pdf
   url2: https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/alexopoulos
   description: USENIX Security'17 legacy pdf (sec prefix in subdir) -> presentation

@@ -31,6 +31,11 @@ export default [
   [/^.*:\/\/ieeexplore\.ieee\.org\/stamp\/stamp\.jsp\?(?:.*?&)?arnumber=(\d+)(&.*?)?(\#.*?)?$/, "https://ieeexplore.ieee.org/document/$1"],
   [/^.*:\/\/aclanthology\.org\/([^\/]+)\.pdf(\?.*?)?(\#.*?)?$/, "https://aclanthology.org/$1/"],
   [/^.*:\/\/aclanthology\.org\/([^\/]+)\/(\?.*?)?(\#.*?)?$/, "https://aclanthology.org/$1.pdf"],
+  // USENIX Security legacy technical-sessions PDFs use a `sec<NN>` file prefix, not the
+  // `usenixsecurity<NN>` path code; rewrite to that prefix. Must precede the generic legacy
+  // rule below (first-match-wins) so Security pages do not get the wrong prefix.
+  [/^.*:\/\/(?:www\.)?usenix\.org\/conference\/usenixsecurity(\d+)\/technical-sessions\/presentation\/([^\/?#]+)\/*(?:\?.*?)?(?:\#.*?)?$/,
+    "https://www.usenix.org/system/files/conference/usenixsecurity$1/sec$1-$2.pdf"],
   // USENIX legacy technical-sessions format (subdir PDFs, ~2012-2018), listed before the
   // flat format so these more specific patterns match first.
   // presentation -> PDF is calibrated to the NSDI-style `-paper-` infix (e.g. nsdi14).
@@ -45,6 +50,11 @@ export default [
   // code is `usenixsecurity<NN>`. Map it explicitly; must precede the generic flat rule.
   [/^.*:\/\/(?:www\.)?usenix\.org\/system\/files\/sec(\d+)-([^\/]+?)\.pdf(?:\?.*?)?(?:\#.*?)?$/,
     "https://www.usenix.org/conference/usenixsecurity$1/presentation/$2"],
+  // USENIX Security flat PDFs used the `sec<NN>` prefix through 2022 before switching to
+  // `usenixsecurity<NN>` in 2023; rewrite those years explicitly. Must precede the generic
+  // flat rule below. 2023+ falls through to it (path code already matches the file prefix).
+  [/^.*:\/\/(?:www\.)?usenix\.org\/conference\/usenixsecurity(19|20|21|22)\/presentation\/([^\/?#]+)\/*(?:\?.*?)?(?:\#.*?)?$/,
+    "https://www.usenix.org/system/files/sec$1-$2.pdf"],
   // USENIX flat format (~2018+, e.g. nsdi26, fast26, usenixsecurity24):
   // `/conference/<conf>/presentation/<slug>` <-> `/system/files/<conf>-<slug>.pdf`.
   [/^.*:\/\/(?:www\.)?usenix\.org\/conference\/([^\/]+)\/presentation\/([^\/?#]+)\/*(?:\?.*?)?(?:\#.*?)?$/,
