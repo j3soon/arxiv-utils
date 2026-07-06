@@ -356,6 +356,116 @@ navigation:
   title: Why are Sensitive Functions Hard for Transformers? - ACL Anthology
   url2: https://aclanthology.org/2024.acl-long.800.pdf
   description: ACL abs -> pdf
+# USENIX (modern flat format, ~2019+)
+- url: https://www.usenix.org/conference/nsdi26/presentation/chen-jiayi
+  title: "UNUM: A New Framework for Network Control | USENIX"
+  url2: https://www.usenix.org/system/files/nsdi26-chen-jiayi.pdf
+  description: USENIX modern presentation -> pdf
+- url: https://www.usenix.org/system/files/nsdi26-chen-jiayi.pdf
+  url2: https://www.usenix.org/conference/nsdi26/presentation/chen-jiayi
+  title2: "UNUM: A New Framework for Network Control | USENIX"
+  description: USENIX modern pdf -> presentation
+- url: https://www.usenix.org/conference/fast26/presentation/wang
+  title: "Cost-efficient Archive Cloud Storage with Tape: Design and Deployment | USENIX"
+  url2: https://www.usenix.org/system/files/fast26-wang.pdf
+  description: USENIX modern presentation -> pdf (single-token slug)
+- url: https://www.usenix.org/system/files/fast26-wang.pdf
+  url2: https://www.usenix.org/conference/fast26/presentation/wang
+  title2: "Cost-efficient Archive Cloud Storage with Tape: Design and Deployment | USENIX"
+  description: USENIX modern pdf -> presentation (single-token slug)
+- url: https://www.usenix.org/conference/nsdi23/presentation/wang-zilong
+  title: "SRNIC: A Scalable Architecture for RDMA NICs | USENIX"
+  url2: https://www.usenix.org/system/files/nsdi23-wang-zilong.pdf
+  description: USENIX modern presentation -> pdf (hyphenated slug)
+- url: https://www.usenix.org/system/files/nsdi23-wang-zilong.pdf
+  url2: https://www.usenix.org/conference/nsdi23/presentation/wang-zilong
+  title2: "SRNIC: A Scalable Architecture for RDMA NICs | USENIX"
+  description: USENIX modern pdf -> presentation (hyphenated slug)
+# USENIX (legacy technical-sessions format, e.g. nsdi14)
+- url: https://www.usenix.org/conference/nsdi14/technical-sessions/presentation/liu_he
+  title: Circuit Switching Under the Radar with REACToR | USENIX
+  url2: https://www.usenix.org/system/files/conference/nsdi14/nsdi14-paper-liu_he.pdf
+  description: USENIX legacy presentation -> pdf
+- url: https://www.usenix.org/system/files/conference/nsdi14/nsdi14-paper-liu_he.pdf
+  url2: https://www.usenix.org/conference/nsdi14/technical-sessions/presentation/liu_he
+  title2: Circuit Switching Under the Radar with REACToR | USENIX
+  description: USENIX legacy pdf -> presentation
+# USENIX modern format generalizes across conference families (the `<conf>` code is
+# captured generically): USENIX Security (`usenixsecurity<NN>`, no longer the old
+# `sec<NN>` prefix), 4-digit-year SOUPS, and co-located workshops such as WOOT.
+- url: https://www.usenix.org/conference/usenixsecurity25/presentation/gibson
+  title: Analyzing the AI Nudification Application Ecosystem | USENIX
+  url2: https://www.usenix.org/system/files/usenixsecurity25-gibson.pdf
+  description: USENIX Security presentation -> pdf
+- url: https://www.usenix.org/system/files/usenixsecurity25-gibson.pdf
+  url2: https://www.usenix.org/conference/usenixsecurity25/presentation/gibson
+  title2: Analyzing the AI Nudification Application Ecosystem | USENIX
+  description: USENIX Security pdf -> presentation
+- url: https://www.usenix.org/conference/soups2025/presentation/oak-butchering
+  url2: https://www.usenix.org/system/files/soups2025-oak-butchering.pdf
+  description: USENIX SOUPS (4-digit year) presentation -> pdf
+- url: https://www.usenix.org/system/files/soups2025-oak-butchering.pdf
+  url2: https://www.usenix.org/conference/soups2025/presentation/oak-butchering
+  description: USENIX SOUPS (4-digit year) pdf -> presentation
+- url: https://www.usenix.org/conference/woot25/presentation/muench
+  title: "Security through Transparency: Tales from the RP2350 Hacking Challenge | USENIX"
+  url2: https://www.usenix.org/system/files/woot25-muench.pdf
+  description: USENIX WOOT workshop presentation -> pdf
+- url: https://www.usenix.org/system/files/woot25-muench.pdf
+  url2: https://www.usenix.org/conference/woot25/presentation/muench
+  title2: "Security through Transparency: Tales from the RP2350 Hacking Challenge | USENIX"
+  description: USENIX WOOT workshop pdf -> presentation
+# USENIX coverage across conference families / years (verified against live URLs).
+# Legacy technical-sessions format with the NSDI-style `-paper-` infix (both directions):
+- url: https://www.usenix.org/conference/osdi14/technical-sessions/presentation/angel
+  url2: https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-angel.pdf
+  description: USENIX OSDI'14 legacy presentation -> pdf
+- url: https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-angel.pdf
+  url2: https://www.usenix.org/conference/osdi14/technical-sessions/presentation/angel
+  description: USENIX OSDI'14 legacy pdf -> presentation
+# Flat format across families/years (both directions):
+- url: https://www.usenix.org/conference/osdi18/presentation/alagappan
+  url2: https://www.usenix.org/system/files/osdi18-alagappan.pdf
+  description: USENIX OSDI'18 flat presentation -> pdf
+- url: https://www.usenix.org/system/files/osdi18-alagappan.pdf
+  url2: https://www.usenix.org/conference/osdi18/presentation/alagappan
+  description: USENIX OSDI'18 flat pdf -> presentation
+- url: https://www.usenix.org/conference/fast22/presentation/an
+  url2: https://www.usenix.org/system/files/fast22-an.pdf
+  description: USENIX FAST'22 flat presentation -> pdf
+- url: https://www.usenix.org/system/files/fast22-an.pdf
+  url2: https://www.usenix.org/conference/fast22/presentation/an
+  description: USENIX FAST'22 flat pdf -> presentation
+- url: https://www.usenix.org/conference/atc23/presentation/al-fares
+  url2: https://www.usenix.org/system/files/atc23-al-fares.pdf
+  description: USENIX ATC'23 flat presentation -> pdf (hyphenated slug)
+- url: https://www.usenix.org/system/files/atc23-al-fares.pdf
+  url2: https://www.usenix.org/conference/atc23/presentation/al-fares
+  description: USENIX ATC'23 flat pdf -> presentation (hyphenated slug)
+# Reverse-only wins: the forward (presentation -> pdf) filename is not derivable for these,
+# but pdf -> presentation is. A flat file with a stray `-paper-` infix (NSDI'20):
+- url: https://www.usenix.org/system/files/nsdi20-paper-abhashkumar.pdf
+  url2: https://www.usenix.org/conference/nsdi20/presentation/abhashkumar
+  description: USENIX NSDI'20 flat pdf (paper- infix) -> presentation
+# A legacy file with a `papers-` (plural) infix (FAST'16):
+- url: https://www.usenix.org/system/files/conference/fast16/fast16-papers-andersen.pdf
+  url2: https://www.usenix.org/conference/fast16/technical-sessions/presentation/andersen
+  description: USENIX FAST'16 legacy pdf (papers- infix) -> presentation
+# USENIX Security flat files use a `sec<NN>` prefix (2019-2022) mapped to/from the
+# `usenixsecurity<NN>` path code (both directions):
+- url: https://www.usenix.org/conference/usenixsecurity20/presentation/afek
+  url2: https://www.usenix.org/system/files/sec20-afek.pdf
+  description: USENIX Security'20 presentation -> flat pdf (sec prefix)
+- url: https://www.usenix.org/system/files/sec20-afek.pdf
+  url2: https://www.usenix.org/conference/usenixsecurity20/presentation/afek
+  description: USENIX Security'20 flat pdf (sec prefix) -> presentation
+# USENIX Security legacy subdir uses the `sec<NN>` prefix too (both directions):
+- url: https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/alexopoulos
+  url2: https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-alexopoulos.pdf
+  description: USENIX Security'17 legacy presentation -> pdf (sec prefix in subdir)
+- url: https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-alexopoulos.pdf
+  url2: https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/alexopoulos
+  description: USENIX Security'17 legacy pdf (sec prefix in subdir) -> presentation
 
 # TODO: Test download filenames:
 #       - Title with colon: https://arxiv.org/abs/2102.07936
