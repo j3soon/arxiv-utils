@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import yaml
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -243,6 +243,25 @@ for browser in ['chrome', 'firefox', 'edge']:
         assert len(driver.window_handles) == len(windows_stack)
         driver.switch_to.window(windows_stack[-1])
 
+    def switch_to_opened_window():
+        def switchable_untracked_window(_):
+            for window_handle in driver.window_handles:
+                if window_handle in windows_stack:
+                    continue
+                try:
+                    driver.switch_to.window(window_handle)
+                    # Force a command against the selected handle so Chrome has
+                    # finished attaching it before URL/title assertions poll it.
+                    driver.current_url
+                    return window_handle
+                except WebDriverException:
+                    continue
+            return False
+
+        window_handle = wait.until(switchable_untracked_window)
+        windows_stack.append(window_handle)
+        assert len(driver.window_handles) == len(windows_stack)
+
     meta_setup_arxiv_utils()
 
     global_exception = None
@@ -304,12 +323,7 @@ for browser in ['chrome', 'firefox', 'edge']:
                 driver.close()
                 windows_stack.pop()
                 assert len(windows_stack) == 1
-                assert len(driver.window_handles) == 2
-                for window_handle in driver.window_handles:
-                    if window_handle not in windows_stack:
-                        driver.switch_to.window(window_handle)
-                        break
-                windows_stack.append(driver.current_window_handle)
+                switch_to_opened_window()
                 assert len(windows_stack) == 2
                 assert len(driver.window_handles) == 2
                 if pdf_url:
@@ -389,12 +403,7 @@ for browser in ['chrome', 'firefox', 'edge']:
                 driver.close()
                 windows_stack.pop()
                 assert len(windows_stack) == 1
-                assert len(driver.window_handles) == 2
-                for window_handle in driver.window_handles:
-                    if window_handle not in windows_stack:
-                        driver.switch_to.window(window_handle)
-                        break
-                windows_stack.append(driver.current_window_handle)
+                switch_to_opened_window()
                 assert len(windows_stack) == 2
                 assert len(driver.window_handles) == 2
                 print(f"Checking (abs) url...")
