@@ -321,10 +321,15 @@ navigation:
   url2: https://www.jmlr.org/papers/v12/pedregosa11a.html
   title2: "Scikit-learn: Machine Learning in Python"
   description: JMLR pdf -> abs
-- url: https://arxiv.org/html/2403.17537v1
+- url: https://arxiv.org/html/2403.17537
   title: "NeRF-HuGS: Improved Neural Radiance Fields in Non-static Scenes Using Heuristics-Guided Segmentation"
-  url2: https://arxiv.org/abs/2403.17537v1
+  url2: https://arxiv.org/abs/2403.17537
   title2: "NeRF-HuGS: Improved Neural Radiance Fields in Non-static Scenes Using Heuristics-Guided Segmentation | Abstract"
+  description: arXiv HTML -> arXiv
+- url: https://arxiv.org/html/2503.11651v1
+  title: "VGGT: Visual Geometry Grounded Transformer"
+  url2: https://arxiv.org/abs/2503.11651v1
+  title2: "VGGT: Visual Geometry Grounded Transformer | Abstract"
   description: arXiv HTML -> arXiv
 # Below are testcases for Jest only
 - url: https://ieeexplore.ieee.org/document/10412086

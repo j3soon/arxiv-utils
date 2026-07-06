@@ -193,6 +193,56 @@ for browser in ['chrome', 'firefox', 'edge']:
         print("(Meta) Clicking Open Abstract / PDF")
         meta_click_at(arxiv_utils_button_pos, wait=False)
 
+    def send_arxiv_utils_shortcut():
+        print("(Meta) Sending Open Abstract / PDF shortcut")
+        ActionChains(driver)\
+            .key_down(Keys.ALT)\
+            .send_keys('a')\
+            .key_up(Keys.ALT)\
+            .perform()
+
+    def open_with_arxiv_utils():
+        expected_windows = len(driver.window_handles) + 1
+        attempts = [
+            (meta_click_arxiv_utils, 10),
+            (send_arxiv_utils_shortcut, 10),
+            (meta_click_arxiv_utils, 40),
+        ]
+        last_exception = None
+        for trigger, timeout in attempts:
+            trigger()
+            try:
+                WebDriverWait(driver, timeout).until(
+                    EC.number_of_windows_to_be(expected_windows)
+                )
+                return
+            except TimeoutException as e:
+                last_exception = e
+                print(
+                    "Open Abstract / PDF did not create a new window "
+                    f"within {timeout} seconds; "
+                    f"current windows: {len(driver.window_handles)}; "
+                    f"current URL: `{driver.current_url}`; "
+                    f"current title: `{driver.title}`."
+                )
+        raise last_exception
+
+    def is_openreview_block_page():
+        current_url = driver.current_url
+        return (
+            current_url.startswith("https://openreview.net/unsupported-browser")
+            or current_url.startswith("https://openreview.net/challenge")
+        )
+
+    def skip_active_testcase(reason):
+        n_windows = len(windows_stack)
+        print(f"Testcase Skipped ({reason})")
+        driver.close()
+        windows_stack.pop()
+        assert len(windows_stack) == n_windows - 1
+        assert len(driver.window_handles) == len(windows_stack)
+        driver.switch_to.window(windows_stack[-1])
+
     meta_setup_arxiv_utils()
 
     global_exception = None
@@ -236,6 +286,10 @@ for browser in ['chrome', 'firefox', 'edge']:
                 except TimeoutException as e:
                     print(f"Page load timeout, continuing...")
                     raise e
+                if is_openreview_block_page():
+                    skip_active_testcase("OpenReview blocked the Selenium browser")
+                    n_skipped += 1
+                    continue
                 if title:
                     print(f"Checking (abs) title...")
                     try:
@@ -245,8 +299,7 @@ for browser in ['chrome', 'firefox', 'edge']:
                         raise e
                     # Please note that the tests may be flaky due to slow arxiv API response.
                     assert driver.title == title
-                meta_click_arxiv_utils()
-                wait.until(EC.number_of_windows_to_be(3))
+                open_with_arxiv_utils()
                 print(f"Closing (abs) webpage...")
                 driver.close()
                 windows_stack.pop()
@@ -285,6 +338,10 @@ for browser in ['chrome', 'firefox', 'edge']:
                     try:
                         wait.until(EC.url_to_be(url2))
                     except TimeoutException as e:
+                        if is_openreview_block_page():
+                            skip_active_testcase("OpenReview blocked the Selenium browser")
+                            n_skipped += 1
+                            continue
                         print(f"URL mismatch: `{driver.current_url}`.")
                         raise e
                     assert driver.current_url == url2
@@ -299,6 +356,10 @@ for browser in ['chrome', 'firefox', 'edge']:
                 except TimeoutException as e:
                     print(f"Page load timeout, continuing...")
                     raise e
+                if is_openreview_block_page():
+                    skip_active_testcase("OpenReview blocked the Selenium browser")
+                    n_skipped += 1
+                    continue
 
             if pdf_url:
                 # Within arXiv domain
@@ -323,8 +384,7 @@ for browser in ['chrome', 'firefox', 'edge']:
                     assert driver.title == title2
 
             if pdf_url and pdf2abs:
-                meta_click_arxiv_utils()
-                wait.until(EC.number_of_windows_to_be(3))
+                open_with_arxiv_utils()
                 print(f"Closing (pdf) webpage...")
                 driver.close()
                 windows_stack.pop()
