@@ -185,6 +185,15 @@ navigation:
 - url: https://www.alphaxiv.org/abs/1706.03762
   url2: https://arxiv.org/abs/1706.03762
   description: alphaXiv -> arXiv
+- url: https://www.alphaxiv.org/overview/1706.03762
+  url2: https://arxiv.org/abs/1706.03762
+  description: alphaXiv overview -> arXiv
+- url: https://www.alphaxiv.org/replicate/1706.03762
+  url2: https://arxiv.org/abs/1706.03762
+  description: alphaXiv replicate -> arXiv
+- url: https://www.alphaxiv.org/audio/1706.03762
+  url2: https://arxiv.org/abs/1706.03762
+  description: alphaXiv audio -> arXiv
 - url: https://openreview.net/pdf?id=LcF-EEt8cCC
   url2: https://openreview.net/forum?id=LcF-EEt8cCC
   title2: Denoising Likelihood Score Matching for Conditional Score-based Data Generation | OpenReview
