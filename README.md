@@ -237,7 +237,16 @@ docker exec -t end-to-end-test-selenium-tests-1 \
     python "/app/tests/end-to-end-test/test_navigation.py"
 ```
 
-When adding new test cases, it is often convenient to comment out existing test cases in [tests/testcases/testcases.yaml](tests/testcases/testcases.yaml); When testing specific browsers, you can modify the `for browser in [...]` part in [tests/test_navigation.py](tests/test_navigation.py) to only run tests for the desired browser.
+By default, the Selenium navigation test runs only cases marked with `selenium_focus: True` in [tests/testcases/testcases.yaml](tests/testcases/testcases.yaml). Mark the newly added or currently relevant cases instead of commenting out existing cases. If no focused cases exist, the command exits successfully with a warning that no tests were run. The Jest navigation test always runs every case, regardless of this marker.
+
+Run the complete Selenium navigation suite with:
+
+```sh
+docker exec -t -e E2E_FULL=1 end-to-end-test-selenium-tests-1 \
+    python "/app/tests/end-to-end-test/test_navigation.py"
+```
+
+CI always sets `E2E_FULL=1`. When testing specific browsers locally, you can temporarily modify the `for browser in [...]` list in [test_navigation.py](tests/end-to-end-test/test_navigation.py).
 
 > If the test logs stuck at launching the webdriver, you may need to restart the containers.
 

@@ -1,3 +1,5 @@
+import os
+import sys
 import time
 from operator import itemgetter
 from collections import defaultdict
@@ -14,6 +16,26 @@ from selenium.webdriver.support.ui import WebDriverWait
 testcases_path = "/app/tests/testcases/testcases.yaml"
 with open(testcases_path, "r") as f:
     testcases = yaml.safe_load(f)
+
+navigation_testcases = testcases['navigation']
+if os.getenv('E2E_FULL') == '1':
+    print("Running the full Selenium navigation suite (E2E_FULL=1).")
+else:
+    navigation_testcases = [
+        testcase for testcase in navigation_testcases
+        if testcase.get('selenium_focus', False)
+    ]
+    if not navigation_testcases:
+        print(
+            "WARNING: No focused Selenium navigation testcases found; "
+            "no tests were run. Set `selenium_focus: True` on newly added "
+            "testcases, or set E2E_FULL=1 to run the full suite."
+        )
+        sys.exit(0)
+    print(
+        f"Running {len(navigation_testcases)} focused Selenium navigation "
+        "testcase(s). Set E2E_FULL=1 to run the full suite."
+    )
 
 command_executor = 'http://selenium-hub:4444/wd/hub'
 
@@ -266,7 +288,7 @@ for browser in ['chrome', 'firefox', 'edge']:
 
     global_exception = None
     try:
-        for testcase in testcases['navigation']:
+        for testcase in navigation_testcases:
             url, title, pdf_url, pdf_title, url2, title2, skip_selenium, description = \
                 itemgetter('url', 'title', 'pdf_url', 'pdf_title', 'url2', 'title2', 'skip_selenium', 'description')(
                 defaultdict(lambda: None, testcase))
