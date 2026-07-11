@@ -23,7 +23,7 @@ A collection of features that enhance your reading experience on ArXiv (and some
 - Renames the title of PDF page to the paper's title.
 - Adds a button and hotkey (`Alt+A`) to navigate back to Abstract page for arXiv, OpenReview, and more.
 - Download PDF with paper's title as filename.
-- Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/).
+- Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/) and [papers.cool](https://papers.cool/).
 - Works with Native Tab Search, and other plugins! (See the [Solution Descriptions](#solution-descriptions) section for more details)
 - All required permissions are documented in detail.
 
@@ -43,7 +43,7 @@ Alternatively, these 3 browsers can also load arxiv-utils directly from source. 
 
 The paper id in the title has been removed automatically!  
 A direct download link is added to download PDF with paper's title as the filename!  
-Open in extra services such as ar5iv!
+Open in extra services such as ar5iv and papers.cool!
 ![](screenshots/01-abstract.png)
 Finally... Meaningful paper title instead of paper id! (For Firefox, this is achieved through a custom PDF container.)
 ![](screenshots/02-pdf.png)
@@ -73,7 +73,7 @@ For ArXiv PDF / abstract tabs:
 - Renames the title to paper's title automatically in the background. (Originally is meaningless paper id, or start with paper id)
 - Add an action button (or `Alt+A`) to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
 - Add a direct download link on abstract page, click it to download the PDF with the title as filename. (Originally is paper id as filename)
-- Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/).
+- Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/) and [papers.cool](https://papers.cool/).
 - Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
 - Firefox has [strict restrictions on PDF.js](https://bugzilla.mozilla.org/show_bug.cgi?id=1454760). So it doesn't work well with OneTab, the PDF renaming is achieved by intercepting requests and show the PDF in a container. The bookmark works well though.
 - Works well with native tab search (credits: [@The Rooler](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/reviews/1674567/))

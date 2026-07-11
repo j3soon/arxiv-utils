@@ -12,12 +12,13 @@
       "*://arxiv.org/abs/*",
       "*://export.arxiv.org/*pdf*",
       "*://export.arxiv.org/abs/*",
-      "*://browse.arxiv.org/*pdf*",
-      "*://browse.arxiv.org/abs/*",
-      "*://www.arxiv.org/*pdf*",
-      "*://www.arxiv.org/abs/*",
-      "*://ar5iv.labs.arxiv.org/html/*"
-    ],
+        "*://browse.arxiv.org/*pdf*",
+        "*://browse.arxiv.org/abs/*",
+        "*://www.arxiv.org/*pdf*",
+        "*://www.arxiv.org/abs/*",
+        "*://ar5iv.labs.arxiv.org/html/*",
+        "*://papers.cool/arxiv/search*"
+      ],
     "js": [ "content.js" ],
     "run_at": "document_end"
   }],
@@ -48,7 +49,8 @@
     "*://export.arxiv.org/*",
     "*://browse.arxiv.org/*",
     "*://www.arxiv.org/*",
-    "*://ar5iv.labs.arxiv.org/*"
+    "*://ar5iv.labs.arxiv.org/*",
+    "*://papers.cool/*"
   ],
   "icons": {
     "16": "icon16.png",

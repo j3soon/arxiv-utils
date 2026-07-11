@@ -12,6 +12,7 @@
       "*://browse.arxiv.org/abs/*",
       "*://www.arxiv.org/abs/*",
       "*://ar5iv.labs.arxiv.org/html/*",
+      "*://papers.cool/arxiv/search*",
       "*://mozilla.github.io/pdf.js/web/viewer.html*"
     ],
     "js": [ "content.js" ],
