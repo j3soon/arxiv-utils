@@ -73,7 +73,7 @@ For ArXiv PDF / abstract tabs:
 - Renames the title to paper's title automatically in the background. (Originally is meaningless paper id, or start with paper id)
 - Add an action button (or `Alt+A`) to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
 - Add a direct download link on abstract page, click it to download the PDF with the title as filename. (Originally is paper id as filename)
-- Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/).
+- Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/) and [Hugging Face Papers](https://huggingface.co/papers).
 - Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
 - Firefox has [strict restrictions on PDF.js](https://bugzilla.mozilla.org/show_bug.cgi?id=1454760). So it doesn't work well with OneTab, the PDF renaming is achieved by intercepting requests and show the PDF in a container. The bookmark works well though.
 - Works well with native tab search (credits: [@The Rooler](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/reviews/1674567/))
@@ -195,7 +195,8 @@ Other functions should still be tested manually:
 - Disable and re-enabling the extension should not cause any errors.
 - Installing or re-enabling the extension should immediately update the title of existing tabs.
 - The help menu item in the context menu should link to this GitHub page.
-- ar5iv tabs should have renamed title, and support navigation.
+- ar5iv tabs should have renamed titles and support navigation.
+- Hugging Face Papers tabs should support navigation to the corresponding arXiv abstract.
 
 ### Run Unit Tests Locally
 

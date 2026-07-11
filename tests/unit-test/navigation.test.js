@@ -53,3 +53,11 @@ test('navigation rules', () => {
   console.log("All tests passed successfully!\n" +
               `Success: ${n_success}/${n_success}`);
 });
+
+test.each([
+  'https://huggingface.co/papers/',
+  'https://huggingface.co/papers/trending',
+  'https://huggingface.co/papers/date/2026-07-10',
+])('does not navigate from Hugging Face Papers listing URL %s', (url) => {
+  expect(getTargetURL(url)).toBeNull();
+});

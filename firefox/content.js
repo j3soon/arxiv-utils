@@ -121,6 +121,7 @@ function addCustomLinksAsync(id) {
     <ul> \
       <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
       <li><a href="https://alphaxiv.org/abs/${id}">alphaXiv</a></li> \
+      <li><a href="https://huggingface.co/papers/${id.replace(/v\d+$/, '')}">Hugging Face Papers</a></li> \
       <li><a href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
     </ul>`;
   elExtraRefCite.after(extraServicesDiv);

@@ -12,7 +12,7 @@ export default [
   [/^.*:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/ftp\/(?:arxiv\/|([^\/]*\/))papers\/.*?([^\/]*?)\.pdf(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1$2"],
   [/^.*:\/\/(?:browse\.|www\.)?arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
   [/^.*:\/\/ar5iv\.labs\.arxiv\.org\/html\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
-  [/^.*:\/\/huggingface\.co\/papers\/(\S*?)(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
+  [/^.*:\/\/huggingface\.co\/papers\/(\d{4}\.\d{4,5})\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
   [/^.*:\/\/(?:www\.)?alphaxiv\.org\/(?:abs|overview|replicate|audio)\/(\S*?)\/*(\?.*?)?(\#.*?)?$/, "https://arxiv.org/abs/$1"],
   [/^.*:\/\/openreview\.net\/forum\?(?:.*?&)?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/pdf?id=$1"],
   [/^.*:\/\/openreview\.net\/pdf\?(?:.*?&)?id=(\S*?)(&.*?)?(\#.*?)?$/, "https://openreview.net/forum?id=$1"],

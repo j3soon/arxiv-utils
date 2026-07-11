@@ -181,7 +181,10 @@ navigation:
   title: "Paper page - SAM 2: Segment Anything in Images and Videos"
   url2: https://arxiv.org/abs/2408.00714
   title2: "SAM 2: Segment Anything in Images and Videos | Abstract"
-  description: ar5iv -> arXiv
+  description: Hugging Face Papers -> arXiv
+- url: https://huggingface.co/papers/2408.00714/?query#community
+  url2: https://arxiv.org/abs/2408.00714
+  description: Hugging Face Papers -> arXiv (with trailing slash, query string, and fragment)
 - url: https://www.alphaxiv.org/abs/1706.03762
   url2: https://arxiv.org/abs/1706.03762
   description: alphaXiv -> arXiv
