@@ -249,6 +249,23 @@ for browser in ['chrome', 'firefox', 'edge']:
                 )
         raise last_exception
 
+    def load_page(url, max_attempts=3):
+        for attempt in range(1, max_attempts + 1):
+            try:
+                driver.get(url)
+                return
+            except (TimeoutException, WebDriverException) as e:
+                is_network_timeout = (
+                    isinstance(e, TimeoutException)
+                    or "about:neterror?e=netTimeout" in str(e)
+                )
+                if not is_network_timeout or attempt == max_attempts:
+                    raise
+                print(
+                    f"Page load attempt {attempt}/{max_attempts} timed out "
+                    f"for `{url}`. Retrying..."
+                )
+
     def is_openreview_block_page():
         current_url = driver.current_url
         return (
@@ -322,11 +339,7 @@ for browser in ['chrome', 'firefox', 'edge']:
                 windows_stack.append(driver.current_window_handle)
                 assert len(windows_stack) == 2
                 assert len(driver.window_handles) == 2
-                try:
-                    driver.get(url)
-                except TimeoutException as e:
-                    print(f"Page load timeout, continuing...")
-                    raise e
+                load_page(url)
                 if is_openreview_block_page():
                     skip_active_testcase("OpenReview blocked the Selenium browser")
                     n_skipped += 1
@@ -387,11 +400,7 @@ for browser in ['chrome', 'firefox', 'edge']:
                 windows_stack.append(driver.current_window_handle)
                 assert len(windows_stack) == 2
                 assert len(driver.window_handles) == 2
-                try:
-                    driver.get(pdf_url)
-                except TimeoutException as e:
-                    print(f"Page load timeout, continuing...")
-                    raise e
+                load_page(pdf_url)
                 if is_openreview_block_page():
                     skip_active_testcase("OpenReview blocked the Selenium browser")
                     n_skipped += 1

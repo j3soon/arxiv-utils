@@ -320,6 +320,7 @@ navigation:
 - url: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/papers/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.pdf
   url2: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/html/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.html
   title2: "CVPR 2022 Open Access Repository"
+  selenium_focus: True
   description: CVF pdf -> abs (Workshop with slash)
 - url: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/html/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.html
   title: "CVPR 2022 Open Access Repository"
