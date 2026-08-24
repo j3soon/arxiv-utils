@@ -20,6 +20,19 @@ var LOG_PREFIX = "[arXiv-utils]";
 var DIRECT_DOWNLOAD_LI_ID = "arxiv-utils-direct-download-li";
 var DIRECT_DOWNLOAD_A_ID = "arxiv-utils-direct-download-a";
 var EXTRA_SERVICES_DIV_ID = "arxiv-utils-extra-services-div";
+var DEFAULT_FILENAME_FORMAT = '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf';
+var DEFAULT_FILENAME_REPLACEMENT_RULES = JSON.stringify([
+  { from: '/', to: ',' },
+  { from: ':', to: ',' },
+  { from: '\\', to: '_' },
+  { from: '?', to: '_' },
+  { from: '*', to: '_' },
+  { from: '|', to: '_' },
+  { from: '"', to: '_' },
+  { from: '<', to: '_' },
+  { from: '>', to: '_' },
+  { from: '\n', to: '' },
+], null, 2);
 
 // Return the id parsed from the url.
 function getId(url) {
@@ -102,6 +115,58 @@ async function getArticleInfoAsync(id, pageType) {
   };
 }
 
+function getFilenameReplacementRules(rulesText) {
+  const rules = JSON.parse(rulesText);
+  if (!Array.isArray(rules))
+    throw new Error("Filename replacement rules must be an array.");
+  for (const rule of rules) {
+    if (typeof rule.from !== 'string' || typeof rule.to !== 'string')
+      throw new Error("Each filename replacement rule must have string `from` and `to` fields.");
+    if (rule.from === '')
+      throw new Error("Filename replacement rule `from` cannot be empty.");
+  }
+  return rules;
+}
+
+function formatFileName(filenameFormat, id, articleInfo) {
+  return filenameFormat
+    .replace('${title}', articleInfo.escapedTitle)
+    .replace('${firstAuthor}', articleInfo.firstAuthor)
+    .replace('${firstAuthorFamilyName}', articleInfo.firstAuthorFamilyName)
+    .replace('${firstAuthorFamilyNameLowerCase}', articleInfo.firstAuthorFamilyNameLowerCase)
+    .replace('${authors}', articleInfo.authors)
+    .replace('${publishedYear}', articleInfo.publishedYear)
+    .replace('${updatedYear}', articleInfo.updatedYear)
+    .replace('${publishedYear2Digits}', articleInfo.publishedYear2Digits)
+    .replace('${updatedYear2Digits}', articleInfo.updatedYear2Digits)
+    .replace('${publishedMonth}', articleInfo.publishedMonth)
+    .replace('${updatedMonth}', articleInfo.updatedMonth)
+    .replace('${publishedDay}', articleInfo.publishedDay)
+    .replace('${updatedDay}', articleInfo.updatedDay)
+    .replace('${version}', articleInfo.version)
+    .replace('${paperid}', id)
+  ;
+}
+
+function applyFilenameReplacementRules(fileName, rules) {
+  for (const rule of rules)
+    fileName = fileName.split(rule.from).join(rule.to);
+  return fileName
+    // Keep the browser downloads API from treating the filename as a relative path.
+    .replace(/[/\\]/g, '_')
+    .replace(/\n/g, '')
+  ;
+}
+
+function parseFilenameReplacementRules(rulesText) {
+  try {
+    return getFilenameReplacementRules(rulesText);
+  } catch (error) {
+    console.error(LOG_PREFIX, "Error: Invalid filename replacement rules. Falling back to default rules.", error);
+    return getFilenameReplacementRules(DEFAULT_FILENAME_REPLACEMENT_RULES);
+  }
+}
+
 // Add custom links in abstract page.
 function addCustomLinksAsync(id) {
   document.getElementById(DIRECT_DOWNLOAD_LI_ID)?.remove();
@@ -141,31 +206,15 @@ function addCustomLinksAsync(id) {
 async function enableDirectDownload(id, articleInfo) {
   // Add direct download link.
   const result = await chrome.storage.sync.get({
-    'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf'
+    'filename_format': DEFAULT_FILENAME_FORMAT,
+    'filename_replacement_rules': DEFAULT_FILENAME_REPLACEMENT_RULES,
+    'download_save_as': false,
   });
-  const fileName = result.filename_format
-    .replace('${title}', articleInfo.escapedTitle)
-    .replace('${firstAuthor}', articleInfo.firstAuthor)
-    .replace('${firstAuthorFamilyName}', articleInfo.firstAuthorFamilyName)
-    .replace('${firstAuthorFamilyNameLowerCase}', articleInfo.firstAuthorFamilyNameLowerCase)
-    .replace('${authors}', articleInfo.authors)
-    .replace('${publishedYear}', articleInfo.publishedYear)
-    .replace('${updatedYear}', articleInfo.updatedYear)
-    .replace('${publishedYear2Digits}', articleInfo.publishedYear2Digits)
-    .replace('${updatedYear2Digits}', articleInfo.updatedYear2Digits)
-    .replace('${publishedMonth}', articleInfo.publishedMonth)
-    .replace('${updatedMonth}', articleInfo.updatedMonth)
-    .replace('${publishedDay}', articleInfo.publishedDay)
-    .replace('${updatedDay}', articleInfo.updatedDay)
-    .replace('${version}', articleInfo.version)
-    .replace('${paperid}', id)
-    // Replace invalid characters.
-    // Ref: https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
-    // Ref: https://stackoverflow.com/a/42210346
-    .replace(/[/:]/g, ',')
-    .replace(/[/\\?*|"<>]/g, '_')
-    .replace(/\n/g, '') // Replace newline, which exists in some titles that are too long.
-  ;
+  const filenameReplacementRules = parseFilenameReplacementRules(result.filename_replacement_rules);
+  const fileName = applyFilenameReplacementRules(
+    formatFileName(result.filename_format, id, articleInfo),
+    filenameReplacementRules
+  );
   const directURL = `https://arxiv.org/pdf/${id}.pdf`;
   const downloadA = document.getElementById(DIRECT_DOWNLOAD_A_ID)
   downloadA.addEventListener('click', function (e) {
@@ -173,6 +222,7 @@ async function enableDirectDownload(id, articleInfo) {
       type: 'downloadFile',
       url: directURL,
       filename: fileName,
+      saveAs: result.download_save_as,
     });
     e.preventDefault();
     console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`)

@@ -110,7 +110,7 @@ async function onMessage(message) {
   await browser.downloads.download({
     url: message.url,
     filename: message.filename,
-    saveAs: false,
+    saveAs: !!message.saveAs,
   });
   console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
 }
