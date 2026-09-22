@@ -11,11 +11,13 @@ function collectMatches(text, regexp) {
   return [...text.matchAll(regexp)].map((match) => match[1]);
 }
 
-test.each(['chrome', 'firefox'])('%s English locale covers every message reference', (browser) => {
+test.each(['chrome', 'firefox'])('%s locales cover every message reference', (browser) => {
   const manifest = JSON.parse(read(browser, 'manifest.json'));
-  const messages = JSON.parse(read(browser, '_locales/en/messages.json'));
+  const englishMessages = JSON.parse(read(browser, '_locales/en/messages.json'));
+  const koreanMessages = JSON.parse(read(browser, '_locales/ko/messages.json'));
 
   expect(manifest.default_locale).toBe('en');
+  expect(Object.keys(koreanMessages).sort()).toEqual(Object.keys(englishMessages).sort());
 
   const sources = {
     manifest: JSON.stringify(manifest),
@@ -31,12 +33,14 @@ test.each(['chrome', 'firefox'])('%s English locale covers every message referen
     ...collectMatches(sources.backgroundJs, /(?:chrome|browser)\.i18n\.getMessage\(["']([^"']+)["']\)/g),
   ]);
 
-  for (const [key, value] of Object.entries(messages)) {
-    expect(value.message.trim()).not.toBe('');
-    expect(value.description.trim()).not.toBe('');
-    expect(referencedKeys).toContain(key);
+  for (const messages of [englishMessages, koreanMessages]) {
+    for (const [key, value] of Object.entries(messages)) {
+      expect(value.message.trim()).not.toBe('');
+      expect(value.description.trim()).not.toBe('');
+      expect(referencedKeys).toContain(key);
+    }
   }
 
   for (const key of referencedKeys)
-    expect(messages).toHaveProperty(key);
+    expect(englishMessages).toHaveProperty(key);
 });
