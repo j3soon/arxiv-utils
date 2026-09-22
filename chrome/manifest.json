@@ -1,7 +1,8 @@
 {
-  "name": "arxiv-utils",
+  "name": "__MSG_extensionName__",
   "version": "1.8.7",
-  "description": "Easy access on ArXiv! Auto-rename tabs to paper title, Quick navigation via button/hotkey, Save PDFs by paper title, and more.",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
   "background": {
     "service_worker": "background.js",
     "type": "module"
@@ -26,7 +27,7 @@
       "19": "icon19.png",
       "38": "icon38.png"
     },
-    "default_title": "Open Abstract / PDF"
+    "default_title": "__MSG_actionTitle__"
   },
   "commands": {
     "_execute_action": {

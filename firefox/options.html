@@ -7,36 +7,36 @@
 
 <body>
   <form>
-    <p>Current filename format: <b id="filename-format">(To be loaded)</b></p>
-    <label>New filename format:</label>
+    <p><span data-i18n="currentFilenameFormat"></span>: <b id="filename-format"><span data-i18n="loading"></span></b></p>
+    <label data-i18n="newFilenameFormat"></label>:
     <input type="text" id="new-filename-format" style="margin: 2px; width:500px;" ><br>
-    <p>Will open in new tab: <b id="open-in-new-tab"></b></p>
+    <p><span data-i18n="willOpenInNewTab"></span>: <b id="open-in-new-tab"></b></p>
     <input type="checkbox" id="new-open-in-new-tab" name="new-open-in-new-tab">
-    <label for="new-open-in-new-tab">Open in new tab</label><br>
-    <p>Using PDF redirection: <b id="redirect-pdf"></b></p>
+    <label for="new-open-in-new-tab" data-i18n="openInNewTab"></label><br>
+    <p><span data-i18n="usingPdfRedirection"></span>: <b id="redirect-pdf"></b></p>
     <input type="checkbox" id="new-redirect-pdf" name="new-redirect-pdf">
-    <label for="new-redirect-pdf">Enable PDF redirection</label><br><br>
-    <button id="update" type="submit">Update</button>
-    <button id="revert" type="submit">Revert to Default</button><br>
-    <p>Note: You'll need to re-open the arXiv tabs for the new filename format to take effect.</p>
-    <p>Note: Disabling PDF redirection will disallow renaming for PDF tabs.</p>
+    <label for="new-redirect-pdf" data-i18n="enablePdfRedirection"></label><br><br>
+    <button id="update" type="submit" data-i18n="update"></button>
+    <button id="revert" type="submit" data-i18n="revertToDefault"></button><br>
+    <p data-i18n="filenameFormatNote"></p>
+    <p data-i18n="pdfRedirectionNote"></p>
   </form>
-  <b>Experimental Features:</b>
+  <b data-i18n="experimentalFeatures"></b>:
   <form>
-    <p>Current external PDF viewer URL prefix: <b id="pdf-viewer-url-prefix"></b></p>
-    <label>New external PDF viewer URL prefix:</label>
+    <p><span data-i18n="currentPdfViewerUrlPrefix"></span>: <b id="pdf-viewer-url-prefix"></b></p>
+    <label data-i18n="newPdfViewerUrlPrefix"></label>:
     <input type="text" id="new-pdf-viewer-url-prefix" style="margin: 2px; width:400px;" value="https://mozilla.github.io/pdf.js/web/viewer.html?file="><br>
-    <button id="update-pdf-viewer-url-prefix" type="submit">Update</button>
-    <button id="revert-pdf-viewer-url-prefix" type="submit">Revert to Default</button><br>
-    <p>Note: Setting an external PDF viewer enables Screenshots and Go Back.</p>
+    <button id="update-pdf-viewer-url-prefix" type="submit" data-i18n="update"></button>
+    <button id="revert-pdf-viewer-url-prefix" type="submit" data-i18n="revertToDefault"></button><br>
+    <p data-i18n="externalPdfViewerNote"></p>
   </form>
   <form>
-    <p>Current PDF viewer default zoom: <b id="pdf-viewer-default-zoom"></b></p>
-    <label>New PDF viewer default zoom:</label>
+    <p><span data-i18n="currentPdfViewerDefaultZoom"></span>: <b id="pdf-viewer-default-zoom"></b></p>
+    <label data-i18n="newPdfViewerDefaultZoom"></label>:
     <select id="new-pdf-viewer-default-zoom" style="margin: 2px;">
-      <option value="auto">Auto</option>
-      <option value="page-fit">Page Fit</option>
-      <option value="page-width">Page Width</option>
+      <option value="auto" data-i18n="zoomAuto"></option>
+      <option value="page-fit" data-i18n="zoomPageFit"></option>
+      <option value="page-width" data-i18n="zoomPageWidth"></option>
       <option value="50">50%</option>
       <option value="75">75%</option>
       <option value="100">100%</option>
@@ -45,17 +45,17 @@
       <option value="200">200%</option>
       <option value="300">300%</option>
       <option value="400">400%</option>
-      <option value="custom">Custom</option>
+      <option value="custom" data-i18n="zoomCustom"></option>
     </select><br>
     <div id="custom-zoom-container" style="display: none; margin-top: 5px;">
-      <label>Custom zoom (%):</label>
+      <label data-i18n="customZoom"></label> (%):
       <input type="number" id="custom-pdf-viewer-zoom" style="margin: 2px; width: 80px;" min="10" max="500" step="5">%
     </div>
-    <button id="update-pdf-viewer-default-zoom" type="submit">Update</button>
-    <button id="revert-pdf-viewer-default-zoom" type="submit">Revert to Default</button><br>
-    <p>Note: This setting only applies when "Using PDF redirection" is enabled.</p>
+    <button id="update-pdf-viewer-default-zoom" type="submit" data-i18n="update"></button>
+    <button id="revert-pdf-viewer-default-zoom" type="submit" data-i18n="revertToDefault"></button><br>
+    <p data-i18n="pdfViewerZoomNote"></p>
   </form>
-  <a href="https://github.com/j3soon/arxiv-utils#options">Help</a>
+  <a href="https://github.com/j3soon/arxiv-utils#options" data-i18n="help"></a>
   <script src="options.js"></script>
 </body>
 

@@ -1,0 +1,54 @@
+{
+  "extensionName": {
+    "message": "arxiv-utils",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Easy access on ArXiv! Auto-rename tabs to paper title, Quick navigation via button/hotkey, Save PDFs by paper title, and more.",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "Open Abstract / PDF",
+    "description": "Tooltip for the extension action."
+  },
+  "optionsTitle": {
+    "message": "Options for arxiv-utils",
+    "description": "Title of the options page."
+  },
+  "currentFilenameFormat": {
+    "message": "Current filename format",
+    "description": "Label for the currently configured filename format."
+  },
+  "loading": {
+    "message": "(To be loaded)",
+    "description": "Placeholder shown before an option value is loaded."
+  },
+  "newFilenameFormat": {
+    "message": "New filename format",
+    "description": "Label for the filename format input."
+  },
+  "willOpenInNewTab": {
+    "message": "Will open in new tab",
+    "description": "Label for the current open-in-new-tab value."
+  },
+  "openInNewTab": {
+    "message": "Open in new tab",
+    "description": "Label for the open-in-new-tab checkbox."
+  },
+  "update": {
+    "message": "Update",
+    "description": "Button label for saving an option."
+  },
+  "revertToDefault": {
+    "message": "Revert to Default",
+    "description": "Button label for restoring default options."
+  },
+  "filenameFormatNote": {
+    "message": "Note: You'll need to re-open the arXiv tabs for the new filename format to take effect.",
+    "description": "Explains when a changed filename format takes effect."
+  },
+  "help": {
+    "message": "Help",
+    "description": "Label for links and menu items that open the project help page."
+  }
+}

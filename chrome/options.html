@@ -3,24 +3,24 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Options for arxiv-utils </title>
+    <title data-i18n="optionsTitle"></title>
   </head>
 
 <body>
-  <h1>Options for arxiv-utils </h1>
+  <h1 data-i18n="optionsTitle"></h1>
   <form>
-    <p>Current filename format: <b id="filename-format">(To be loaded)</b></p>
-    <label>New filename format:</label>
+    <p><span data-i18n="currentFilenameFormat"></span>: <b id="filename-format"><span data-i18n="loading"></span></b></p>
+    <label data-i18n="newFilenameFormat"></label>:
     <input type="text" id="new-filename-format" style="margin: 2px; width:500px;" ><br>
-    <p>Will open in new tab: <b id="open-in-new-tab"></b></p>
+    <p><span data-i18n="willOpenInNewTab"></span>: <b id="open-in-new-tab"></b></p>
     <input type="checkbox" id="new-open-in-new-tab" name="new-open-in-new-tab">
-    <label for="new-open-in-new-tab">Open in new tab</label><br>
+    <label for="new-open-in-new-tab" data-i18n="openInNewTab"></label><br>
     <br>
-    <button id="update" type="submit">Update</button>
-    <button id="revert" type="submit">Revert to Default</button><br>
-    <p>Note: You'll need to re-open the arXiv tabs for the new filename format to take effect.</p>
+    <button id="update" type="submit" data-i18n="update"></button>
+    <button id="revert" type="submit" data-i18n="revertToDefault"></button><br>
+    <p data-i18n="filenameFormatNote"></p>
   </form>
-  <a href="https://github.com/j3soon/arxiv-utils#options">Help</a>
+  <a href="https://github.com/j3soon/arxiv-utils#options" data-i18n="help"></a>
   <script src="options.js"></script>
 </body>
 

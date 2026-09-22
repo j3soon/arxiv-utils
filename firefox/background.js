@@ -167,7 +167,7 @@ browser.tabs.onUpdated.addListener(onTabUpdated);
 browser.browserAction.onClicked.addListener(onButtonClickedAsync);
 // Add Help menu item to extension button context menu. (Manifest v2)
 browser.contextMenus.create({
-  title: "Help",
+  title: browser.i18n.getMessage("help"),
   contexts: ["browser_action"],
   onclick: () => {
     browser.tabs.create({

@@ -1,3 +1,11 @@
+function localizePage() {
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const message = browser.i18n.getMessage(element.dataset.i18n);
+    if (message)
+      element.textContent = message;
+  });
+}
+
 async function saveOptionsAsync(e) {
   if (e.submitter.id === "revert") {
     await browser.storage.sync.remove('filename_format');
@@ -98,6 +106,7 @@ function handleZoomSelectChange() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  localizePage();
   await restoreOptionsAsync();
   
   // Add event listener for zoom dropdown change

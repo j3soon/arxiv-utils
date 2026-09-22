@@ -1,0 +1,110 @@
+{
+  "extensionName": {
+    "message": "arxiv-utils",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Easy access on ArXiv! Auto-rename tabs to paper title, Quick navigation via button/hotkey, Save PDFs by paper title, and more.",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "Open Abstract / PDF",
+    "description": "Tooltip for the extension action."
+  },
+  "currentFilenameFormat": {
+    "message": "Current filename format",
+    "description": "Label for the currently configured filename format."
+  },
+  "loading": {
+    "message": "(To be loaded)",
+    "description": "Placeholder shown before an option value is loaded."
+  },
+  "newFilenameFormat": {
+    "message": "New filename format",
+    "description": "Label for the filename format input."
+  },
+  "willOpenInNewTab": {
+    "message": "Will open in new tab",
+    "description": "Label for the current open-in-new-tab value."
+  },
+  "openInNewTab": {
+    "message": "Open in new tab",
+    "description": "Label for the open-in-new-tab checkbox."
+  },
+  "usingPdfRedirection": {
+    "message": "Using PDF redirection",
+    "description": "Label for the current PDF redirection value."
+  },
+  "enablePdfRedirection": {
+    "message": "Enable PDF redirection",
+    "description": "Label for the PDF redirection checkbox."
+  },
+  "update": {
+    "message": "Update",
+    "description": "Button label for saving an option."
+  },
+  "revertToDefault": {
+    "message": "Revert to Default",
+    "description": "Button label for restoring default options."
+  },
+  "filenameFormatNote": {
+    "message": "Note: You'll need to re-open the arXiv tabs for the new filename format to take effect.",
+    "description": "Explains when a changed filename format takes effect."
+  },
+  "pdfRedirectionNote": {
+    "message": "Note: Disabling PDF redirection will disallow renaming for PDF tabs.",
+    "description": "Explains the effect of disabling PDF redirection."
+  },
+  "experimentalFeatures": {
+    "message": "Experimental Features",
+    "description": "Heading for experimental options."
+  },
+  "currentPdfViewerUrlPrefix": {
+    "message": "Current external PDF viewer URL prefix",
+    "description": "Label for the current external PDF viewer URL prefix."
+  },
+  "newPdfViewerUrlPrefix": {
+    "message": "New external PDF viewer URL prefix",
+    "description": "Label for the external PDF viewer URL prefix input."
+  },
+  "externalPdfViewerNote": {
+    "message": "Note: Setting an external PDF viewer enables Screenshots and Go Back.",
+    "description": "Explains the features enabled by an external PDF viewer."
+  },
+  "currentPdfViewerDefaultZoom": {
+    "message": "Current PDF viewer default zoom",
+    "description": "Label for the current PDF viewer zoom value."
+  },
+  "newPdfViewerDefaultZoom": {
+    "message": "New PDF viewer default zoom",
+    "description": "Label for the PDF viewer zoom selector."
+  },
+  "zoomAuto": {
+    "message": "Auto",
+    "description": "Automatic PDF viewer zoom option."
+  },
+  "zoomPageFit": {
+    "message": "Page Fit",
+    "description": "PDF viewer zoom option that fits the whole page."
+  },
+  "zoomPageWidth": {
+    "message": "Page Width",
+    "description": "PDF viewer zoom option that fits the page width."
+  },
+  "zoomCustom": {
+    "message": "Custom",
+    "description": "Custom PDF viewer zoom option."
+  },
+  "customZoom": {
+    "message": "Custom zoom",
+    "description": "Label for the custom PDF viewer zoom input."
+  },
+  "pdfViewerZoomNote": {
+    "message": "Note: This setting only applies when \"Using PDF redirection\" is enabled.",
+    "description": "Explains when the PDF viewer zoom setting applies."
+  },
+  "help": {
+    "message": "Help",
+    "description": "Label for links and menu items that open the project help page."
+  }
+}
