@@ -89,7 +89,7 @@ function onMessage(message, sender, sendResponse) {
     chrome.downloads.download({
       url: message.url,
       filename: message.filename,
-      saveAs: false,
+      saveAs: !!message.saveAs,
     }).then(() => {
       console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
     });
