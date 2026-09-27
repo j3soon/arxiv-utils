@@ -103,8 +103,8 @@ For ArXiv PDF / abstract tabs:
 - `filename replacement rules`:
   - Default: replaces `/` and `:` with `,`, replaces `\ ? * | " < >` with `_`, and removes newlines.
   - The option accepts a JSON array of `{ "from": "...", "to": "..." }` string replacement rules.
-  - Example: use `{ "from": ":", "to": "_" }` to replace colons with underscores.
-  - Path separators are always replaced after applying these rules.
+  - Example: use `[ { "from": ":", "to": "_" } ]` to replace colons with underscores.
+  - Built-in filename safety rules are always applied after custom rules.
 - `Ask where to save each PDF`:
   - Default: `false`
   - Set to `true` to show the browser's save dialog when using the direct download link.

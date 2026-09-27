@@ -16,11 +16,13 @@ function getFilenameReplacementRules(rulesText) {
   const rules = JSON.parse(rulesText);
   if (!Array.isArray(rules))
     throw new Error("Filename replacement rules must be an array.");
-  for (const rule of rules) {
+  for (const [index, rule] of rules.entries()) {
+    if (rule === null || typeof rule !== 'object' || Array.isArray(rule))
+      throw new Error(`Filename replacement rule ${index + 1} must be an object.`);
     if (typeof rule.from !== 'string' || typeof rule.to !== 'string')
-      throw new Error("Each filename replacement rule must have string `from` and `to` fields.");
+      throw new Error(`Filename replacement rule ${index + 1} must have string \`from\` and \`to\` fields.`);
     if (rule.from === '')
-      throw new Error("Filename replacement rule `from` cannot be empty.");
+      throw new Error(`Filename replacement rule ${index + 1} \`from\` cannot be empty.`);
   }
   return rules;
 }
@@ -45,13 +47,19 @@ async function saveOptionsAsync(e) {
       alert(`Invalid filename replacement rules: ${error.message}`);
       return;
     }
-    await browser.storage.sync.set({
-      'filename_format': document.querySelector("#new-filename-format").value,
-      'filename_replacement_rules': filenameReplacementRules,
-      'open_in_new_tab': document.querySelector("#new-open-in-new-tab").checked,
-      'download_save_as': document.querySelector("#new-download-save-as").checked,
-      'redirect_pdf': document.querySelector("#new-redirect-pdf").checked,
-    });
+    try {
+      await browser.storage.sync.set({
+        'filename_format': document.querySelector("#new-filename-format").value,
+        'filename_replacement_rules': filenameReplacementRules,
+        'open_in_new_tab': document.querySelector("#new-open-in-new-tab").checked,
+        'download_save_as': document.querySelector("#new-download-save-as").checked,
+        'redirect_pdf': document.querySelector("#new-redirect-pdf").checked,
+      });
+    } catch (error) {
+      console.error("Failed to save options.", error);
+      alert(`Unable to save options. The filename replacement rules may exceed the browser sync storage limit. ${error.message}`);
+      return;
+    }
   } else if (e.submitter.id === "revert-pdf-viewer-url-prefix") {
     await browser.storage.sync.remove('pdf_viewer_url_prefix');
   } else if (e.submitter.id === "update-pdf-viewer-url-prefix") {

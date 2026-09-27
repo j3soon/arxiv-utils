@@ -15,7 +15,7 @@
     <p>Current filename replacement rules:</p>
     <pre id="filename-replacement-rules">(To be loaded)</pre>
     <label>New filename replacement rules:</label><br>
-    <textarea id="new-filename-replacement-rules" style="margin: 2px; width:500px; height:180px;" ></textarea><br>
+    <textarea id="new-filename-replacement-rules" maxlength="8192" style="margin: 2px; width:500px; height:180px;" ></textarea><br>
     <p>Will ask where to save each PDF: <b id="download-save-as"></b></p>
     <input type="checkbox" id="new-download-save-as" name="new-download-save-as">
     <label for="new-download-save-as">Ask where to save each PDF</label><br>
@@ -26,7 +26,7 @@
     <button id="update" type="submit">Update</button>
     <button id="revert" type="submit">Revert to Default</button><br>
     <p>Note: You'll need to re-open the arXiv tabs for the new download settings to take effect.</p>
-    <p>Note: Path separators are always replaced after applying filename replacement rules.</p>
+    <p>Note: Built-in filename safety rules are always applied after custom rules.</p>
   </form>
   <a href="https://github.com/j3soon/arxiv-utils#options">Help</a>
   <script src="options.js"></script>

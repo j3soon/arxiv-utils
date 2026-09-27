@@ -110,11 +110,13 @@ function getFilenameReplacementRules(rulesText) {
   const rules = JSON.parse(rulesText);
   if (!Array.isArray(rules))
     throw new Error("Filename replacement rules must be an array.");
-  for (const rule of rules) {
+  for (const [index, rule] of rules.entries()) {
+    if (rule === null || typeof rule !== 'object' || Array.isArray(rule))
+      throw new Error(`Filename replacement rule ${index + 1} must be an object.`);
     if (typeof rule.from !== 'string' || typeof rule.to !== 'string')
-      throw new Error("Each filename replacement rule must have string `from` and `to` fields.");
+      throw new Error(`Filename replacement rule ${index + 1} must have string \`from\` and \`to\` fields.`);
     if (rule.from === '')
-      throw new Error("Filename replacement rule `from` cannot be empty.");
+      throw new Error(`Filename replacement rule ${index + 1} \`from\` cannot be empty.`);
   }
   return rules;
 }
@@ -140,7 +142,9 @@ function formatFileName(filenameFormat, id, articleInfo) {
 }
 
 function applyFilenameReplacementRules(fileName, rules) {
-  for (const rule of rules)
+  // Apply custom rules first, then keep the original rules as a safety net.
+  const allRules = rules.concat(getFilenameReplacementRules(DEFAULT_FILENAME_REPLACEMENT_RULES));
+  for (const rule of allRules)
     fileName = fileName.split(rule.from).join(rule.to);
   return fileName
     // Keep the browser downloads API from treating the filename as a relative path.
