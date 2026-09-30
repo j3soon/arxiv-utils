@@ -107,7 +107,7 @@ function addCustomLinksAsync(id) {
   document.getElementById(DIRECT_DOWNLOAD_LI_ID)?.remove();
   const directDownloadHTML = ` \
     <li id="${DIRECT_DOWNLOAD_LI_ID}"> \
-      <a id="${DIRECT_DOWNLOAD_A_ID}">Direct Download</a> \
+      <a id="${DIRECT_DOWNLOAD_A_ID}" class="abs-button">Direct Download</a> \
     </li>`;
   const downloadUL = document.querySelector(".full-text > ul");
   if (!downloadUL) {
@@ -129,10 +129,10 @@ function addCustomLinksAsync(id) {
   extraServicesDiv.innerHTML = ` \
     <h3>Extra Services</h3> \
     <ul> \
-      <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
-      <li><a href="https://alphaxiv.org/abs/${id}">alphaXiv</a></li> \
-      <li><a href="https://huggingface.co/papers/${id.replace(/v\d+$/, '')}">Hugging Face Papers</a></li> \
-      <li><a href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://alphaxiv.org/abs/${id}">alphaXiv</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://huggingface.co/papers/${id.replace(/v\d+$/, '')}">Hugging Face Papers</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
     </ul>`;
   elExtraRefCite.after(extraServicesDiv);
   console.log(LOG_PREFIX, "Added extra services links.")
