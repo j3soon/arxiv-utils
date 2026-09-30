@@ -107,10 +107,11 @@ async function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Opened abstract / PDF page in existing / new tab.");
 }
 async function onMessage(message) {
+  const saveAs = !!message.saveAs && (await browser.runtime.getPlatformInfo()).os !== 'android';
   await browser.downloads.download({
     url: message.url,
     filename: message.filename,
-    saveAs: !!message.saveAs,
+    saveAs,
   });
   console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
 }

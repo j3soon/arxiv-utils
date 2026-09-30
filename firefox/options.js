@@ -47,12 +47,13 @@ async function saveOptionsAsync(e) {
       alert(`Invalid filename replacement rules: ${error.message}`);
       return;
     }
+    const downloadSaveAsCheckbox = document.querySelector("#new-download-save-as");
     try {
       await browser.storage.sync.set({
         'filename_format': document.querySelector("#new-filename-format").value,
         'filename_replacement_rules': filenameReplacementRules,
         'open_in_new_tab': document.querySelector("#new-open-in-new-tab").checked,
-        'download_save_as': document.querySelector("#new-download-save-as").checked,
+        'download_save_as': downloadSaveAsCheckbox.checked && !downloadSaveAsCheckbox.disabled,
         'redirect_pdf': document.querySelector("#new-redirect-pdf").checked,
       });
     } catch (error) {
@@ -110,8 +111,11 @@ async function restoreOptionsAsync() {
   document.querySelector("#new-open-in-new-tab").checked = open_in_new_tab;
   document.querySelector("#open-in-new-tab").innerText = open_in_new_tab;
   const download_save_as = result.download_save_as;
-  document.querySelector("#new-download-save-as").checked = download_save_as;
-  document.querySelector("#download-save-as").innerText = download_save_as;
+  const isAndroid = (await browser.runtime.getPlatformInfo()).os === 'android';
+  const downloadSaveAsCheckbox = document.querySelector("#new-download-save-as");
+  downloadSaveAsCheckbox.disabled = isAndroid;
+  downloadSaveAsCheckbox.checked = !isAndroid && download_save_as;
+  document.querySelector("#download-save-as").innerText = isAndroid ? 'unavailable on Android' : download_save_as;
   const redirect_pdf = result.redirect_pdf;
   document.querySelector("#new-redirect-pdf").checked = redirect_pdf;
   document.querySelector("#redirect-pdf").innerText = redirect_pdf;

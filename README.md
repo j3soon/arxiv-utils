@@ -109,6 +109,7 @@ For ArXiv PDF / abstract tabs:
 - `Ask where to save each PDF`:
   - Default: `false`
   - Set to `true` to show the browser's save dialog when using the direct download link.
+  - Unavailable on Firefox for Android; direct downloads still work there.
 - `Open in new tab`:
   - Default: `true`
   - Set to `false` to open in existing tab when clicking the action button.
