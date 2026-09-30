@@ -4,6 +4,7 @@
     "test": "playwright test"
   },
   "devDependencies": {
-    "@playwright/test": "1.63.0"
+    "@playwright/test": "1.63.0",
+    "js-yaml": "4.3.2"
   }
 }

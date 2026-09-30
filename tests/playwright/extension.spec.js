@@ -95,6 +95,7 @@ test('removes characters that are invalid in download filenames', async ({ exten
   const page = await context.newPage();
   await page.goto(abstractUrl);
   await expect(page).toHaveTitle('A/B: C? | Abstract');
+  await expect(page.locator('#arxiv-utils-direct-download-a')).toHaveAttribute('href', '#');
   await page.locator('#arxiv-utils-direct-download-a').click();
   await expect.poll(() => worker.evaluate(() => globalThis.testDownloads.length)).toBe(1);
   expect(await worker.evaluate(() => globalThis.testDownloads[0].filename)).toBe('A,B, C_, Jane Doe et al., 2025, v2.pdf');
