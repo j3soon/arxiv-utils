@@ -17,6 +17,7 @@ const LOG_PREFIX = "[arXiv-utils]";
 // Element IDs for injected links
 const DIRECT_DOWNLOAD_LI_ID = "arxiv-utils-direct-download-li";
 const DIRECT_DOWNLOAD_A_ID = "arxiv-utils-direct-download-a";
+const MOBILE_DIRECT_DOWNLOAD_A_ID = "arxiv-utils-mobile-direct-download-a";
 const EXTRA_SERVICES_DIV_ID = "arxiv-utils-extra-services-div";
 
 // Return the id parsed from the url.
@@ -106,6 +107,15 @@ function addCustomLinksAsync(id) {
   }
   downloadUL.innerHTML += directDownloadHTML;
   console.log(LOG_PREFIX, "Added direct download link.")
+  document.getElementById(MOBILE_DIRECT_DOWNLOAD_A_ID)?.remove();
+  const mobileDownloadLinks = document.querySelectorAll("#abs > a.mobile-submission-download");
+  if (mobileDownloadLinks.length) {
+    const mobileDownloadA = document.createElement("a");
+    mobileDownloadA.id = MOBILE_DIRECT_DOWNLOAD_A_ID;
+    mobileDownloadA.className = "mobile-submission-download";
+    mobileDownloadA.textContent = "Direct Download";
+    mobileDownloadLinks[mobileDownloadLinks.length - 1].after(mobileDownloadA);
+  }
   // Add extra services links.
   const elExtraRefCite = document.querySelector(".extra-ref-cite");
   if (!elExtraRefCite) {
@@ -157,16 +167,17 @@ async function enableDirectDownload(id, articleInfo) {
     .replace(/\n/g, '') // Replace newline, which exists in some titles that are too long.
   ;
   const directURL = `https://arxiv.org/pdf/${id}.pdf`;
-  const downloadA = document.getElementById(DIRECT_DOWNLOAD_A_ID)
-  downloadA.addEventListener('click', function (e) {
-    browser.runtime.sendMessage({
-      url: directURL,
-      filename: fileName,
+  for (const downloadA of [DIRECT_DOWNLOAD_A_ID, MOBILE_DIRECT_DOWNLOAD_A_ID].map(id => document.getElementById(id)).filter(Boolean)) {
+    downloadA.addEventListener('click', function (e) {
+      browser.runtime.sendMessage({
+        url: directURL,
+        filename: fileName,
+      });
+      e.preventDefault();
+      console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`)
     });
-    e.preventDefault();
-    console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`)
-  });
-  downloadA.href = "#";
+    downloadA.href = "#";
+  }
   console.log(LOG_PREFIX, "Enabled direct download.")
 }
 
