@@ -105,7 +105,7 @@ function onInstalled() {
   // Add Help menu item to extension button context menu. (Manifest v3)
   chrome.contextMenus.create({
     id: "help",
-    title: "Help",
+    title: chrome.i18n.getMessage("help"),
     contexts: ["action"],
   });
 }

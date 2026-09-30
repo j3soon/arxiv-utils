@@ -1,0 +1,110 @@
+{
+  "extensionName": {
+    "message": "arxiv-utils",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "arXiv를 편리하게 이용하세요! 탭 제목 자동 변경, 버튼/단축키를 통한 빠른 이동, 논문 제목으로 PDF 저장 등을 지원합니다.",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "초록/PDF 열기",
+    "description": "Tooltip for the extension action."
+  },
+  "currentFilenameFormat": {
+    "message": "현재 파일명 형식",
+    "description": "Label for the currently configured filename format."
+  },
+  "loading": {
+    "message": "(불러오는 중)",
+    "description": "Placeholder shown before an option value is loaded."
+  },
+  "newFilenameFormat": {
+    "message": "새 파일명 형식",
+    "description": "Label for the filename format input."
+  },
+  "willOpenInNewTab": {
+    "message": "새 탭에서 열기 여부",
+    "description": "Label for the current open-in-new-tab value."
+  },
+  "openInNewTab": {
+    "message": "새 탭에서 열기",
+    "description": "Label for the open-in-new-tab checkbox."
+  },
+  "usingPdfRedirection": {
+    "message": "PDF 리디렉션 사용 여부",
+    "description": "Label for the current PDF redirection value."
+  },
+  "enablePdfRedirection": {
+    "message": "PDF 리디렉션 사용",
+    "description": "Label for the PDF redirection checkbox."
+  },
+  "update": {
+    "message": "업데이트",
+    "description": "Button label for saving an option."
+  },
+  "revertToDefault": {
+    "message": "기본값으로 되돌리기",
+    "description": "Button label for restoring default options."
+  },
+  "filenameFormatNote": {
+    "message": "참고: 새 파일명 형식을 적용하려면 arXiv 탭을 다시 열어야 합니다.",
+    "description": "Explains when a changed filename format takes effect."
+  },
+  "pdfRedirectionNote": {
+    "message": "참고: PDF 리디렉션을 끄면 PDF 탭의 제목을 변경할 수 없습니다.",
+    "description": "Explains the effect of disabling PDF redirection."
+  },
+  "experimentalFeatures": {
+    "message": "실험적 기능",
+    "description": "Heading for experimental options."
+  },
+  "currentPdfViewerUrlPrefix": {
+    "message": "현재 외부 PDF 뷰어 URL 접두사",
+    "description": "Label for the current external PDF viewer URL prefix."
+  },
+  "newPdfViewerUrlPrefix": {
+    "message": "새 외부 PDF 뷰어 URL 접두사",
+    "description": "Label for the external PDF viewer URL prefix input."
+  },
+  "externalPdfViewerNote": {
+    "message": "참고: 외부 PDF 뷰어를 설정하면 스크린샷과 뒤로 가기 기능을 사용할 수 있습니다.",
+    "description": "Explains the features enabled by an external PDF viewer."
+  },
+  "currentPdfViewerDefaultZoom": {
+    "message": "현재 PDF 뷰어 기본 배율",
+    "description": "Label for the current PDF viewer zoom value."
+  },
+  "newPdfViewerDefaultZoom": {
+    "message": "새 PDF 뷰어 기본 배율",
+    "description": "Label for the PDF viewer zoom selector."
+  },
+  "zoomAuto": {
+    "message": "자동",
+    "description": "Automatic PDF viewer zoom option."
+  },
+  "zoomPageFit": {
+    "message": "페이지 맞춤",
+    "description": "PDF viewer zoom option that fits the whole page."
+  },
+  "zoomPageWidth": {
+    "message": "페이지 너비 맞춤",
+    "description": "PDF viewer zoom option that fits the page width."
+  },
+  "zoomCustom": {
+    "message": "사용자 지정",
+    "description": "Custom PDF viewer zoom option."
+  },
+  "customZoom": {
+    "message": "사용자 지정 배율",
+    "description": "Label for the custom PDF viewer zoom input."
+  },
+  "pdfViewerZoomNote": {
+    "message": "참고: 이 설정은 \"PDF 리디렉션 사용\"이 활성화된 경우에만 적용됩니다.",
+    "description": "Explains when the PDF viewer zoom setting applies."
+  },
+  "help": {
+    "message": "도움말",
+    "description": "Label for links and menu items that open the project help page."
+  }
+}

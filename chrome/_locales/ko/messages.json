@@ -1,0 +1,54 @@
+{
+  "extensionName": {
+    "message": "arxiv-utils",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "arXiv를 편리하게 이용하세요! 탭 제목 자동 변경, 버튼/단축키를 통한 빠른 이동, 논문 제목으로 PDF 저장 등을 지원합니다.",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "초록/PDF 열기",
+    "description": "Tooltip for the extension action."
+  },
+  "optionsTitle": {
+    "message": "arxiv-utils 설정",
+    "description": "Title of the options page."
+  },
+  "currentFilenameFormat": {
+    "message": "현재 파일명 형식",
+    "description": "Label for the currently configured filename format."
+  },
+  "loading": {
+    "message": "(불러오는 중)",
+    "description": "Placeholder shown before an option value is loaded."
+  },
+  "newFilenameFormat": {
+    "message": "새 파일명 형식",
+    "description": "Label for the filename format input."
+  },
+  "willOpenInNewTab": {
+    "message": "새 탭에서 열기 여부",
+    "description": "Label for the current open-in-new-tab value."
+  },
+  "openInNewTab": {
+    "message": "새 탭에서 열기",
+    "description": "Label for the open-in-new-tab checkbox."
+  },
+  "update": {
+    "message": "업데이트",
+    "description": "Button label for saving an option."
+  },
+  "revertToDefault": {
+    "message": "기본값으로 되돌리기",
+    "description": "Button label for restoring default options."
+  },
+  "filenameFormatNote": {
+    "message": "참고: 새 파일명 형식을 적용하려면 arXiv 탭을 다시 열어야 합니다.",
+    "description": "Explains when a changed filename format takes effect."
+  },
+  "help": {
+    "message": "도움말",
+    "description": "Label for links and menu items that open the project help page."
+  }
+}

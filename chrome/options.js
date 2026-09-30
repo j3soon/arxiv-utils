@@ -1,3 +1,11 @@
+function localizePage() {
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const message = chrome.i18n.getMessage(element.dataset.i18n);
+    if (message)
+      element.textContent = message;
+  });
+}
+
 async function saveOptionsAsync(e) {
   if (e.submitter.id === "revert") {
     await chrome.storage.sync.remove('filename_format');
@@ -25,7 +33,10 @@ async function restoreOptionsAsync() {
   document.querySelector("#open-in-new-tab").innerText = open_in_new_tab;
 }
 
-document.addEventListener('DOMContentLoaded', restoreOptionsAsync);
+document.addEventListener('DOMContentLoaded', async () => {
+  localizePage();
+  await restoreOptionsAsync();
+});
 const forms = [...document.getElementsByTagName("form")]
 forms.forEach(element => {
   element.addEventListener("submit", saveOptionsAsync);
