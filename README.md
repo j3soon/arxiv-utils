@@ -31,13 +31,28 @@ Please [open an issue](https://github.com/j3soon/arxiv-utils/issues) if you have
 
 ## Download Links
 
-Supports Chrome, Firefox, Edge, Firefox on Android. (Not tested on Android)
+Supports Chrome, Firefox, Edge, and Firefox for Android.
 
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/arxiv-utils/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
 - [Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/)
 - [Edge Add-on](https://microsoftedge.microsoft.com/addons/detail/arxivutils/ngjpcfjabahdoadnajbhnikbemhmemdg)
 
 Alternatively, these 3 browsers can also load arxiv-utils directly from source. First, download the source code release from [Releases](https://github.com/j3soon/arxiv-utils/releases), and then load the extension as an unpacked extension following the [Development Section](#development).
+
+### Firefox for Android
+
+**Mozilla Add-ons (recommended):** Once an Android-compatible version is published and enabled on Mozilla Add-ons, install Firefox for Android, visit the [arxiv-utils add-on page](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/), tap `Add to Firefox`, and accept the requested permissions. See [Mozilla's installation guide](https://support.mozilla.org/en-US/kb/find-and-install-add-ons-firefox-android).
+
+> This should be available in the next release (v1.8.8+).
+
+**Manual installation:**
+
+1. Download a signed `.xpi` from Mozilla Add-ons or another trusted source.
+2. In Firefox, open `Settings` > `About Firefox` and tap the Firefox logo five times quickly.
+3. Return to `Settings` > `Install Extension from File`.
+4. Select the downloaded `.xpi` and tap `Add` to approve installation.
+
+The hidden developer menu is only needed for installation. It does not need to stay enabled. Firefox still checks compatibility, and installation does not guarantee that every feature works on Android. Renaming an unsigned ZIP file to `.xpi` will not make it installable. See [Mozilla's manual installation guide](https://extensionworkshop.com/documentation/publish/install-self-distributed/) and [signing requirements](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/).
 
 ## Screenshots
 
