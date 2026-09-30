@@ -186,6 +186,7 @@ The automated tests currently include the following:
 
 - **Default tests**: Test the default title name of arXiv abstract/PDF pages.
 - **Navigation tests**: Test the arxiv-utils button can switch between arXiv abstract/PDF pages, and the title is modified.
+- **Playwright tests**: Test titles, injected links, downloads, options, and narrow layouts in Chromium.
 
 The testcases along with their description is stored in [tests/testcases/testcases.yaml](tests/testcases/testcases.yaml).
 
@@ -235,6 +236,17 @@ When done, stop the containers:
 cd tests/unit-test
 docker compose down
 ```
+
+### Run Playwright Tests Locally
+
+```sh
+cd tests/playwright
+npm ci
+npx playwright install --with-deps chromium
+npm test
+```
+
+Playwright uses fixed arXiv fixtures and runs the Chrome extension in Chromium. The Firefox content script also runs with mocked browser APIs.
 
 ### Run End-to-End Tests Locally
 
