@@ -142,15 +142,19 @@ function formatFileName(filenameFormat, id, articleInfo) {
 }
 
 function applyFilenameReplacementRules(fileName, rules) {
+  // Keep the PDF extension when a rule replaces periods in the filename.
+  const pdfExtension = fileName.match(/\.pdf$/i)?.[0] || '';
+  if (pdfExtension)
+    fileName = fileName.slice(0, -pdfExtension.length);
   // Apply custom rules first, then keep the original rules as a safety net.
   const allRules = rules.concat(getFilenameReplacementRules(DEFAULT_FILENAME_REPLACEMENT_RULES));
   for (const rule of allRules)
     fileName = fileName.split(rule.from).join(rule.to);
-  return fileName
+  fileName = fileName
     // Keep the browser downloads API from treating the filename as a relative path.
     .replace(/[/\\]/g, '_')
-    .replace(/\n/g, '')
-  ;
+    .replace(/\n/g, '');
+  return fileName + pdfExtension;
 }
 
 function parseFilenameReplacementRules(rulesText) {
