@@ -246,7 +246,7 @@ npx playwright install --with-deps chromium
 npm test
 ```
 
-Playwright uses fixed arXiv fixtures with layout and button CSS copied from arXiv and runs the Chrome extension in Chromium. The Firefox content script and basic navigation handler also run with mocked browser APIs. Selenium covers browser navigation.
+Playwright uses fixed arXiv fixtures with layout and button CSS copied from arXiv and runs the Chrome extension in Chromium. The Firefox content and background scripts also run with mocked browser APIs, including PDF downloads when the native downloads API is unavailable or rejects the request. These checks do not replace testing on Firefox for Android. Selenium covers browser navigation.
 
 ### Run End-to-End Tests Locally
 

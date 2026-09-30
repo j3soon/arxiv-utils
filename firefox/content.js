@@ -168,13 +168,39 @@ async function enableDirectDownload(id, articleInfo) {
   ;
   const directURL = `https://arxiv.org/pdf/${id}.pdf`;
   for (const downloadA of [DIRECT_DOWNLOAD_A_ID, MOBILE_DIRECT_DOWNLOAD_A_ID].map(id => document.getElementById(id)).filter(Boolean)) {
-    downloadA.addEventListener('click', function (e) {
-      browser.runtime.sendMessage({
-        url: directURL,
-        filename: fileName,
-      });
+    downloadA.addEventListener('click', async function (e) {
       e.preventDefault();
-      console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`)
+      try {
+        const response = await browser.runtime.sendMessage({
+          url: directURL,
+          filename: fileName,
+        });
+        if (response?.downloadSupported !== false) {
+          console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`);
+          return;
+        }
+      } catch (error) {
+        console.warn(LOG_PREFIX, "Native download failed, trying a browser download.", error);
+      }
+      // Firefox for Android may expose downloads.download without a working
+      // download delegate. A blob link also avoids the extension's PDF redirect.
+      try {
+        const response = await fetch(directURL);
+        if (!response.ok) {
+          throw new Error(`PDF request failed: ${response.status}`);
+        }
+        const blobURL = URL.createObjectURL(await response.blob());
+        const link = document.createElement('a');
+        link.href = blobURL;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        // Give the browser time to consume the blob before releasing it.
+        setTimeout(() => URL.revokeObjectURL(blobURL), 60000);
+      } catch (error) {
+        console.error(LOG_PREFIX, "PDF download failed.", error);
+      }
     });
     downloadA.href = "#";
   }

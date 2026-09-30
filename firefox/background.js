@@ -107,6 +107,9 @@ async function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Opened abstract / PDF page in existing / new tab.");
 }
 async function onMessage(message) {
+  if (typeof browser.downloads?.download !== 'function') {
+    return { downloadSupported: false };
+  }
   await browser.downloads.download({
     url: message.url,
     filename: message.filename,
