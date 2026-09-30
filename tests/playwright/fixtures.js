@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const { test: base, chromium } = require('@playwright/test');
 
@@ -7,37 +8,35 @@ const abstractUrl = `https://arxiv.org/abs/${paperId}`;
 const pdfUrl = `https://arxiv.org/pdf/${paperId}`;
 const ar5ivUrl = `https://ar5iv.labs.arxiv.org/html/${paperId}`;
 
+// Preserve arXiv's layout ancestors so its responsive selectors apply.
+const arxivStyles = ['arxiv.css', 'abs.css'].map(filename =>
+  fs.readFileSync(path.join(__dirname, 'fixtures', filename), 'utf8')).join('\n');
+const desktopLinksHtml = `
+  <div class="extra-services">
+    <div class="full-text"><h2>Access Paper:</h2><ul>
+      <li><a class="abs-button download-pdf" href="/pdf/${paperId}">View PDF</a></li>
+    </ul></div>
+    <div class="extra-ref-cite"><h3>References &amp; Citations</h3><ul>
+      <li><a class="abs-button abs-button-small" href="#">NASA ADS</a></li>
+    </ul></div>
+  </div>`;
 const abstractHtml = `<!doctype html>
 <html>
 <head>
   <title>[${paperId}] Sample Paper</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { margin: 0; font: 16px Arial, sans-serif; }
-    #abs, .full-text, .extra-ref-cite { padding: 12px; }
-    .abs-button, .mobile-submission-download { display: inline-block; padding: 8px; border: 1px solid #17679a; }
-    .abs-button-small { padding: 3px 12px; }
-    .full-text li, .extra-ref-cite li { display: inline-block; margin: 2px; }
-    ul { padding: 0; list-style: none; }
-    .mobile-submission-download { display: none; }
-    @media (max-width: 600px) {
-      .mobile-submission-download { display: block; margin: 8px 0; text-align: center; }
-    }
-  </style>
+  <style>${arxivStyles}</style>
 </head>
 <body>
-  <div id="abs">
-    <h1>Sample Paper</h1>
-    <a class="mobile-submission-download" href="/pdf/${paperId}">View PDF</a>
-    <a class="mobile-submission-download" href="/html/${paperId}">HTML (experimental)</a>
-    <blockquote>Abstract text</blockquote>
-  </div>
-  <div class="full-text"><h2>Access Paper:</h2><ul>
-    <li><a class="abs-button download-pdf" href="/pdf/${paperId}">View PDF</a></li>
-  </ul></div>
-  <div class="extra-ref-cite"><h3>References &amp; Citations</h3><ul>
-    <li><a class="abs-button abs-button-small" href="#">NASA ADS</a></li>
-  </ul></div>
+  <main><div id="content"><div id="abs-outer">
+    <div class="leftcolumn"><div id="content-inner"><div id="abs">
+      <h1 class="title">Sample Paper</h1>
+      <a class="mobile-submission-download" href="/pdf/${paperId}">View PDF</a>
+      <a class="mobile-submission-download" href="/html/${paperId}">HTML (experimental)</a>
+      <blockquote class="abstract">Abstract text</blockquote>
+    </div></div></div>
+    ${desktopLinksHtml}
+  </div></div></main>
 </body>
 </html>`;
 

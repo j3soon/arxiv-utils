@@ -1,0 +1,175 @@
+/* Verbatim layout/button rule excerpts from arXiv, retrieved 2026-10-01.
+ * https://arxiv.org/static/browse/0.3.4/css/arXiv.css?v=20260318
+ * Keep declarations and media queries unchanged when refreshing this fixture.
+ */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  color: #000;
+  font-family: "Lucida Grande", helvetica, arial, verdana, sans-serif;
+}
+
+a:link, a:visited, a:active {
+  text-decoration: none;
+  /*font-weight: bold;*/
+  font-weight: normal;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#content, #content-inner {
+  margin: .7em;
+  font-size: 90%;
+}
+
+#content-inner {
+}
+
+#abs-outer, #abs {
+  margin: -0.7em;
+}
+
+#abs-outer .leftcolumn {
+  margin: 0 0 1em 0;
+  padding: 0px;
+  width:calc(100% - 18em);
+  float:left;
+}
+
+#abs-outer .mobile-submission-download {
+  display:none;
+}
+
+#abs-outer .extra-services {
+  float:right;
+  margin:0;
+  width:18em;
+}
+
+@media screen and (max-width: 768px) {
+#abs-outer #abs a.mobile-submission-download {
+    display: flex;
+    justify-content: center;
+    margin: .7em .25em;
+    border-radius: 10px;
+    background-color: #408bd0;
+    padding: .25em 1em;
+    font-weight: 800;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    text-align: center;
+  }
+
+#abs-outer .extra-services h2 {
+    font-size:15px;
+    margin-bottom: .5em;
+  }
+
+#abs-outer .extra-services h3 {
+    font-size:14px;
+  }
+
+#abs-outer .leftcolumn, #abs-outer .extra-services {
+    width:100%;
+    float:left;
+  }
+
+#abs-outer .extra-services, #abs-outer .extra-services .full-text, #abs-outer .extra-services .ancillary, #abs-outer .extra-services .browse, #abs-outer .extra-services .extra-ref-cite {
+    border:0px;
+    font-size:12px;
+  }
+
+#abs-outer .extra-services {
+    -webkit-box-shadow: inset 0px 8px 15px 0px rgba(173,173,173,1);
+    -moz-box-shadow: inset 0px 8px 15px 0px rgba(173,173,173,1);
+    box-shadow: inset 0px 8px 15px 0px rgba(173,173,173,1);
+    background-color: #E6E6E6;
+    margin: 0 0 1em 0;
+    padding: 1em 0;
+  }
+
+#abs-outer .extra-ref-cite ul li {
+    float: left;
+    height: 50px;
+  }
+
+#abs-outer .extra-services .full-text ul, #abs-outer .extra-services .extra-ref-cite ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+#abs-outer .extra-services .full-text ul li, #abs-outer .extra-services .extra-ref-cite ul li {
+    display: inline-block;
+    margin: 0 0 .25em 0;
+    padding: 0;
+  }
+
+.abs-button {
+    display: inline-block;
+    border-radius: 5px;
+    border: 1px solid #046BAF;
+    font-size: 1.25em;
+    color: #046BAF !important;
+    padding: .5em;
+    background: #E6E6E6;
+    margin-right: .3em;
+  }
+
+.abs-button-small {
+    font-size: 1em;
+    padding: .25em 1em;
+    margin: .75em .5em 0 0;
+  }
+
+#abs-outer .extra-services .extra-ref-cite ul li {
+    margin: .5em 0;
+    padding: 0;
+    height: auto;
+  }
+}
+
+.full-text {
+  margin: 0;
+  padding: .5em 1em .5em 1em;
+  font-size: 110%;
+  font-weight: normal;
+  border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
+}
+
+.full-text h2 {
+  font-size: 140%;
+  font-weight: bold;
+  margin: 0.1em 0 0 0;
+}
+
+.full-text .preferred {
+  font-weight: bold;
+}
+
+.full-text ul {
+  margin: .3em 0 0 1em;
+  padding: 0;
+  list-style-type: none;
+}
+
+.extra-ref-cite {
+  margin: 0;
+  padding: 0 1em 0 1em;
+  font-size: 90%;
+  border-bottom: medium solid #ddd;
+  border-left: .35em solid #ddd;
+}
+
+.extra-ref-cite ul {
+  font-weight: normal;
+  margin: 0.3em 0 0 20px;
+  padding-left: 0;
+  padding-bottom: 0.3em;
+  list-style-type: none;
+}

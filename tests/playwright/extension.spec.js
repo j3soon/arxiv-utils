@@ -45,7 +45,7 @@ test('adds paper links once with the paper ID', async ({ extension }) => {
 
 test('places the mobile download button beside arXiv links without overflow', async ({ extension }) => {
   const page = await extension.context.newPage();
-  for (const width of [320, 390]) {
+  for (const width of [320, 390, 600, 768]) {
     await page.setViewportSize({ width, height: 780 });
     await page.goto(abstractUrl);
     const mobileLink = page.locator('#arxiv-utils-mobile-direct-download-a');
@@ -54,11 +54,22 @@ test('places the mobile download button beside arXiv links without overflow', as
     await expect(page.locator('#arxiv-utils-direct-download-a')).toHaveClass('abs-button');
     await expect(page.locator('#arxiv-utils-extra-services-div a').first()).toHaveClass('abs-button abs-button-small');
     expect(await mobileLink.evaluate(el => el.previousElementSibling.textContent)).toBe('HTML (experimental)');
+    const styles = await page.locator('#abs > a.mobile-submission-download').evaluateAll(links =>
+      links.map(link => {
+        const style = getComputedStyle(link);
+        const rect = link.getBoundingClientRect();
+        return { display: style.display, background: style.backgroundColor, padding: style.padding,
+          fontSize: style.fontSize, borderRadius: style.borderRadius, left: rect.left, width: rect.width };
+      }));
+    expect(styles[2]).toEqual(styles[0]);
+    expect(styles[2].display).toBe('flex');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
-  await page.setViewportSize({ width: 1280, height: 780 });
-  await expect(page.locator('#arxiv-utils-mobile-direct-download-a')).toBeHidden();
-  await expect(page.locator('#arxiv-utils-direct-download-a')).toBeVisible();
+  for (const width of [769, 1280]) {
+    await page.setViewportSize({ width, height: 780 });
+    await expect(page.locator('#arxiv-utils-mobile-direct-download-a')).toBeHidden();
+    await expect(page.locator('#arxiv-utils-direct-download-a')).toBeVisible();
+  }
 });
 
 test('both download links request the same PDF and default filename', async ({ extension }) => {
