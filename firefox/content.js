@@ -17,6 +17,7 @@ const LOG_PREFIX = "[arXiv-utils]";
 // Element IDs for injected links
 const DIRECT_DOWNLOAD_LI_ID = "arxiv-utils-direct-download-li";
 const DIRECT_DOWNLOAD_A_ID = "arxiv-utils-direct-download-a";
+const MOBILE_DIRECT_DOWNLOAD_A_ID = "arxiv-utils-mobile-direct-download-a";
 const EXTRA_SERVICES_DIV_ID = "arxiv-utils-extra-services-div";
 
 // Return the id parsed from the url.
@@ -97,7 +98,7 @@ function addCustomLinksAsync(id) {
   document.getElementById(DIRECT_DOWNLOAD_LI_ID)?.remove();
   const directDownloadHTML = ` \
     <li id="${DIRECT_DOWNLOAD_LI_ID}"> \
-      <a id="${DIRECT_DOWNLOAD_A_ID}">Direct Download</a> \
+      <a id="${DIRECT_DOWNLOAD_A_ID}" class="abs-button">Direct Download</a> \
     </li>`;
   const downloadUL = document.querySelector(".full-text > ul");
   if (!downloadUL) {
@@ -106,6 +107,15 @@ function addCustomLinksAsync(id) {
   }
   downloadUL.innerHTML += directDownloadHTML;
   console.log(LOG_PREFIX, "Added direct download link.")
+  document.getElementById(MOBILE_DIRECT_DOWNLOAD_A_ID)?.remove();
+  const mobileDownloadLinks = document.querySelectorAll("#abs > a.mobile-submission-download");
+  if (mobileDownloadLinks.length) {
+    const mobileDownloadA = document.createElement("a");
+    mobileDownloadA.id = MOBILE_DIRECT_DOWNLOAD_A_ID;
+    mobileDownloadA.className = "mobile-submission-download";
+    mobileDownloadA.textContent = "Direct Download";
+    mobileDownloadLinks[mobileDownloadLinks.length - 1].after(mobileDownloadA);
+  }
   // Add extra services links.
   const elExtraRefCite = document.querySelector(".extra-ref-cite");
   if (!elExtraRefCite) {
@@ -119,10 +129,10 @@ function addCustomLinksAsync(id) {
   extraServicesDiv.innerHTML = ` \
     <h3>Extra Services</h3> \
     <ul> \
-      <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
-      <li><a href="https://alphaxiv.org/abs/${id}">alphaXiv</a></li> \
-      <li><a href="https://huggingface.co/papers/${id.replace(/v\d+$/, '')}">Hugging Face Papers</a></li> \
-      <li><a href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://alphaxiv.org/abs/${id}">alphaXiv</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://huggingface.co/papers/${id.replace(/v\d+$/, '')}">Hugging Face Papers</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
     </ul>`;
   elExtraRefCite.after(extraServicesDiv);
   console.log(LOG_PREFIX, "Added extra services links.")
@@ -157,16 +167,43 @@ async function enableDirectDownload(id, articleInfo) {
     .replace(/\n/g, '') // Replace newline, which exists in some titles that are too long.
   ;
   const directURL = `https://arxiv.org/pdf/${id}.pdf`;
-  const downloadA = document.getElementById(DIRECT_DOWNLOAD_A_ID)
-  downloadA.addEventListener('click', function (e) {
-    browser.runtime.sendMessage({
-      url: directURL,
-      filename: fileName,
+  for (const downloadA of [DIRECT_DOWNLOAD_A_ID, MOBILE_DIRECT_DOWNLOAD_A_ID].map(id => document.getElementById(id)).filter(Boolean)) {
+    downloadA.addEventListener('click', async function (e) {
+      e.preventDefault();
+      try {
+        const response = await browser.runtime.sendMessage({
+          url: directURL,
+          filename: fileName,
+        });
+        if (response?.downloadSupported !== false) {
+          console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`);
+          return;
+        }
+      } catch (error) {
+        console.warn(LOG_PREFIX, "Native download failed, trying a browser download.", error);
+      }
+      // Firefox for Android may expose downloads.download without a working
+      // download delegate. A blob link also avoids the extension's PDF redirect.
+      try {
+        const response = await fetch(directURL);
+        if (!response.ok) {
+          throw new Error(`PDF request failed: ${response.status}`);
+        }
+        const blobURL = URL.createObjectURL(await response.blob());
+        const link = document.createElement('a');
+        link.href = blobURL;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        // Give the browser time to consume the blob before releasing it.
+        setTimeout(() => URL.revokeObjectURL(blobURL), 60000);
+      } catch (error) {
+        console.error(LOG_PREFIX, "PDF download failed.", error);
+      }
     });
-    e.preventDefault();
-    console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`)
-  });
-  downloadA.href = "#";
+    downloadA.href = "#";
+  }
   console.log(LOG_PREFIX, "Enabled direct download.")
 }
 

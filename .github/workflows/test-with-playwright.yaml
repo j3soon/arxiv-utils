@@ -1,0 +1,35 @@
+name: playwright-tests
+on:
+  push:
+    paths:
+      - .github/workflows/test-with-playwright.yaml
+      - chrome/**
+      - firefox/**
+      - tests/playwright/**
+  pull_request:
+jobs:
+  test-with-playwright:
+    name: Test extension with Playwright
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tests/playwright
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: npm
+        cache-dependency-path: tests/playwright/package-lock.json
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Chromium
+      run: npx playwright install --with-deps chromium
+    - name: Run Playwright tests
+      run: npm test
+    - name: Upload failure traces
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-traces
+        path: tests/playwright/test-results/

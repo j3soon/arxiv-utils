@@ -1,0 +1,102 @@
+/* https://arxiv.org/static/base/1.0.1/css/abs.css (2026-10-01) */
+/* Temporary forcing of classic abs styling.
+ *
+ * This should go away when the browse service gets a Bulma/base-rooted
+ * stylesheet.
+ *
+ */
+
+#abs {
+    font-family: "Lucida Grande", Helvetica, Arial, sans-serif !important;
+}
+
+#abs h1.title {
+    display: block;
+    font-size: 1.8em !important;
+    font-weight: 700;
+    margin-block-end: 12px;
+    margin-block-start: 12px;
+    margin-bottom: 12px;
+    margin-inline-end: 0px;
+    margin-inline-start: 20px;
+    margin-left: 20px;
+    margin-right: 0px;
+    margin-top: 12px;
+}
+
+#abs .descriptor {
+    display: none;
+}
+
+#abs div.authors {
+    font-size: 1.2em;
+    line-height: 24px;
+    margin-bottom: 8px;
+    margin-left: 20px;
+    margin-right: 0px;
+    margin-top: 8px;
+}
+
+#abs div.dateline {
+    font-size: 0.9em;
+    font-style: italic;
+    margin-bottom: 6.5px;
+    margin-left: 20px;
+    margin-right: 0px;
+    margin-top: 6.5px;
+}
+
+#abs blockquote.abstract {
+    font-size: 1.05em;
+    margin-block-end: 21.6px;
+    margin-block-start: 14.4px;
+    margin-bottom: 21.6px;
+    margin-inline-end: 40px;
+    margin-inline-start: 40px;
+    background-color: white;
+    border-left: 0px;
+    padding: 0px;
+}
+
+#abs div.metatable {
+    font-size: 0.95em !important;
+    margin-bottom: 19px;
+    margin-left: 20px;
+    margin-right: 0px;
+    margin-top: 0px;
+    border: 0px;
+    padding: 0px;
+}
+
+#abs div.metatable tbody {
+    vertical-align: middle;
+}
+
+#abs tr {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#abs td.tablecell {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 6.5px;
+    padding-left: 0px;
+    vertical-align: top;
+    font-size: 0.95em !important;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border: 0px;
+}
+
+#abs td.tablecell.label {
+    font-weight: 400 !important;
+}
+
+#abs span.primary-subject {
+    font-weight: 700;
+}
+
+#abs span.arxivid {
+    font-weight: 700;
+}
