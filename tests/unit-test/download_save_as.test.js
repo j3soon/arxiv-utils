@@ -33,7 +33,7 @@ test.each([
 test.each([
   ['android', true, 'unavailable on Android', false],
   ['linux', false, 'true', true],
-])('Firefox options on %s show the save dialog setting only where supported', async (os, disabled, status, saved) => {
+])('Firefox options on %s preserve the desktop save dialog preference', async (os, disabled, status, checked) => {
   const source = fs.readFileSync(path.join(__dirname, '..', '..', 'firefox', 'options.js'), 'utf8');
   const elements = {};
   const document = {
@@ -45,13 +45,17 @@ test.each([
     },
   };
   let storedOptions = { download_save_as: true };
+  let savedOptions;
   const browser = {
     i18n: { getMessage: (key) => key === 'unavailableOnAndroid' ? 'unavailable on Android' : '' },
     runtime: { getPlatformInfo: async () => ({ os }) },
     storage: {
       sync: {
         get: async (defaults) => ({ ...defaults, ...storedOptions }),
-        set: async (options) => { storedOptions = { ...storedOptions, ...options }; },
+        set: async (options) => {
+          savedOptions = options;
+          storedOptions = { ...storedOptions, ...options };
+        },
       },
     },
   };
@@ -60,9 +64,13 @@ test.each([
 
   await context.restoreOptionsAsync();
   expect(elements['#new-download-save-as'].disabled).toBe(disabled);
-  expect(elements['#new-download-save-as'].checked).toBe(saved);
+  expect(elements['#new-download-save-as'].checked).toBe(checked);
   expect(String(elements['#download-save-as'].innerText)).toBe(status);
 
   await context.saveOptionsAsync({ preventDefault: () => {}, submitter: { id: 'update' } });
-  expect(storedOptions.download_save_as).toBe(saved);
+  expect(storedOptions.download_save_as).toBe(true);
+  if (os === 'android')
+    expect(savedOptions).not.toHaveProperty('download_save_as');
+  else
+    expect(savedOptions.download_save_as).toBe(true);
 });

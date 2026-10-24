@@ -117,6 +117,7 @@ test('options save, reload, affect downloads, and reset', async ({ extension }) 
   const options = await context.newPage();
   await options.goto(`chrome-extension://${id}/options.html`);
   await expect(options.locator('#new-filename-format')).toHaveValue('${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf');
+  await expect(options.locator('#new-filename-replacement-rules')).toHaveValue('[]');
   await options.locator('#new-filename-format').fill('${paperid} - ${firstAuthorFamilyName}.pdf');
   await options.locator('#new-filename-replacement-rules').fill('[{"from":"-","to":"_"}]');
   await options.locator('#new-download-save-as').check();
@@ -144,6 +145,7 @@ test('options save, reload, affect downloads, and reset', async ({ extension }) 
   await options.locator('#revert').click();
   await options.reload();
   await expect(options.locator('#new-filename-format')).toHaveValue('${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf');
+  await expect(options.locator('#new-filename-replacement-rules')).toHaveValue('[]');
   await expect(options.locator('#new-download-save-as')).not.toBeChecked();
   await expect(options.locator('#new-open-in-new-tab')).toBeChecked();
 });

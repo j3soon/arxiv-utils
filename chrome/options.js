@@ -1,16 +1,5 @@
 const DEFAULT_FILENAME_FORMAT = '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf';
-const DEFAULT_FILENAME_REPLACEMENT_RULES = JSON.stringify([
-  { from: '/', to: ',' },
-  { from: ':', to: ',' },
-  { from: '\\', to: '_' },
-  { from: '?', to: '_' },
-  { from: '*', to: '_' },
-  { from: '|', to: '_' },
-  { from: '"', to: '_' },
-  { from: '<', to: '_' },
-  { from: '>', to: '_' },
-  { from: '\n', to: '' },
-], null, 2);
+const DEFAULT_FILENAME_REPLACEMENT_RULES = '[]';
 
 function getFilenameReplacementRules(rulesText) {
   const rules = JSON.parse(rulesText);

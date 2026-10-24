@@ -116,10 +116,11 @@ For ArXiv PDF / abstract tabs:
   - `${version}` is replaced with the version of the current paper.
   - `${paperid}` is replaced with the arXiv paper id.
 - `filename replacement rules`:
-  - Default: replaces `/` and `:` with `,`, replaces `\ ? * | " < >` with `_`, and removes newlines.
+  - Default: `[]` (no custom rules). Built-in safety cleanup replaces `/` and `:` with `,`, replaces `\ ? * | " < >` with `_`, and removes newlines.
   - The option accepts a JSON array of `{ "from": "...", "to": "..." }` string replacement rules.
   - Example: use `[ { "from": ":", "to": "_" } ]` to replace colons with underscores.
-  - Built-in filename safety rules are always applied after custom rules.
+  - Rules match the original filename once; replacement text is not matched by later rules. The first listed rule wins when patterns overlap.
+  - Built-in filename safety rules are always applied after custom rules. The resulting filename is truncated to 255 UTF-8 bytes.
   - An existing `.pdf` extension is preserved when applying replacement rules.
 - `Ask where to save each PDF`:
   - Default: `false`

@@ -1,16 +1,5 @@
 const DEFAULT_FILENAME_FORMAT = '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf';
-const DEFAULT_FILENAME_REPLACEMENT_RULES = JSON.stringify([
-  { from: '/', to: ',' },
-  { from: ':', to: ',' },
-  { from: '\\', to: '_' },
-  { from: '?', to: '_' },
-  { from: '*', to: '_' },
-  { from: '|', to: '_' },
-  { from: '"', to: '_' },
-  { from: '<', to: '_' },
-  { from: '>', to: '_' },
-  { from: '\n', to: '' },
-], null, 2);
+const DEFAULT_FILENAME_REPLACEMENT_RULES = '[]';
 
 function getFilenameReplacementRules(rulesText) {
   const rules = JSON.parse(rulesText);
@@ -56,14 +45,16 @@ async function saveOptionsAsync(e) {
       return;
     }
     const downloadSaveAsCheckbox = document.querySelector("#new-download-save-as");
+    const options = {
+      'filename_format': document.querySelector("#new-filename-format").value,
+      'filename_replacement_rules': filenameReplacementRules,
+      'open_in_new_tab': document.querySelector("#new-open-in-new-tab").checked,
+      'redirect_pdf': document.querySelector("#new-redirect-pdf").checked,
+    };
+    if (!downloadSaveAsCheckbox.disabled)
+      options.download_save_as = downloadSaveAsCheckbox.checked;
     try {
-      await browser.storage.sync.set({
-        'filename_format': document.querySelector("#new-filename-format").value,
-        'filename_replacement_rules': filenameReplacementRules,
-        'open_in_new_tab': document.querySelector("#new-open-in-new-tab").checked,
-        'download_save_as': downloadSaveAsCheckbox.checked && !downloadSaveAsCheckbox.disabled,
-        'redirect_pdf': document.querySelector("#new-redirect-pdf").checked,
-      });
+      await browser.storage.sync.set(options);
     } catch (error) {
       console.error("Failed to save options.", error);
       alert(`Unable to save options. The filename replacement rules may exceed the browser sync storage limit. ${error.message}`);

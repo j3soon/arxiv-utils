@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { TextEncoder } = require('util');
 
 function loadFilenameFormatter(browserName) {
   const source = fs.readFileSync(
@@ -10,6 +11,7 @@ function loadFilenameFormatter(browserName) {
   const context = vm.createContext({
     console: { log: () => {}, error: () => {} },
     location: { href: 'https://example.org/' },
+    TextEncoder,
     [browserName]: { runtime: { onMessage: { addListener: () => {} } } },
   });
   vm.runInContext(source, context);
@@ -47,6 +49,7 @@ test.each(['chrome', 'firefox'])(
     const context = vm.createContext({
       console: { log: () => {}, error: () => {} },
       location: { href: 'https://example.org/' },
+      TextEncoder,
       document: { getElementById: () => downloadLink },
       [browserName === 'firefox' ? 'browser' : 'chrome']: browserAPI,
     });
@@ -74,16 +77,32 @@ test.each(['chrome', 'firefox'])(
 );
 
 test.each(['chrome', 'firefox'])(
-  '%s rejects filename rules that exceed the length limit',
+  '%s applies rules once and truncates the finished filename',
   (browserName) => {
     const format = loadFilenameFormatter(browserName);
     const doublingRules = Array.from({ length: 12 }, () => ({ from: 'a', to: 'aa' }));
-    expect(() => format('a.pdf', doublingRules))
-      .toThrow('Filename replacement rule exceeds the 255-character limit.');
+    expect(format('a.pdf', doublingRules)).toBe('aa.pdf');
     expect(format(`${'a'.repeat(1000)}.pdf`, []))
       .toBe(`${'a'.repeat(251)}.pdf`);
-    expect(() => format('a/b.pdf', [{ from: 'a', to: 'x'.repeat(8192) }]))
-      .toThrow('Filename replacement rule exceeds the 255-character limit.');
+    expect(format('a/b.pdf', [{ from: 'a', to: 'x'.repeat(8192) }]))
+      .toBe(`${'x'.repeat(251)}.pdf`);
+    expect(format(`${'é'.repeat(200)}.pdf`, []))
+      .toBe(`${'é'.repeat(125)}.pdf`);
+  }
+);
+
+test.each(['chrome', 'firefox'])(
+  '%s uses literal, independent rules with first-match precedence',
+  (browserName) => {
+    const format = loadFilenameFormatter(browserName);
+    expect(format('ab.pdf', [{ from: 'a', to: 'bb' }, { from: 'b', to: 'c' }]))
+      .toBe('bbc.pdf');
+    expect(format('abc.pdf', [{ from: 'ab', to: 'X' }, { from: 'a', to: 'Y' }]))
+      .toBe('Xc.pdf');
+    expect(format('abc.pdf', [{ from: 'a', to: 'Y' }, { from: 'ab', to: 'X' }]))
+      .toBe('Ybc.pdf');
+    expect(format('a+b.pdf', [{ from: '+', to: '_plus_' }]))
+      .toBe('a_plus_b.pdf');
   }
 );
 

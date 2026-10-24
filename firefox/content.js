@@ -20,18 +20,7 @@ const DIRECT_DOWNLOAD_A_ID = "arxiv-utils-direct-download-a";
 const MOBILE_DIRECT_DOWNLOAD_A_ID = "arxiv-utils-mobile-direct-download-a";
 const EXTRA_SERVICES_DIV_ID = "arxiv-utils-extra-services-div";
 const DEFAULT_FILENAME_FORMAT = '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf';
-const DEFAULT_FILENAME_REPLACEMENT_RULES = JSON.stringify([
-  { from: '/', to: ',' },
-  { from: ':', to: ',' },
-  { from: '\\', to: '_' },
-  { from: '?', to: '_' },
-  { from: '*', to: '_' },
-  { from: '|', to: '_' },
-  { from: '"', to: '_' },
-  { from: '<', to: '_' },
-  { from: '>', to: '_' },
-  { from: '\n', to: '' },
-], null, 2);
+const DEFAULT_FILENAME_REPLACEMENT_RULES = '[]';
 
 // Return the id parsed from the url.
 function getId(url) {
@@ -143,30 +132,37 @@ function formatFileName(filenameFormat, id, articleInfo) {
 }
 
 function applyFilenameReplacementRules(fileName, rules) {
-  const MAX_FILENAME_LENGTH = 255;
+  const MAX_FILENAME_BYTES = 255;
   // Keep the PDF extension even when the format has trailing whitespace.
   const pdfSuffix = fileName.match(/(\.pdf)\s*$/i);
   if (pdfSuffix)
     fileName = fileName.slice(0, -pdfSuffix[0].length);
   const suffix = pdfSuffix?.[1] || '';
-  const maxBaseLength = MAX_FILENAME_LENGTH - suffix.length;
-  fileName = fileName.slice(0, maxBaseLength);
-  // Apply custom rules first, then keep the original rules as a safety net.
-  const allRules = rules.concat(getFilenameReplacementRules(DEFAULT_FILENAME_REPLACEMENT_RULES));
-  for (const rule of allRules) {
-    const parts = fileName.split(rule.from);
-    const resultLength = fileName.length + (parts.length - 1) * (rule.to.length - rule.from.length);
-    if (resultLength > maxBaseLength)
-      throw new Error(`Filename replacement rule exceeds the ${MAX_FILENAME_LENGTH}-character limit.`);
-    fileName = parts.join(rule.to);
+  // Match the original text once, so one rule's output cannot trigger another rule.
+  if (rules.length) {
+    const replacements = new Map();
+    for (const rule of rules)
+      if (!replacements.has(rule.from)) replacements.set(rule.from, rule.to);
+    const pattern = new RegExp(rules.map(rule => rule.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'gu');
+    fileName = fileName.replace(pattern, match => replacements.get(match));
   }
   fileName = fileName
-    // Keep the browser downloads API from treating the filename as a relative path.
-    .replace(/[/\\]/g, '_')
-    .replace(/\n/g, '')
-    // Firefox rejects filename components beginning or ending with a dot.
-    .replace(/^\.+|\.+$/g, '_');
-  return (fileName || 'download') + suffix;
+    .replace(/[/:]/g, ',')
+    .replace(/[\\?*|"<>]/g, '_')
+    .replace(/\n/g, '');
+  const encoder = new TextEncoder();
+  const maxBaseBytes = MAX_FILENAME_BYTES - encoder.encode(suffix).length;
+  let base = '';
+  let bytes = 0;
+  for (const char of fileName) {
+    const charBytes = encoder.encode(char).length;
+    if (bytes + charBytes > maxBaseBytes) break;
+    base += char;
+    bytes += charBytes;
+  }
+  // Firefox rejects filename components beginning or ending with a dot.
+  base = base.replace(/^\.+|\.+$/g, '_');
+  return (base || 'download') + suffix;
 }
 
 function parseFilenameReplacementRules(rulesText) {
