@@ -181,10 +181,22 @@ navigation:
   title: "Paper page - SAM 2: Segment Anything in Images and Videos"
   url2: https://arxiv.org/abs/2408.00714
   title2: "SAM 2: Segment Anything in Images and Videos | Abstract"
-  description: ar5iv -> arXiv
+  description: Hugging Face Papers -> arXiv
+- url: https://huggingface.co/papers/2408.00714/?query#community
+  url2: https://arxiv.org/abs/2408.00714
+  description: Hugging Face Papers -> arXiv (with trailing slash, query string, and fragment)
 - url: https://www.alphaxiv.org/abs/1706.03762
   url2: https://arxiv.org/abs/1706.03762
   description: alphaXiv -> arXiv
+- url: https://www.alphaxiv.org/overview/1706.03762
+  url2: https://arxiv.org/abs/1706.03762
+  description: alphaXiv overview -> arXiv
+- url: https://www.alphaxiv.org/replicate/1706.03762
+  url2: https://arxiv.org/abs/1706.03762
+  description: alphaXiv replicate -> arXiv
+- url: https://www.alphaxiv.org/audio/1706.03762
+  url2: https://arxiv.org/abs/1706.03762
+  description: alphaXiv audio -> arXiv
 - url: https://openreview.net/pdf?id=LcF-EEt8cCC
   url2: https://openreview.net/forum?id=LcF-EEt8cCC
   title2: Denoising Likelihood Score Matching for Conditional Score-based Data Generation | OpenReview
@@ -308,6 +320,7 @@ navigation:
 - url: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/papers/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.pdf
   url2: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/html/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.html
   title2: "CVPR 2022 Open Access Repository"
+  selenium_focus: True
   description: CVF pdf -> abs (Workshop with slash)
 - url: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/html/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.html
   title: "CVPR 2022 Open Access Repository"
@@ -321,10 +334,15 @@ navigation:
   url2: https://www.jmlr.org/papers/v12/pedregosa11a.html
   title2: "Scikit-learn: Machine Learning in Python"
   description: JMLR pdf -> abs
-- url: https://arxiv.org/html/2403.17537v1
+- url: https://arxiv.org/html/2403.17537
   title: "NeRF-HuGS: Improved Neural Radiance Fields in Non-static Scenes Using Heuristics-Guided Segmentation"
-  url2: https://arxiv.org/abs/2403.17537v1
+  url2: https://arxiv.org/abs/2403.17537
   title2: "NeRF-HuGS: Improved Neural Radiance Fields in Non-static Scenes Using Heuristics-Guided Segmentation | Abstract"
+  description: arXiv HTML -> arXiv
+- url: https://arxiv.org/html/2503.11651v1
+  title: "VGGT: Visual Geometry Grounded Transformer"
+  url2: https://arxiv.org/abs/2503.11651v1
+  title2: "VGGT: Visual Geometry Grounded Transformer | Abstract"
   description: arXiv HTML -> arXiv
 # Below are testcases for Jest only
 - url: https://ieeexplore.ieee.org/document/10412086

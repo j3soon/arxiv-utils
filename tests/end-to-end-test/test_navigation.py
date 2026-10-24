@@ -1,10 +1,12 @@
+import os
+import sys
 import time
 from operator import itemgetter
 from collections import defaultdict
 
 import yaml
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -14,6 +16,26 @@ from selenium.webdriver.support.ui import WebDriverWait
 testcases_path = "/app/tests/testcases/testcases.yaml"
 with open(testcases_path, "r") as f:
     testcases = yaml.safe_load(f)
+
+navigation_testcases = testcases['navigation']
+if os.getenv('E2E_FULL') == '1':
+    print("Running the full Selenium navigation suite (E2E_FULL=1).")
+else:
+    navigation_testcases = [
+        testcase for testcase in navigation_testcases
+        if testcase.get('selenium_focus', False)
+    ]
+    if not navigation_testcases:
+        print(
+            "WARNING: No focused Selenium navigation testcases found; "
+            "no tests were run. Set `selenium_focus: True` on newly added "
+            "testcases, or set E2E_FULL=1 to run the full suite."
+        )
+        sys.exit(0)
+    print(
+        f"Running {len(navigation_testcases)} focused Selenium navigation "
+        "testcase(s). Set E2E_FULL=1 to run the full suite."
+    )
 
 command_executor = 'http://selenium-hub:4444/wd/hub'
 
@@ -193,11 +215,97 @@ for browser in ['chrome', 'firefox', 'edge']:
         print("(Meta) Clicking Open Abstract / PDF")
         meta_click_at(arxiv_utils_button_pos, wait=False)
 
+    def send_arxiv_utils_shortcut():
+        print("(Meta) Sending Open Abstract / PDF shortcut")
+        ActionChains(driver)\
+            .key_down(Keys.ALT)\
+            .send_keys('a')\
+            .key_up(Keys.ALT)\
+            .perform()
+
+    def open_with_arxiv_utils():
+        expected_windows = len(driver.window_handles) + 1
+        attempts = [
+            (meta_click_arxiv_utils, 10),
+            (send_arxiv_utils_shortcut, 10),
+            (meta_click_arxiv_utils, 40),
+        ]
+        last_exception = None
+        for trigger, timeout in attempts:
+            trigger()
+            try:
+                WebDriverWait(driver, timeout).until(
+                    EC.number_of_windows_to_be(expected_windows)
+                )
+                return
+            except TimeoutException as e:
+                last_exception = e
+                print(
+                    "Open Abstract / PDF did not create a new window "
+                    f"within {timeout} seconds; "
+                    f"current windows: {len(driver.window_handles)}; "
+                    f"current URL: `{driver.current_url}`; "
+                    f"current title: `{driver.title}`."
+                )
+        raise last_exception
+
+    def load_page(url, max_attempts=3):
+        for attempt in range(1, max_attempts + 1):
+            try:
+                driver.get(url)
+                return
+            except (TimeoutException, WebDriverException) as e:
+                is_network_timeout = (
+                    isinstance(e, TimeoutException)
+                    or "about:neterror?e=netTimeout" in str(e)
+                )
+                if not is_network_timeout or attempt == max_attempts:
+                    raise
+                print(
+                    f"Page load attempt {attempt}/{max_attempts} timed out "
+                    f"for `{url}`. Retrying..."
+                )
+
+    def is_openreview_block_page():
+        current_url = driver.current_url
+        return (
+            current_url.startswith("https://openreview.net/unsupported-browser")
+            or current_url.startswith("https://openreview.net/challenge")
+        )
+
+    def skip_active_testcase(reason):
+        n_windows = len(windows_stack)
+        print(f"Testcase Skipped ({reason})")
+        driver.close()
+        windows_stack.pop()
+        assert len(windows_stack) == n_windows - 1
+        assert len(driver.window_handles) == len(windows_stack)
+        driver.switch_to.window(windows_stack[-1])
+
+    def switch_to_opened_window():
+        def switchable_untracked_window(_):
+            for window_handle in driver.window_handles:
+                if window_handle in windows_stack:
+                    continue
+                try:
+                    driver.switch_to.window(window_handle)
+                    # Force a command against the selected handle so Chrome has
+                    # finished attaching it before URL/title assertions poll it.
+                    driver.current_url
+                    return window_handle
+                except WebDriverException:
+                    continue
+            return False
+
+        window_handle = wait.until(switchable_untracked_window)
+        windows_stack.append(window_handle)
+        assert len(driver.window_handles) == len(windows_stack)
+
     meta_setup_arxiv_utils()
 
     global_exception = None
     try:
-        for testcase in testcases['navigation']:
+        for testcase in navigation_testcases:
             url, title, pdf_url, pdf_title, url2, title2, skip_selenium, description = \
                 itemgetter('url', 'title', 'pdf_url', 'pdf_title', 'url2', 'title2', 'skip_selenium', 'description')(
                 defaultdict(lambda: None, testcase))
@@ -231,11 +339,11 @@ for browser in ['chrome', 'firefox', 'edge']:
                 windows_stack.append(driver.current_window_handle)
                 assert len(windows_stack) == 2
                 assert len(driver.window_handles) == 2
-                try:
-                    driver.get(url)
-                except TimeoutException as e:
-                    print(f"Page load timeout, continuing...")
-                    raise e
+                load_page(url)
+                if is_openreview_block_page():
+                    skip_active_testcase("OpenReview blocked the Selenium browser")
+                    n_skipped += 1
+                    continue
                 if title:
                     print(f"Checking (abs) title...")
                     try:
@@ -245,18 +353,12 @@ for browser in ['chrome', 'firefox', 'edge']:
                         raise e
                     # Please note that the tests may be flaky due to slow arxiv API response.
                     assert driver.title == title
-                meta_click_arxiv_utils()
-                wait.until(EC.number_of_windows_to_be(3))
+                open_with_arxiv_utils()
                 print(f"Closing (abs) webpage...")
                 driver.close()
                 windows_stack.pop()
                 assert len(windows_stack) == 1
-                assert len(driver.window_handles) == 2
-                for window_handle in driver.window_handles:
-                    if window_handle not in windows_stack:
-                        driver.switch_to.window(window_handle)
-                        break
-                windows_stack.append(driver.current_window_handle)
+                switch_to_opened_window()
                 assert len(windows_stack) == 2
                 assert len(driver.window_handles) == 2
                 if pdf_url:
@@ -285,6 +387,10 @@ for browser in ['chrome', 'firefox', 'edge']:
                     try:
                         wait.until(EC.url_to_be(url2))
                     except TimeoutException as e:
+                        if is_openreview_block_page():
+                            skip_active_testcase("OpenReview blocked the Selenium browser")
+                            n_skipped += 1
+                            continue
                         print(f"URL mismatch: `{driver.current_url}`.")
                         raise e
                     assert driver.current_url == url2
@@ -294,11 +400,11 @@ for browser in ['chrome', 'firefox', 'edge']:
                 windows_stack.append(driver.current_window_handle)
                 assert len(windows_stack) == 2
                 assert len(driver.window_handles) == 2
-                try:
-                    driver.get(pdf_url)
-                except TimeoutException as e:
-                    print(f"Page load timeout, continuing...")
-                    raise e
+                load_page(pdf_url)
+                if is_openreview_block_page():
+                    skip_active_testcase("OpenReview blocked the Selenium browser")
+                    n_skipped += 1
+                    continue
 
             if pdf_url:
                 # Within arXiv domain
@@ -323,18 +429,12 @@ for browser in ['chrome', 'firefox', 'edge']:
                     assert driver.title == title2
 
             if pdf_url and pdf2abs:
-                meta_click_arxiv_utils()
-                wait.until(EC.number_of_windows_to_be(3))
+                open_with_arxiv_utils()
                 print(f"Closing (pdf) webpage...")
                 driver.close()
                 windows_stack.pop()
                 assert len(windows_stack) == 1
-                assert len(driver.window_handles) == 2
-                for window_handle in driver.window_handles:
-                    if window_handle not in windows_stack:
-                        driver.switch_to.window(window_handle)
-                        break
-                windows_stack.append(driver.current_window_handle)
+                switch_to_opened_window()
                 assert len(windows_stack) == 2
                 assert len(driver.window_handles) == 2
                 print(f"Checking (abs) url...")

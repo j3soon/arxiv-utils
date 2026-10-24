@@ -31,13 +31,28 @@ Please [open an issue](https://github.com/j3soon/arxiv-utils/issues) if you have
 
 ## Download Links
 
-Supports Chrome, Firefox, Edge, Firefox on Android. (Not tested on Android)
+Supports Chrome, Firefox, Edge, and Firefox for Android.
 
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/arxiv-utils/mnhdpeipjhhkmlhlcljdjpgmilbmehij)
 - [Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/)
 - [Edge Add-on](https://microsoftedge.microsoft.com/addons/detail/arxivutils/ngjpcfjabahdoadnajbhnikbemhmemdg)
 
 Alternatively, these 3 browsers can also load arxiv-utils directly from source. First, download the source code release from [Releases](https://github.com/j3soon/arxiv-utils/releases), and then load the extension as an unpacked extension following the [Development Section](#development).
+
+### Firefox for Android
+
+**Mozilla Add-ons (recommended):** Once an Android-compatible version is published and enabled on Mozilla Add-ons, install Firefox for Android, visit the [arxiv-utils add-on page](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/), tap `Add to Firefox`, and accept the requested permissions. See [Mozilla's installation guide](https://support.mozilla.org/en-US/kb/find-and-install-add-ons-firefox-android).
+
+> This should be available in the next release (v1.8.8+).
+
+**Manual installation:**
+
+1. Download a signed `.xpi` from Mozilla Add-ons or another trusted source.
+2. In Firefox, open `Settings` > `About Firefox` and tap the Firefox logo five times quickly.
+3. Return to `Settings` > `Install Extension from File`.
+4. Select the downloaded `.xpi` and tap `Add` to approve installation.
+
+The hidden developer menu is only needed for installation. It does not need to stay enabled. Firefox still checks compatibility, and installation does not guarantee that every feature works on Android. Renaming an unsigned ZIP file to `.xpi` will not make it installable. See [Mozilla's manual installation guide](https://extensionworkshop.com/documentation/publish/install-self-distributed/) and [signing requirements](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/).
 
 ## Screenshots
 
@@ -73,7 +88,7 @@ For ArXiv PDF / abstract tabs:
 - Renames the title to paper's title automatically in the background. (Originally is meaningless paper id, or start with paper id)
 - Add an action button (or `Alt+A`) to open its corresponding abstract / PDF page. (Originally is hard to get back to abstract page from PDF page)
 - Add a direct download link on abstract page, click it to download the PDF with the title as filename. (Originally is paper id as filename)
-- Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/).
+- Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/) and [Hugging Face Papers](https://huggingface.co/papers).
 - Better title even for bookmarks and the [OneTab](https://www.one-tab.com/) plugin!
 - Firefox has [strict restrictions on PDF.js](https://bugzilla.mozilla.org/show_bug.cgi?id=1454760). So it doesn't work well with OneTab, the PDF renaming is achieved by intercepting requests and show the PDF in a container. The bookmark works well though.
 - Works well with native tab search (credits: [@The Rooler](https://addons.mozilla.org/en-US/firefox/addon/arxiv-utils/reviews/1674567/))
@@ -100,6 +115,17 @@ For ArXiv PDF / abstract tabs:
   - `${updatedDay}` is replaced with the updated day of the current paper version (e.g., "25").
   - `${version}` is replaced with the version of the current paper.
   - `${paperid}` is replaced with the arXiv paper id.
+- `filename replacement rules`:
+  - Default: `[]` (no custom rules). Built-in safety cleanup replaces `/` and `:` with `,`, replaces `\ ? * | " < >` with `_`, and removes newlines.
+  - The option accepts a JSON array of `{ "from": "...", "to": "..." }` string replacement rules.
+  - Example: use `[ { "from": ":", "to": "_" } ]` to replace colons with underscores.
+  - Rules match the original filename once; replacement text is not matched by later rules. The first listed rule wins when patterns overlap.
+  - Built-in filename safety rules are always applied after custom rules. The resulting filename is truncated to 255 UTF-8 bytes.
+  - An existing `.pdf` extension is preserved when applying replacement rules.
+- `Ask where to save each PDF`:
+  - Default: `false`
+  - Set to `true` to show the browser's save dialog when using the direct download link.
+  - Unavailable on Firefox for Android. On Firefox for Android 156, Direct Download opens a PDF preview; tap the viewer's Download button to save the file.
 - `Open in new tab`:
   - Default: `true`
   - Set to `false` to open in existing tab when clicking the action button.
@@ -171,6 +197,7 @@ The automated tests currently include the following:
 
 - **Default tests**: Test the default title name of arXiv abstract/PDF pages.
 - **Navigation tests**: Test the arxiv-utils button can switch between arXiv abstract/PDF pages, and the title is modified.
+- **Playwright tests**: Test titles, injected links, downloads, options, narrow layouts, and basic navigation behavior in Chromium.
 
 The testcases along with their description is stored in [tests/testcases/testcases.yaml](tests/testcases/testcases.yaml).
 
@@ -183,6 +210,8 @@ Other functions should still be tested manually:
 - **Download tests**: Test the downloaded file name.
   - Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab.
   - Change filename format options, reload page, and download to verify the filename is changed.
+  - Change filename replacement rules, reload page, and download to verify the replaced characters are changed.
+  - Enable `Ask where to save each PDF`, reload page, and download to verify the browser shows a save dialog.
   - Reset filename format option to default, reload page, and download to verify the filename format is default.
   - Test papers with long title.
   - Test papers with special characters in title.
@@ -195,7 +224,8 @@ Other functions should still be tested manually:
 - Disable and re-enabling the extension should not cause any errors.
 - Installing or re-enabling the extension should immediately update the title of existing tabs.
 - The help menu item in the context menu should link to this GitHub page.
-- ar5iv tabs should have renamed title, and support navigation.
+- ar5iv tabs should have renamed titles and support navigation.
+- Hugging Face Papers tabs should support navigation to the corresponding arXiv abstract.
 
 ### Run Unit Tests Locally
 
@@ -220,6 +250,17 @@ cd tests/unit-test
 docker compose down
 ```
 
+### Run Playwright Tests Locally
+
+```sh
+cd tests/playwright
+npm ci
+npx playwright install --with-deps chromium
+npm test
+```
+
+Playwright uses fixed arXiv fixtures with layout and button CSS copied from arXiv and runs the Chrome extension in Chromium. The Firefox content and background scripts also run with mocked browser APIs, including PDF downloads when the native downloads API is unavailable or rejects the request. These checks do not replace testing on Firefox for Android. Selenium covers browser navigation.
+
 ### Run End-to-End Tests Locally
 
 Launch the docker containers:
@@ -236,7 +277,16 @@ docker exec -t end-to-end-test-selenium-tests-1 \
     python "/app/tests/end-to-end-test/test_navigation.py"
 ```
 
-When adding new test cases, it is often convenient to comment out existing test cases in [tests/testcases/testcases.yaml](tests/testcases/testcases.yaml); When testing specific browsers, you can modify the `for browser in [...]` part in [tests/test_navigation.py](tests/test_navigation.py) to only run tests for the desired browser.
+By default, the Selenium navigation test runs only cases marked with `selenium_focus: True` in [tests/testcases/testcases.yaml](tests/testcases/testcases.yaml). Mark the newly added or currently relevant cases instead of commenting out existing cases. If no focused cases exist, the command exits successfully with a warning that no tests were run. The Jest navigation test always runs every case, regardless of this marker.
+
+Run the complete Selenium navigation suite with:
+
+```sh
+docker exec -t -e E2E_FULL=1 end-to-end-test-selenium-tests-1 \
+    python "/app/tests/end-to-end-test/test_navigation.py"
+```
+
+CI always sets `E2E_FULL=1`. When testing specific browsers locally, you can temporarily modify the `for browser in [...]` list in [test_navigation.py](tests/end-to-end-test/test_navigation.py).
 
 > If the test logs stuck at launching the webdriver, you may need to restart the containers.
 

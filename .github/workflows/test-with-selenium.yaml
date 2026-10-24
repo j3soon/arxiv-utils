@@ -25,6 +25,8 @@ jobs:
     - name: Test default
       run: tests/scripts/docker-utils/exec-selenium.sh test_default.py
     - name: Test navigation
+      env:
+        E2E_FULL: "1"
       run: tests/scripts/docker-utils/exec-selenium.sh test_navigation.py
     # Clean up
     - name: Stop test containers

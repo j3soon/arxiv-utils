@@ -19,7 +19,10 @@ var LOG_PREFIX = "[arXiv-utils]";
 // Element IDs for injected links
 var DIRECT_DOWNLOAD_LI_ID = "arxiv-utils-direct-download-li";
 var DIRECT_DOWNLOAD_A_ID = "arxiv-utils-direct-download-a";
+var MOBILE_DIRECT_DOWNLOAD_A_ID = "arxiv-utils-mobile-direct-download-a";
 var EXTRA_SERVICES_DIV_ID = "arxiv-utils-extra-services-div";
+var DEFAULT_FILENAME_FORMAT = '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf';
+var DEFAULT_FILENAME_REPLACEMENT_RULES = '[]';
 
 // Return the id parsed from the url.
 function getId(url) {
@@ -102,47 +105,23 @@ async function getArticleInfoAsync(id, pageType) {
   };
 }
 
-// Add custom links in abstract page.
-function addCustomLinksAsync(id) {
-  document.getElementById(DIRECT_DOWNLOAD_LI_ID)?.remove();
-  const directDownloadHTML = ` \
-    <li id="${DIRECT_DOWNLOAD_LI_ID}"> \
-      <a id="${DIRECT_DOWNLOAD_A_ID}">Direct Download</a> \
-    </li>`;
-  const downloadUL = document.querySelector(".full-text > ul");
-  if (!downloadUL) {
-    console.error(LOG_PREFIX, "Error: Cannot find the unordered list inside the Download section at the right side of the abstract page.");
-    return;
+function getFilenameReplacementRules(rulesText) {
+  const rules = JSON.parse(rulesText);
+  if (!Array.isArray(rules))
+    throw new Error("Filename replacement rules must be an array.");
+  for (const [index, rule] of rules.entries()) {
+    if (rule === null || typeof rule !== 'object' || Array.isArray(rule))
+      throw new Error(`Filename replacement rule ${index + 1} must be an object.`);
+    if (typeof rule.from !== 'string' || typeof rule.to !== 'string')
+      throw new Error(`Filename replacement rule ${index + 1} must have string \`from\` and \`to\` fields.`);
+    if (rule.from === '')
+      throw new Error(`Filename replacement rule ${index + 1} \`from\` cannot be empty.`);
   }
-  downloadUL.innerHTML += directDownloadHTML;
-  console.log(LOG_PREFIX, "Added direct download link.")
-  // Add extra services links.
-  const elExtraRefCite = document.querySelector(".extra-ref-cite");
-  if (!elExtraRefCite) {
-    console.error(LOG_PREFIX, "Error: Cannot find the References & Citations section at the right side of the abstract page.");
-    return;
-  }
-  document.getElementById(EXTRA_SERVICES_DIV_ID)?.remove();
-  const extraServicesDiv = document.createElement("div");
-  extraServicesDiv.classList.add('extra-ref-cite');
-  extraServicesDiv.id = EXTRA_SERVICES_DIV_ID;
-  extraServicesDiv.innerHTML = ` \
-    <h3>Extra Services</h3> \
-    <ul> \
-      <li><a href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
-      <li><a href="https://alphaxiv.org/abs/${id}">alphaXiv</a></li> \
-      <li><a href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
-    </ul>`;
-  elExtraRefCite.after(extraServicesDiv);
-  console.log(LOG_PREFIX, "Added extra services links.")
+  return rules;
 }
 
-async function enableDirectDownload(id, articleInfo) {
-  // Add direct download link.
-  const result = await chrome.storage.sync.get({
-    'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf'
-  });
-  const fileName = result.filename_format
+function formatFileName(filenameFormat, id, articleInfo) {
+  return filenameFormat
     .replace('${title}', articleInfo.escapedTitle)
     .replace('${firstAuthor}', articleInfo.firstAuthor)
     .replace('${firstAuthorFamilyName}', articleInfo.firstAuthorFamilyName)
@@ -158,25 +137,123 @@ async function enableDirectDownload(id, articleInfo) {
     .replace('${updatedDay}', articleInfo.updatedDay)
     .replace('${version}', articleInfo.version)
     .replace('${paperid}', id)
-    // Replace invalid characters.
-    // Ref: https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
-    // Ref: https://stackoverflow.com/a/42210346
-    .replace(/[/:]/g, ',')
-    .replace(/[/\\?*|"<>]/g, '_')
-    .replace(/\n/g, '') // Replace newline, which exists in some titles that are too long.
   ;
-  const directURL = `https://arxiv.org/pdf/${id}.pdf`;
-  const downloadA = document.getElementById(DIRECT_DOWNLOAD_A_ID)
-  downloadA.addEventListener('click', function (e) {
-    chrome.runtime.sendMessage({
-      type: 'downloadFile',
-      url: directURL,
-      filename: fileName,
-    });
-    e.preventDefault();
-    console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`)
+}
+
+function applyFilenameReplacementRules(fileName, rules) {
+  const MAX_FILENAME_BYTES = 255;
+  // Keep the PDF extension even when the format has trailing whitespace.
+  const pdfSuffix = fileName.match(/(\.pdf)\s*$/i);
+  if (pdfSuffix)
+    fileName = fileName.slice(0, -pdfSuffix[0].length);
+  const suffix = pdfSuffix?.[1] || '';
+  // Match the original text once, so one rule's output cannot trigger another rule.
+  if (rules.length) {
+    const replacements = new Map();
+    for (const rule of rules)
+      if (!replacements.has(rule.from)) replacements.set(rule.from, rule.to);
+    const pattern = new RegExp(rules.map(rule => rule.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'gu');
+    fileName = fileName.replace(pattern, match => replacements.get(match));
+  }
+  fileName = fileName
+    .replace(/[/:]/g, ',')
+    .replace(/[\\?*|"<>]/g, '_')
+    .replace(/\n/g, '');
+  const encoder = new TextEncoder();
+  const maxBaseBytes = MAX_FILENAME_BYTES - encoder.encode(suffix).length;
+  let base = '';
+  let bytes = 0;
+  for (const char of fileName) {
+    const charBytes = encoder.encode(char).length;
+    if (bytes + charBytes > maxBaseBytes) break;
+    base += char;
+    bytes += charBytes;
+  }
+  // Firefox rejects filename components beginning or ending with a dot.
+  base = base.replace(/^\.+|\.+$/g, '_');
+  return (base || 'download') + suffix;
+}
+
+function parseFilenameReplacementRules(rulesText) {
+  try {
+    return getFilenameReplacementRules(rulesText);
+  } catch (error) {
+    console.error(LOG_PREFIX, "Error: Invalid filename replacement rules. Falling back to default rules.", error);
+    return getFilenameReplacementRules(DEFAULT_FILENAME_REPLACEMENT_RULES);
+  }
+}
+
+// Add custom links in abstract page.
+function addCustomLinksAsync(id) {
+  document.getElementById(DIRECT_DOWNLOAD_LI_ID)?.remove();
+  const directDownloadHTML = ` \
+    <li id="${DIRECT_DOWNLOAD_LI_ID}"> \
+      <a id="${DIRECT_DOWNLOAD_A_ID}" class="abs-button">Direct Download</a> \
+    </li>`;
+  const downloadUL = document.querySelector(".full-text > ul");
+  if (!downloadUL) {
+    console.error(LOG_PREFIX, "Error: Cannot find the unordered list inside the Download section at the right side of the abstract page.");
+    return;
+  }
+  downloadUL.innerHTML += directDownloadHTML;
+  console.log(LOG_PREFIX, "Added direct download link.")
+  document.getElementById(MOBILE_DIRECT_DOWNLOAD_A_ID)?.remove();
+  const mobileDownloadLinks = document.querySelectorAll("#abs > a.mobile-submission-download");
+  if (mobileDownloadLinks.length) {
+    const mobileDownloadA = document.createElement("a");
+    mobileDownloadA.id = MOBILE_DIRECT_DOWNLOAD_A_ID;
+    mobileDownloadA.className = "mobile-submission-download";
+    mobileDownloadA.textContent = "Direct Download";
+    mobileDownloadLinks[mobileDownloadLinks.length - 1].after(mobileDownloadA);
+  }
+  // Add extra services links.
+  const elExtraRefCite = document.querySelector(".extra-ref-cite");
+  if (!elExtraRefCite) {
+    console.error(LOG_PREFIX, "Error: Cannot find the References & Citations section at the right side of the abstract page.");
+    return;
+  }
+  document.getElementById(EXTRA_SERVICES_DIV_ID)?.remove();
+  const extraServicesDiv = document.createElement("div");
+  extraServicesDiv.classList.add('extra-ref-cite');
+  extraServicesDiv.id = EXTRA_SERVICES_DIV_ID;
+  extraServicesDiv.innerHTML = ` \
+    <h3>Extra Services</h3> \
+    <ul> \
+      <li><a class="abs-button abs-button-small" href="https://ar5iv.labs.arxiv.org/html/${id}">ar5iv (HTML 5)</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://alphaxiv.org/abs/${id}">alphaXiv</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://huggingface.co/papers/${id.replace(/v\d+$/, '')}">Hugging Face Papers</a></li> \
+      <li><a class="abs-button abs-button-small" href="https://export.arxiv.org/api/query/id_list/${id}">RSS feed</a></li> \
+    </ul>`;
+  elExtraRefCite.after(extraServicesDiv);
+  console.log(LOG_PREFIX, "Added extra services links.")
+}
+
+async function enableDirectDownload(id, articleInfo) {
+  // Add direct download link.
+  const result = await chrome.storage.sync.get({
+    'filename_format': DEFAULT_FILENAME_FORMAT,
+    'filename_replacement_rules': DEFAULT_FILENAME_REPLACEMENT_RULES,
+    'download_save_as': false,
   });
-  downloadA.href = "#";
+  const filenameReplacementRules = parseFilenameReplacementRules(result.filename_replacement_rules);
+  const fileName = applyFilenameReplacementRules(
+    formatFileName(result.filename_format, id, articleInfo),
+    filenameReplacementRules
+  );
+  const directURL = `https://arxiv.org/pdf/${id}.pdf`;
+  for (const downloadA of [DIRECT_DOWNLOAD_A_ID, MOBILE_DIRECT_DOWNLOAD_A_ID].map(id => document.getElementById(id)).filter(Boolean)) {
+    downloadA.addEventListener('click', function (e) {
+      chrome.runtime.sendMessage({
+        type: 'downloadFile',
+        url: directURL,
+        filename: fileName,
+        saveAs: result.download_save_as,
+      });
+      e.preventDefault();
+      console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`)
+    });
+    downloadA.href = "#";
+  }
   console.log(LOG_PREFIX, "Enabled direct download.")
 }
 

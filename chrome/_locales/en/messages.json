@@ -1,0 +1,74 @@
+{
+  "extensionName": {
+    "message": "arxiv-utils",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Easy access on ArXiv! Auto-rename tabs to paper title, Quick navigation via button/hotkey, Save PDFs by paper title, and more.",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "Open Abstract / PDF",
+    "description": "Tooltip for the extension action."
+  },
+  "optionsTitle": {
+    "message": "Options for arxiv-utils",
+    "description": "Title of the options page."
+  },
+  "currentFilenameFormat": {
+    "message": "Current filename format",
+    "description": "Label for the currently configured filename format."
+  },
+  "loading": {
+    "message": "(To be loaded)",
+    "description": "Placeholder shown before an option value is loaded."
+  },
+  "newFilenameFormat": {
+    "message": "New filename format",
+    "description": "Label for the filename format input."
+  },
+  "willOpenInNewTab": {
+    "message": "Will open in new tab",
+    "description": "Label for the current open-in-new-tab value."
+  },
+  "openInNewTab": {
+    "message": "Open in new tab",
+    "description": "Label for the open-in-new-tab checkbox."
+  },
+  "update": {
+    "message": "Update",
+    "description": "Button label for saving an option."
+  },
+  "revertToDefault": {
+    "message": "Revert to Default",
+    "description": "Button label for restoring default options."
+  },
+  "filenameFormatNote": {
+    "message": "Note: Re-open arXiv tabs for new filename and download settings to take effect.",
+    "description": "Explains when changed filename and download settings take effect."
+  },
+  "help": {
+    "message": "Help",
+    "description": "Label for links and menu items that open the project help page."
+  },
+  "currentFilenameReplacementRules": {
+    "message": "Current filename replacement rules",
+    "description": "Label for the current filename replacement rules."
+  },
+  "newFilenameReplacementRules": {
+    "message": "New filename replacement rules",
+    "description": "Label for the filename replacement rules input."
+  },
+  "willAskWhereToSavePdf": {
+    "message": "Will ask where to save each PDF",
+    "description": "Label for the current save dialog setting."
+  },
+  "askWhereToSavePdf": {
+    "message": "Ask where to save each PDF",
+    "description": "Label for the save dialog checkbox."
+  },
+  "filenameSafetyNote": {
+    "message": "Note: Built-in filename safety rules are always applied after custom rules.",
+    "description": "Explains that built-in filename safety rules apply after custom rules."
+  }
+}

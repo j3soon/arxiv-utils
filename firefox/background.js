@@ -107,10 +107,14 @@ async function onButtonClickedAsync(tab) {
   console.log(LOG_PREFIX, "Opened abstract / PDF page in existing / new tab.");
 }
 async function onMessage(message) {
+  if (typeof browser.downloads?.download !== 'function') {
+    return { downloadSupported: false };
+  }
+  const saveAs = !!message.saveAs && (await browser.runtime.getPlatformInfo()).os !== 'android';
   await browser.downloads.download({
     url: message.url,
     filename: message.filename,
-    saveAs: false,
+    saveAs,
   });
   console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
 }
@@ -167,7 +171,7 @@ browser.tabs.onUpdated.addListener(onTabUpdated);
 browser.browserAction.onClicked.addListener(onButtonClickedAsync);
 // Add Help menu item to extension button context menu. (Manifest v2)
 browser.contextMenus.create({
-  title: "Help",
+  title: browser.i18n.getMessage("help"),
   contexts: ["browser_action"],
   onclick: () => {
     browser.tabs.create({

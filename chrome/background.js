@@ -89,7 +89,7 @@ function onMessage(message, sender, sendResponse) {
     chrome.downloads.download({
       url: message.url,
       filename: message.filename,
-      saveAs: false,
+      saveAs: !!message.saveAs,
     }).then(() => {
       console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
     });
@@ -105,7 +105,7 @@ function onInstalled() {
   // Add Help menu item to extension button context menu. (Manifest v3)
   chrome.contextMenus.create({
     id: "help",
-    title: "Help",
+    title: chrome.i18n.getMessage("help"),
     contexts: ["action"],
   });
 }
