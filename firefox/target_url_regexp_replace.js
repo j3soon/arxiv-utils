@@ -46,6 +46,10 @@ export default [
   // paper-/papers- infix.
   [/^.*:\/\/(?:www\.)?usenix\.org\/system\/files\/conference\/([^\/]+)\/[^\/]+?-(?:papers?-)?([^\/]+?)\.pdf(?:\?.*?)?(?:\#.*?)?$/,
     "https://www.usenix.org/conference/$1/technical-sessions/presentation/$2"],
+  // Security '18 presentation pages use the flat presentation path, but their PDFs
+  // still live in the conference subdirectory.
+  [/^.*:\/\/(?:www\.)?usenix\.org\/conference\/usenixsecurity18\/presentation\/([^\/?#]+)\/*(?:\?.*?)?(?:\#.*?)?$/,
+    "https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-$1.pdf"],
   // USENIX Security flat PDFs use a `sec<NN>` prefix (~2019-2022) while the conference path
   // code is `usenixsecurity<NN>`. Map it explicitly; must precede the generic flat rule.
   [/^.*:\/\/(?:www\.)?usenix\.org\/system\/files\/sec(\d+)-([^\/]+?)\.pdf(?:\?.*?)?(?:\#.*?)?$/,

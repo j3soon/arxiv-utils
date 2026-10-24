@@ -320,7 +320,6 @@ navigation:
 - url: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/papers/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.pdf
   url2: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/html/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.html
   title2: "CVPR 2022 Open Access Repository"
-  selenium_focus: True
   description: CVF pdf -> abs (Workshop with slash)
 - url: https://openaccess.thecvf.com/content/CVPR2022W/VOCVALC/html/Fu_Coupling_Vision_and_Proprioception_for_Navigation_of_Legged_Robots_CVPRW_2022_paper.html
   title: "CVPR 2022 Open Access Repository"
@@ -373,10 +372,12 @@ navigation:
 - url: https://www.usenix.org/conference/nsdi26/presentation/chen-jiayi
   title: "UNUM: A New Framework for Network Control | USENIX"
   url2: https://www.usenix.org/system/files/nsdi26-chen-jiayi.pdf
+  selenium_focus: True
   description: USENIX modern presentation -> pdf
 - url: https://www.usenix.org/system/files/nsdi26-chen-jiayi.pdf
   url2: https://www.usenix.org/conference/nsdi26/presentation/chen-jiayi
   title2: "UNUM: A New Framework for Network Control | USENIX"
+  selenium_focus: True
   description: USENIX modern pdf -> presentation
 - url: https://www.usenix.org/conference/fast26/presentation/wang
   title: "Cost-efficient Archive Cloud Storage with Tape: Design and Deployment | USENIX"
@@ -432,6 +433,7 @@ navigation:
 # Legacy technical-sessions format with the NSDI-style `-paper-` infix (both directions):
 - url: https://www.usenix.org/conference/osdi14/technical-sessions/presentation/angel
   url2: https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-angel.pdf
+  selenium_focus: True
   description: USENIX OSDI'14 legacy presentation -> pdf
 - url: https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-angel.pdf
   url2: https://www.usenix.org/conference/osdi14/technical-sessions/presentation/angel
@@ -466,8 +468,13 @@ navigation:
   description: USENIX FAST'16 legacy pdf (papers- infix) -> presentation
 # USENIX Security flat files use a `sec<NN>` prefix (2019-2022) mapped to/from the
 # `usenixsecurity<NN>` path code (both directions):
+- url: https://www.usenix.org/conference/usenixsecurity18/presentation/lipp
+  url2: https://www.usenix.org/system/files/conference/usenixsecurity18/sec18-lipp.pdf
+  selenium_focus: True
+  description: USENIX Security'18 presentation -> subdir pdf (sec prefix)
 - url: https://www.usenix.org/conference/usenixsecurity20/presentation/afek
   url2: https://www.usenix.org/system/files/sec20-afek.pdf
+  selenium_focus: True
   description: USENIX Security'20 presentation -> flat pdf (sec prefix)
 - url: https://www.usenix.org/system/files/sec20-afek.pdf
   url2: https://www.usenix.org/conference/usenixsecurity20/presentation/afek
@@ -478,6 +485,7 @@ navigation:
   description: USENIX Security'17 legacy presentation -> pdf (sec prefix in subdir)
 - url: https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-alexopoulos.pdf
   url2: https://www.usenix.org/conference/usenixsecurity17/technical-sessions/presentation/alexopoulos
+  selenium_focus: True
   description: USENIX Security'17 legacy pdf (sec prefix in subdir) -> presentation
 
 # TODO: Test download filenames:
