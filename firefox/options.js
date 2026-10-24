@@ -30,7 +30,8 @@ async function saveOptionsAsync(e) {
     await browser.storage.sync.remove('filename_format');
     await browser.storage.sync.remove('filename_replacement_rules');
     await browser.storage.sync.remove('open_in_new_tab');
-    await browser.storage.sync.remove('download_save_as');
+    if ((await browser.runtime.getPlatformInfo()).os !== 'android')
+      await browser.storage.sync.remove('download_save_as');
     await browser.storage.sync.remove('redirect_pdf');
   } else if (e.submitter.id === "update") {
     var filenameReplacementRules;

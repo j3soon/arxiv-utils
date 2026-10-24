@@ -46,6 +46,7 @@ test.each([
   };
   let storedOptions = { download_save_as: true };
   let savedOptions;
+  const removedKeys = [];
   const browser = {
     i18n: { getMessage: (key) => key === 'unavailableOnAndroid' ? 'unavailable on Android' : '' },
     runtime: { getPlatformInfo: async () => ({ os }) },
@@ -55,6 +56,10 @@ test.each([
         set: async (options) => {
           savedOptions = options;
           storedOptions = { ...storedOptions, ...options };
+        },
+        remove: async (key) => {
+          removedKeys.push(key);
+          delete storedOptions[key];
         },
       },
     },
@@ -73,4 +78,9 @@ test.each([
     expect(savedOptions).not.toHaveProperty('download_save_as');
   else
     expect(savedOptions.download_save_as).toBe(true);
+
+  await context.saveOptionsAsync({ preventDefault: () => {}, submitter: { id: 'revert' } });
+  expect(removedKeys).toContain('filename_replacement_rules');
+  expect(removedKeys.includes('download_save_as')).toBe(os !== 'android');
+  expect(storedOptions.download_save_as).toBe(os === 'android' ? true : undefined);
 });
