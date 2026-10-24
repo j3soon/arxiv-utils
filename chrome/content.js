@@ -152,19 +152,30 @@ function formatFileName(filenameFormat, id, articleInfo) {
 }
 
 function applyFilenameReplacementRules(fileName, rules) {
+  const MAX_FILENAME_LENGTH = 255;
   // Keep the PDF extension even when the format has trailing whitespace.
   const pdfSuffix = fileName.match(/(\.pdf)\s*$/i);
   if (pdfSuffix)
     fileName = fileName.slice(0, -pdfSuffix[0].length);
+  const suffix = pdfSuffix?.[1] || '';
+  const maxBaseLength = MAX_FILENAME_LENGTH - suffix.length;
+  fileName = fileName.slice(0, maxBaseLength);
   // Apply custom rules first, then keep the original rules as a safety net.
   const allRules = rules.concat(getFilenameReplacementRules(DEFAULT_FILENAME_REPLACEMENT_RULES));
-  for (const rule of allRules)
-    fileName = fileName.split(rule.from).join(rule.to);
+  for (const rule of allRules) {
+    const parts = fileName.split(rule.from);
+    const resultLength = fileName.length + (parts.length - 1) * (rule.to.length - rule.from.length);
+    if (resultLength > maxBaseLength)
+      throw new Error(`Filename replacement rule exceeds the ${MAX_FILENAME_LENGTH}-character limit.`);
+    fileName = parts.join(rule.to);
+  }
   fileName = fileName
     // Keep the browser downloads API from treating the filename as a relative path.
     .replace(/[/\\]/g, '_')
-    .replace(/\n/g, '');
-  return fileName + (pdfSuffix?.[1] || '');
+    .replace(/\n/g, '')
+    // Firefox rejects filename components beginning or ending with a dot.
+    .replace(/^\.+|\.+$/g, '_');
+  return (fileName || 'download') + suffix;
 }
 
 function parseFilenameReplacementRules(rulesText) {
