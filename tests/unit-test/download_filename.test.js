@@ -49,3 +49,22 @@ test.each(['chrome', 'firefox'])(
     expect(downloadMessage.filename).toBe('A_B, Smith et al_, 2026, v1.pdf');
   }
 );
+
+test.each(['chrome', 'firefox'])(
+  '%s direct download keeps a PDF extension followed by whitespace',
+  async (browserName) => {
+    const source = fs.readFileSync(
+      path.join(__dirname, '..', '..', browserName, 'content.js'),
+      'utf8'
+    );
+    const context = vm.createContext({
+      console: { log: () => {}, error: () => {} },
+      location: { href: 'https://example.org/' },
+      [browserName]: { runtime: { onMessage: { addListener: () => {} } } },
+    });
+    vm.runInContext(source, context);
+
+    expect(context.applyFilenameReplacementRules('A.B.pdf ', [{ from: '.', to: '_' }]))
+      .toBe('A_B.pdf');
+  }
+);

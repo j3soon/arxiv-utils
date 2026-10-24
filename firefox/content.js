@@ -142,10 +142,10 @@ function formatFileName(filenameFormat, id, articleInfo) {
 }
 
 function applyFilenameReplacementRules(fileName, rules) {
-  // Keep the PDF extension when a rule replaces periods in the filename.
-  const pdfExtension = fileName.match(/\.pdf$/i)?.[0] || '';
-  if (pdfExtension)
-    fileName = fileName.slice(0, -pdfExtension.length);
+  // Keep the PDF extension even when the format has trailing whitespace.
+  const pdfSuffix = fileName.match(/(\.pdf)\s*$/i);
+  if (pdfSuffix)
+    fileName = fileName.slice(0, -pdfSuffix[0].length);
   // Apply custom rules first, then keep the original rules as a safety net.
   const allRules = rules.concat(getFilenameReplacementRules(DEFAULT_FILENAME_REPLACEMENT_RULES));
   for (const rule of allRules)
@@ -154,7 +154,7 @@ function applyFilenameReplacementRules(fileName, rules) {
     // Keep the browser downloads API from treating the filename as a relative path.
     .replace(/[/\\]/g, '_')
     .replace(/\n/g, '');
-  return fileName + pdfExtension;
+  return fileName + (pdfSuffix?.[1] || '');
 }
 
 function parseFilenameReplacementRules(rulesText) {
