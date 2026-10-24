@@ -46,6 +46,7 @@ test.each([
   };
   let storedOptions = { download_save_as: true };
   const browser = {
+    i18n: { getMessage: (key) => key === 'unavailableOnAndroid' ? 'unavailable on Android' : '' },
     runtime: { getPlatformInfo: async () => ({ os }) },
     storage: {
       sync: {

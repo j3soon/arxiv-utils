@@ -27,6 +27,14 @@ function getFilenameReplacementRules(rulesText) {
   return rules;
 }
 
+function localizePage() {
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const message = chrome.i18n.getMessage(element.dataset.i18n);
+    if (message)
+      element.textContent = message;
+  });
+}
+
 async function saveOptionsAsync(e) {
   e.preventDefault();
   if (e.submitter.id === "revert") {
@@ -83,7 +91,10 @@ async function restoreOptionsAsync() {
   document.querySelector("#download-save-as").innerText = download_save_as;
 }
 
-document.addEventListener('DOMContentLoaded', restoreOptionsAsync);
+document.addEventListener('DOMContentLoaded', async () => {
+  localizePage();
+  await restoreOptionsAsync();
+});
 const forms = [...document.getElementsByTagName("form")]
 forms.forEach(element => {
   element.addEventListener("submit", saveOptionsAsync);

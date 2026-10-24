@@ -27,6 +27,14 @@ function getFilenameReplacementRules(rulesText) {
   return rules;
 }
 
+function localizePage() {
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const message = browser.i18n.getMessage(element.dataset.i18n);
+    if (message)
+      element.textContent = message;
+  });
+}
+
 async function saveOptionsAsync(e) {
   e.preventDefault();
   if (e.submitter.id === "revert") {
@@ -115,7 +123,7 @@ async function restoreOptionsAsync() {
   const downloadSaveAsCheckbox = document.querySelector("#new-download-save-as");
   downloadSaveAsCheckbox.disabled = isAndroid;
   downloadSaveAsCheckbox.checked = !isAndroid && download_save_as;
-  document.querySelector("#download-save-as").innerText = isAndroid ? 'unavailable on Android' : download_save_as;
+  document.querySelector("#download-save-as").innerText = isAndroid ? browser.i18n.getMessage('unavailableOnAndroid') : download_save_as;
   const redirect_pdf = result.redirect_pdf;
   document.querySelector("#new-redirect-pdf").checked = redirect_pdf;
   document.querySelector("#redirect-pdf").innerText = redirect_pdf;
@@ -160,6 +168,7 @@ function handleZoomSelectChange() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  localizePage();
   await restoreOptionsAsync();
   
   // Add event listener for zoom dropdown change
