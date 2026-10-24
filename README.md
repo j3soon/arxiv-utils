@@ -115,6 +115,17 @@ For ArXiv PDF / abstract tabs:
   - `${updatedDay}` is replaced with the updated day of the current paper version (e.g., "25").
   - `${version}` is replaced with the version of the current paper.
   - `${paperid}` is replaced with the arXiv paper id.
+- `filename replacement rules`:
+  - Default: `[]` (no custom rules). Built-in safety cleanup replaces `/` and `:` with `,`, replaces `\ ? * | " < >` with `_`, and removes newlines.
+  - The option accepts a JSON array of `{ "from": "...", "to": "..." }` string replacement rules.
+  - Example: use `[ { "from": ":", "to": "_" } ]` to replace colons with underscores.
+  - Rules match the original filename once; replacement text is not matched by later rules. The first listed rule wins when patterns overlap.
+  - Built-in filename safety rules are always applied after custom rules. The resulting filename is truncated to 255 UTF-8 bytes.
+  - An existing `.pdf` extension is preserved when applying replacement rules.
+- `Ask where to save each PDF`:
+  - Default: `false`
+  - Set to `true` to show the browser's save dialog when using the direct download link.
+  - Unavailable on Firefox for Android. On Firefox for Android 156, Direct Download opens a PDF preview; tap the viewer's Download button to save the file.
 - `Open in new tab`:
   - Default: `true`
   - Set to `false` to open in existing tab when clicking the action button.
@@ -199,6 +210,8 @@ Other functions should still be tested manually:
 - **Download tests**: Test the downloaded file name.
   - Test PDF download (`Download PDF (arxiv-utils)`) in abstract. In firefox, only mouse left-click works, middle-click open up the original PDF page in a new tab.
   - Change filename format options, reload page, and download to verify the filename is changed.
+  - Change filename replacement rules, reload page, and download to verify the replaced characters are changed.
+  - Enable `Ask where to save each PDF`, reload page, and download to verify the browser shows a save dialog.
   - Reset filename format option to default, reload page, and download to verify the filename format is default.
   - Test papers with long title.
   - Test papers with special characters in title.

@@ -13,6 +13,7 @@ async function openFirefoxAbstract(page, html = abstractHtml) {
       i18n: { getMessage: key => key },
       runtime: {
         getURL: resource => `https://extension.test/${resource}`,
+        getPlatformInfo: async () => ({ os: 'linux' }),
         sendMessage: async message => {
           window.testDownloads.push(message);
           return window.downloadMessage(message);
@@ -58,8 +59,8 @@ test('Firefox content script adds working mobile and lower download links', asyn
   await mobileLink.click();
   await page.locator('#arxiv-utils-direct-download-a').click();
   expect(await page.evaluate(() => window.testDownloads)).toEqual([
-    { url: `${pdfUrl}.pdf`, filename: 'Sample Paper, A Test, Jane Doe et al., 2025, v2.pdf' },
-    { url: `${pdfUrl}.pdf`, filename: 'Sample Paper, A Test, Jane Doe et al., 2025, v2.pdf' },
+    { url: `${pdfUrl}.pdf`, filename: 'Sample Paper, A Test, Jane Doe et al., 2025, v2.pdf', saveAs: false },
+    { url: `${pdfUrl}.pdf`, filename: 'Sample Paper, A Test, Jane Doe et al., 2025, v2.pdf', saveAs: false },
   ]);
 });
 

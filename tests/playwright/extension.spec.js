@@ -117,11 +117,17 @@ test('options save, reload, affect downloads, and reset', async ({ extension }) 
   const options = await context.newPage();
   await options.goto(`chrome-extension://${id}/options.html`);
   await expect(options.locator('#new-filename-format')).toHaveValue('${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf');
+  await expect(options.locator('#new-filename-replacement-rules')).toHaveValue('[]');
   await options.locator('#new-filename-format').fill('${paperid} - ${firstAuthorFamilyName}.pdf');
+  await options.locator('#new-filename-replacement-rules').fill('[{"from":"-","to":"_"}]');
+  await options.locator('#new-download-save-as').check();
   await options.locator('#new-open-in-new-tab').uncheck();
   await options.locator('#update').click();
   await options.reload();
   await expect(options.locator('#new-filename-format')).toHaveValue('${paperid} - ${firstAuthorFamilyName}.pdf');
+  expect(JSON.parse(await options.locator('#new-filename-replacement-rules').inputValue()))
+    .toEqual([{ from: '-', to: '_' }]);
+  await expect(options.locator('#new-download-save-as')).toBeChecked();
   await expect(options.locator('#new-open-in-new-tab')).not.toBeChecked();
 
   await worker.evaluate(() => {
@@ -132,10 +138,14 @@ test('options save, reload, affect downloads, and reset', async ({ extension }) 
   await expect(page.locator('#arxiv-utils-direct-download-a')).toHaveAttribute('href', '#');
   await page.locator('#arxiv-utils-direct-download-a').click();
   await expect.poll(() => worker.evaluate(() => globalThis.testDownloads.length)).toBe(1);
-  expect(await worker.evaluate(() => globalThis.testDownloads[0].filename)).toBe(`${paperId} - Doe.pdf`);
+  expect(await worker.evaluate(() => globalThis.testDownloads[0])).toEqual({
+    url: `${pdfUrl}.pdf`, filename: `${paperId} _ Doe.pdf`, saveAs: true,
+  });
 
   await options.locator('#revert').click();
   await options.reload();
   await expect(options.locator('#new-filename-format')).toHaveValue('${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf');
+  await expect(options.locator('#new-filename-replacement-rules')).toHaveValue('[]');
+  await expect(options.locator('#new-download-save-as')).not.toBeChecked();
   await expect(options.locator('#new-open-in-new-tab')).toBeChecked();
 });

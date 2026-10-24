@@ -110,10 +110,11 @@ async function onMessage(message) {
   if (typeof browser.downloads?.download !== 'function') {
     return { downloadSupported: false };
   }
+  const saveAs = !!message.saveAs && (await browser.runtime.getPlatformInfo()).os !== 'android';
   await browser.downloads.download({
     url: message.url,
     filename: message.filename,
-    saveAs: false,
+    saveAs,
   });
   console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
 }

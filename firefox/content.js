@@ -19,6 +19,8 @@ const DIRECT_DOWNLOAD_LI_ID = "arxiv-utils-direct-download-li";
 const DIRECT_DOWNLOAD_A_ID = "arxiv-utils-direct-download-a";
 const MOBILE_DIRECT_DOWNLOAD_A_ID = "arxiv-utils-mobile-direct-download-a";
 const EXTRA_SERVICES_DIV_ID = "arxiv-utils-extra-services-div";
+const DEFAULT_FILENAME_FORMAT = '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf';
+const DEFAULT_FILENAME_REPLACEMENT_RULES = '[]';
 
 // Return the id parsed from the url.
 function getId(url) {
@@ -93,6 +95,84 @@ async function getArticleInfoAsync(id, pageType) {
     version,
   }
 }
+
+function getFilenameReplacementRules(rulesText) {
+  const rules = JSON.parse(rulesText);
+  if (!Array.isArray(rules))
+    throw new Error("Filename replacement rules must be an array.");
+  for (const [index, rule] of rules.entries()) {
+    if (rule === null || typeof rule !== 'object' || Array.isArray(rule))
+      throw new Error(`Filename replacement rule ${index + 1} must be an object.`);
+    if (typeof rule.from !== 'string' || typeof rule.to !== 'string')
+      throw new Error(`Filename replacement rule ${index + 1} must have string \`from\` and \`to\` fields.`);
+    if (rule.from === '')
+      throw new Error(`Filename replacement rule ${index + 1} \`from\` cannot be empty.`);
+  }
+  return rules;
+}
+
+function formatFileName(filenameFormat, id, articleInfo) {
+  return filenameFormat
+    .replace('${title}', articleInfo.escapedTitle)
+    .replace('${firstAuthor}', articleInfo.firstAuthor)
+    .replace('${firstAuthorFamilyName}', articleInfo.firstAuthorFamilyName)
+    .replace('${firstAuthorFamilyNameLowerCase}', articleInfo.firstAuthorFamilyNameLowerCase)
+    .replace('${authors}', articleInfo.authors)
+    .replace('${publishedYear}', articleInfo.publishedYear)
+    .replace('${updatedYear}', articleInfo.updatedYear)
+    .replace('${publishedYear2Digits}', articleInfo.publishedYear2Digits)
+    .replace('${updatedYear2Digits}', articleInfo.updatedYear2Digits)
+    .replace('${publishedMonth}', articleInfo.publishedMonth)
+    .replace('${updatedMonth}', articleInfo.updatedMonth)
+    .replace('${publishedDay}', articleInfo.publishedDay)
+    .replace('${updatedDay}', articleInfo.updatedDay)
+    .replace('${version}', articleInfo.version)
+    .replace('${paperid}', id)
+  ;
+}
+
+function applyFilenameReplacementRules(fileName, rules) {
+  const MAX_FILENAME_BYTES = 255;
+  // Keep the PDF extension even when the format has trailing whitespace.
+  const pdfSuffix = fileName.match(/(\.pdf)\s*$/i);
+  if (pdfSuffix)
+    fileName = fileName.slice(0, -pdfSuffix[0].length);
+  const suffix = pdfSuffix?.[1] || '';
+  // Match the original text once, so one rule's output cannot trigger another rule.
+  if (rules.length) {
+    const replacements = new Map();
+    for (const rule of rules)
+      if (!replacements.has(rule.from)) replacements.set(rule.from, rule.to);
+    const pattern = new RegExp(rules.map(rule => rule.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'gu');
+    fileName = fileName.replace(pattern, match => replacements.get(match));
+  }
+  fileName = fileName
+    .replace(/[/:]/g, ',')
+    .replace(/[\\?*|"<>]/g, '_')
+    .replace(/\n/g, '');
+  const encoder = new TextEncoder();
+  const maxBaseBytes = MAX_FILENAME_BYTES - encoder.encode(suffix).length;
+  let base = '';
+  let bytes = 0;
+  for (const char of fileName) {
+    const charBytes = encoder.encode(char).length;
+    if (bytes + charBytes > maxBaseBytes) break;
+    base += char;
+    bytes += charBytes;
+  }
+  // Firefox rejects filename components beginning or ending with a dot.
+  base = base.replace(/^\.+|\.+$/g, '_');
+  return (base || 'download') + suffix;
+}
+
+function parseFilenameReplacementRules(rulesText) {
+  try {
+    return getFilenameReplacementRules(rulesText);
+  } catch (error) {
+    console.error(LOG_PREFIX, "Error: Invalid filename replacement rules. Falling back to default rules.", error);
+    return getFilenameReplacementRules(DEFAULT_FILENAME_REPLACEMENT_RULES);
+  }
+}
 // Add custom links in abstract page.
 function addCustomLinksAsync(id) {
   document.getElementById(DIRECT_DOWNLOAD_LI_ID)?.remove();
@@ -141,31 +221,15 @@ function addCustomLinksAsync(id) {
 async function enableDirectDownload(id, articleInfo) {
   // Add direct download link.
   const result = await browser.storage.sync.get({
-    'filename_format': '${title}, ${firstAuthor} et al., ${publishedYear}, v${version}.pdf'
+    'filename_format': DEFAULT_FILENAME_FORMAT,
+    'filename_replacement_rules': DEFAULT_FILENAME_REPLACEMENT_RULES,
+    'download_save_as': false,
   });
-  const fileName = result.filename_format
-    .replace('${title}', articleInfo.escapedTitle)
-    .replace('${firstAuthor}', articleInfo.firstAuthor)
-    .replace('${firstAuthorFamilyName}', articleInfo.firstAuthorFamilyName)
-    .replace('${firstAuthorFamilyNameLowerCase}', articleInfo.firstAuthorFamilyNameLowerCase)
-    .replace('${authors}', articleInfo.authors)
-    .replace('${publishedYear}', articleInfo.publishedYear)
-    .replace('${updatedYear}', articleInfo.updatedYear)
-    .replace('${publishedYear2Digits}', articleInfo.publishedYear2Digits)
-    .replace('${updatedYear2Digits}', articleInfo.updatedYear2Digits)
-    .replace('${publishedMonth}', articleInfo.publishedMonth)
-    .replace('${updatedMonth}', articleInfo.updatedMonth)
-    .replace('${publishedDay}', articleInfo.publishedDay)
-    .replace('${updatedDay}', articleInfo.updatedDay)
-    .replace('${version}', articleInfo.version)
-    .replace('${paperid}', id)
-    // Replace invalid characters.
-    // Ref: https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
-    // Ref: https://stackoverflow.com/a/42210346
-    .replace(/[/:]/g, ',')
-    .replace(/[/\\?*|"<>]/g, '_')
-    .replace(/\n/g, '') // Replace newline, which exists in some titles that are too long.
-  ;
+  const filenameReplacementRules = parseFilenameReplacementRules(result.filename_replacement_rules);
+  const fileName = applyFilenameReplacementRules(
+    formatFileName(result.filename_format, id, articleInfo),
+    filenameReplacementRules
+  );
   const directURL = `https://arxiv.org/pdf/${id}.pdf`;
   for (const downloadA of [DIRECT_DOWNLOAD_A_ID, MOBILE_DIRECT_DOWNLOAD_A_ID].map(id => document.getElementById(id)).filter(Boolean)) {
     downloadA.addEventListener('click', async function (e) {
@@ -174,6 +238,7 @@ async function enableDirectDownload(id, articleInfo) {
         const response = await browser.runtime.sendMessage({
           url: directURL,
           filename: fileName,
+          saveAs: result.download_save_as,
         });
         if (response?.downloadSupported !== false) {
           console.log(LOG_PREFIX, `Sending download message to download: ${fileName} from ${directURL}.`);

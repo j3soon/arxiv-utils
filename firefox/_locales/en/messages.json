@@ -48,8 +48,8 @@
     "description": "Button label for restoring default options."
   },
   "filenameFormatNote": {
-    "message": "Note: You'll need to re-open the arXiv tabs for the new filename format to take effect.",
-    "description": "Explains when a changed filename format takes effect."
+    "message": "Note: Re-open arXiv tabs for new filename and download settings to take effect.",
+    "description": "Explains when changed filename and download settings take effect."
   },
   "pdfRedirectionNote": {
     "message": "Note: Disabling PDF redirection will disallow renaming for PDF tabs.",
@@ -106,5 +106,29 @@
   "help": {
     "message": "Help",
     "description": "Label for links and menu items that open the project help page."
+  },
+  "currentFilenameReplacementRules": {
+    "message": "Current filename replacement rules",
+    "description": "Label for the current filename replacement rules."
+  },
+  "newFilenameReplacementRules": {
+    "message": "New filename replacement rules",
+    "description": "Label for the filename replacement rules input."
+  },
+  "willAskWhereToSavePdf": {
+    "message": "Will ask where to save each PDF",
+    "description": "Label for the current save dialog setting."
+  },
+  "askWhereToSavePdfDesktop": {
+    "message": "Ask where to save each PDF (desktop only)",
+    "description": "Label for the desktop-only save dialog checkbox."
+  },
+  "unavailableOnAndroid": {
+    "message": "unavailable on Android",
+    "description": "Status shown when the save dialog option is unavailable on Android."
+  },
+  "filenameSafetyNote": {
+    "message": "Note: Built-in filename safety rules are always applied after custom rules.",
+    "description": "Explains that built-in filename safety rules apply after custom rules."
   }
 }

@@ -48,8 +48,8 @@
     "description": "Button label for restoring default options."
   },
   "filenameFormatNote": {
-    "message": "참고: 새 파일명 형식을 적용하려면 arXiv 탭을 다시 열어야 합니다.",
-    "description": "Explains when a changed filename format takes effect."
+    "message": "참고: 새 파일명 및 다운로드 설정을 적용하려면 arXiv 탭을 다시 열어야 합니다.",
+    "description": "Explains when changed filename and download settings take effect."
   },
   "pdfRedirectionNote": {
     "message": "참고: PDF 리디렉션을 끄면 PDF 탭의 제목을 변경할 수 없습니다.",
@@ -106,5 +106,29 @@
   "help": {
     "message": "도움말",
     "description": "Label for links and menu items that open the project help page."
+  },
+  "currentFilenameReplacementRules": {
+    "message": "현재 파일명 치환 규칙",
+    "description": "Label for the current filename replacement rules."
+  },
+  "newFilenameReplacementRules": {
+    "message": "새 파일명 치환 규칙",
+    "description": "Label for the filename replacement rules input."
+  },
+  "willAskWhereToSavePdf": {
+    "message": "각 PDF의 저장 위치를 묻는지 여부",
+    "description": "Label for the current save dialog setting."
+  },
+  "askWhereToSavePdfDesktop": {
+    "message": "각 PDF의 저장 위치 묻기 (데스크톱 전용)",
+    "description": "Label for the desktop-only save dialog checkbox."
+  },
+  "unavailableOnAndroid": {
+    "message": "Android에서 사용할 수 없음",
+    "description": "Status shown when the save dialog option is unavailable on Android."
+  },
+  "filenameSafetyNote": {
+    "message": "참고: 사용자 지정 규칙을 적용한 후에도 기본 파일명 안전 규칙이 적용됩니다.",
+    "description": "Explains that built-in filename safety rules apply after custom rules."
   }
 }
