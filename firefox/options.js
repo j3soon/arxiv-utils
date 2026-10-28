@@ -2,18 +2,39 @@ const DEFAULT_FILENAME_FORMAT = '${title}, ${firstAuthor} et al., ${publishedYea
 const DEFAULT_FILENAME_REPLACEMENT_RULES = '[]';
 
 function getFilenameReplacementRules(rulesText) {
-  const rules = JSON.parse(rulesText);
+  let rules;
+  try {
+    rules = JSON.parse(rulesText);
+  } catch {
+    throw new Error();
+  }
   if (!Array.isArray(rules))
-    throw new Error("Filename replacement rules must be an array.");
+    throw new Error(browser.i18n.getMessage("filenameRulesMustBeArray"));
   for (const [index, rule] of rules.entries()) {
     if (rule === null || typeof rule !== 'object' || Array.isArray(rule))
-      throw new Error(`Filename replacement rule ${index + 1} must be an object.`);
+      throw new Error(browser.i18n.getMessage("filenameRuleMustBeObject", String(index + 1)));
     if (typeof rule.from !== 'string' || typeof rule.to !== 'string')
-      throw new Error(`Filename replacement rule ${index + 1} must have string \`from\` and \`to\` fields.`);
+      throw new Error(browser.i18n.getMessage("filenameRuleMustHaveStringFields", String(index + 1)));
     if (rule.from === '')
-      throw new Error(`Filename replacement rule ${index + 1} \`from\` cannot be empty.`);
+      throw new Error(browser.i18n.getMessage("filenameRuleFromCannotBeEmpty", String(index + 1)));
   }
   return rules;
+}
+
+function getBooleanText(value) {
+  return value
+    ? browser.i18n.getMessage("yes")
+    : browser.i18n.getMessage("no");
+}
+
+function getZoomText(value) {
+  if (value === 'auto')
+    return browser.i18n.getMessage("zoomAuto");
+  if (value === 'page-fit')
+    return browser.i18n.getMessage("zoomPageFit");
+  if (value === 'page-width')
+    return browser.i18n.getMessage("zoomPageWidth");
+  return value + (!['25', '50', '75', '100', '125', '150', '200'].includes(value) ? '%' : '');
 }
 
 function localizePage() {
@@ -42,7 +63,8 @@ async function saveOptionsAsync(e) {
         2
       );
     } catch (error) {
-      alert(`Invalid filename replacement rules: ${error.message}`);
+      const detail = error.message ? `\n${error.message}` : '';
+      alert(`${browser.i18n.getMessage("invalidFilenameReplacementRules")}${detail}`);
       return;
     }
     const downloadSaveAsCheckbox = document.querySelector("#new-download-save-as");
@@ -58,7 +80,7 @@ async function saveOptionsAsync(e) {
       await browser.storage.sync.set(options);
     } catch (error) {
       console.error("Failed to save options.", error);
-      alert(`Unable to save options. The filename replacement rules may exceed the browser sync storage limit. ${error.message}`);
+      alert(`${browser.i18n.getMessage("unableToSaveOptions")} ${browser.i18n.getMessage("filenameRulesMayExceedSyncStorage")}`);
       return;
     }
   } else if (e.submitter.id === "revert-pdf-viewer-url-prefix") {
@@ -109,16 +131,16 @@ async function restoreOptionsAsync() {
   document.querySelector("#new-filename-replacement-rules").value = filename_replacement_rules;
   const open_in_new_tab = result.open_in_new_tab;
   document.querySelector("#new-open-in-new-tab").checked = open_in_new_tab;
-  document.querySelector("#open-in-new-tab").innerText = open_in_new_tab;
+  document.querySelector("#open-in-new-tab").innerText = getBooleanText(open_in_new_tab);
   const download_save_as = result.download_save_as;
   const isAndroid = (await browser.runtime.getPlatformInfo()).os === 'android';
   const downloadSaveAsCheckbox = document.querySelector("#new-download-save-as");
   downloadSaveAsCheckbox.disabled = isAndroid;
   downloadSaveAsCheckbox.checked = !isAndroid && download_save_as;
-  document.querySelector("#download-save-as").innerText = isAndroid ? browser.i18n.getMessage('unavailableOnAndroid') : download_save_as;
+  document.querySelector("#download-save-as").innerText = isAndroid ? browser.i18n.getMessage('unavailableOnAndroid') : getBooleanText(download_save_as);
   const redirect_pdf = result.redirect_pdf;
   document.querySelector("#new-redirect-pdf").checked = redirect_pdf;
-  document.querySelector("#redirect-pdf").innerText = redirect_pdf;
+  document.querySelector("#redirect-pdf").innerText = getBooleanText(redirect_pdf);
   const pdf_viewer_url_prefix = result.pdf_viewer_url_prefix;
   document.querySelector("#pdf-viewer-url-prefix").innerText = pdf_viewer_url_prefix;
   if (pdf_viewer_url_prefix !== '')
@@ -126,7 +148,7 @@ async function restoreOptionsAsync() {
   else
     document.querySelector("#new-pdf-viewer-url-prefix").value = "https://mozilla.github.io/pdf.js/web/viewer.html?file=";
   const pdf_viewer_default_zoom = result.pdf_viewer_default_zoom;
-  document.querySelector("#pdf-viewer-default-zoom").innerText = pdf_viewer_default_zoom + (pdf_viewer_default_zoom !== 'auto' && pdf_viewer_default_zoom !== 'page-fit' && pdf_viewer_default_zoom !== 'page-width' && !['25', '50', '75', '100', '125', '150', '200'].includes(pdf_viewer_default_zoom) ? '%' : '');
+  document.querySelector("#pdf-viewer-default-zoom").innerText = getZoomText(pdf_viewer_default_zoom);
 
   // Check if it's a predefined value or custom
   const predefinedValues = ['auto', 'page-fit', 'page-width', '50', '75', '100', '125', '150', '200', '300', '400'];

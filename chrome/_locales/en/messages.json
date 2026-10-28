@@ -70,5 +70,50 @@
   "filenameSafetyNote": {
     "message": "Note: Built-in filename safety rules are always applied after custom rules.",
     "description": "Explains that built-in filename safety rules apply after custom rules."
+  },
+  "yes": {
+    "message": "Yes",
+    "description": "Affirmative value shown for enabled options."
+  },
+  "no": {
+    "message": "No",
+    "description": "Negative value shown for disabled options."
+  },
+  "filenameRulesMustBeArray": {
+    "message": "Filename replacement rules must be an array.",
+    "description": "Validation error shown when filename replacement rules are not an array."
+  },
+  "filenameRuleMustBeObject": {
+    "message": "Filename replacement rule $NUMBER$ must be an object.",
+    "description": "Validation error shown when a filename replacement rule is not an object.",
+    "placeholders": {
+      "number": { "content": "$1" }
+    }
+  },
+  "filenameRuleMustHaveStringFields": {
+    "message": "Filename replacement rule $NUMBER$ must have string `from` and `to` fields.",
+    "description": "Validation error shown when a filename replacement rule has invalid fields.",
+    "placeholders": {
+      "number": { "content": "$1" }
+    }
+  },
+  "filenameRuleFromCannotBeEmpty": {
+    "message": "Filename replacement rule $NUMBER$ `from` cannot be empty.",
+    "description": "Validation error shown when a filename replacement rule has an empty source value.",
+    "placeholders": {
+      "number": { "content": "$1" }
+    }
+  },
+  "invalidFilenameReplacementRules": {
+    "message": "Invalid filename replacement rules.",
+    "description": "Alert shown when filename replacement rules are invalid."
+  },
+  "unableToSaveOptions": {
+    "message": "Unable to save options.",
+    "description": "Alert shown when extension options cannot be saved."
+  },
+  "filenameRulesMayExceedSyncStorage": {
+    "message": "The filename replacement rules may exceed the browser sync storage limit.",
+    "description": "Explains a possible reason extension options could not be saved."
   }
 }

@@ -2,18 +2,29 @@ const DEFAULT_FILENAME_FORMAT = '${title}, ${firstAuthor} et al., ${publishedYea
 const DEFAULT_FILENAME_REPLACEMENT_RULES = '[]';
 
 function getFilenameReplacementRules(rulesText) {
-  const rules = JSON.parse(rulesText);
+  let rules;
+  try {
+    rules = JSON.parse(rulesText);
+  } catch {
+    throw new Error();
+  }
   if (!Array.isArray(rules))
-    throw new Error("Filename replacement rules must be an array.");
+    throw new Error(chrome.i18n.getMessage("filenameRulesMustBeArray"));
   for (const [index, rule] of rules.entries()) {
     if (rule === null || typeof rule !== 'object' || Array.isArray(rule))
-      throw new Error(`Filename replacement rule ${index + 1} must be an object.`);
+      throw new Error(chrome.i18n.getMessage("filenameRuleMustBeObject", String(index + 1)));
     if (typeof rule.from !== 'string' || typeof rule.to !== 'string')
-      throw new Error(`Filename replacement rule ${index + 1} must have string \`from\` and \`to\` fields.`);
+      throw new Error(chrome.i18n.getMessage("filenameRuleMustHaveStringFields", String(index + 1)));
     if (rule.from === '')
-      throw new Error(`Filename replacement rule ${index + 1} \`from\` cannot be empty.`);
+      throw new Error(chrome.i18n.getMessage("filenameRuleFromCannotBeEmpty", String(index + 1)));
   }
   return rules;
+}
+
+function getBooleanText(value) {
+  return value
+    ? chrome.i18n.getMessage("yes")
+    : chrome.i18n.getMessage("no");
 }
 
 function localizePage() {
@@ -40,7 +51,8 @@ async function saveOptionsAsync(e) {
         2
       );
     } catch (error) {
-      alert(`Invalid filename replacement rules: ${error.message}`);
+      const detail = error.message ? `\n${error.message}` : '';
+      alert(`${chrome.i18n.getMessage("invalidFilenameReplacementRules")}${detail}`);
       return;
     }
     try {
@@ -52,7 +64,7 @@ async function saveOptionsAsync(e) {
       });
     } catch (error) {
       console.error("Failed to save options.", error);
-      alert(`Unable to save options. The filename replacement rules may exceed the browser sync storage limit. ${error.message}`);
+      alert(`${chrome.i18n.getMessage("unableToSaveOptions")} ${chrome.i18n.getMessage("filenameRulesMayExceedSyncStorage")}`);
       return;
     }
   }
@@ -74,10 +86,10 @@ async function restoreOptionsAsync() {
   document.querySelector("#new-filename-replacement-rules").value = filename_replacement_rules;
   const open_in_new_tab = result.open_in_new_tab;
   document.querySelector("#new-open-in-new-tab").checked = open_in_new_tab;
-  document.querySelector("#open-in-new-tab").innerText = open_in_new_tab;
+  document.querySelector("#open-in-new-tab").innerText = getBooleanText(open_in_new_tab);
   const download_save_as = result.download_save_as;
   document.querySelector("#new-download-save-as").checked = download_save_as;
-  document.querySelector("#download-save-as").innerText = download_save_as;
+  document.querySelector("#download-save-as").innerText = getBooleanText(download_save_as);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
