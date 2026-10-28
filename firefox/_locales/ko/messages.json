@@ -48,7 +48,7 @@
     "description": "Button label for restoring default options."
   },
   "filenameFormatNote": {
-    "message": "참고: 새 파일명 및 다운로드 설정을 적용하려면 arXiv 탭을 다시 열어야 합니다.",
+    "message": "참고: 변경한 파일명 및 다운로드 설정을 적용하려면 arXiv 탭을 다시 열어야 합니다.",
     "description": "Explains when changed filename and download settings take effect."
   },
   "pdfRedirectionNote": {
@@ -116,19 +116,64 @@
     "description": "Label for the filename replacement rules input."
   },
   "willAskWhereToSavePdf": {
-    "message": "각 PDF의 저장 위치를 묻는지 여부",
+    "message": "PDF 저장 시 위치 확인 여부",
     "description": "Label for the current save dialog setting."
   },
   "askWhereToSavePdfDesktop": {
-    "message": "각 PDF의 저장 위치 묻기 (데스크톱 전용)",
+    "message": "PDF를 저장할 때마다 위치 묻기(데스크톱 전용)",
     "description": "Label for the desktop-only save dialog checkbox."
   },
   "unavailableOnAndroid": {
-    "message": "Android에서 사용할 수 없음",
+    "message": "Android에서는 사용할 수 없음",
     "description": "Status shown when the save dialog option is unavailable on Android."
   },
   "filenameSafetyNote": {
     "message": "참고: 사용자 지정 규칙을 적용한 후에도 기본 파일명 안전 규칙이 적용됩니다.",
     "description": "Explains that built-in filename safety rules apply after custom rules."
+  },
+  "yes": {
+    "message": "예",
+    "description": "Affirmative value shown for enabled options."
+  },
+  "no": {
+    "message": "아니요",
+    "description": "Negative value shown for disabled options."
+  },
+  "filenameRulesMustBeArray": {
+    "message": "파일명 치환 규칙은 JSON 배열 형식이어야 합니다.",
+    "description": "Validation error shown when filename replacement rules are not an array."
+  },
+  "filenameRuleMustBeObject": {
+    "message": "$NUMBER$번째 파일명 치환 규칙은 JSON 객체여야 합니다.",
+    "description": "Validation error shown when a filename replacement rule is not an object.",
+    "placeholders": {
+      "number": { "content": "$1" }
+    }
+  },
+  "filenameRuleMustHaveStringFields": {
+    "message": "$NUMBER$번째 파일명 치환 규칙의 `from`과 `to` 필드는 문자열이어야 합니다.",
+    "description": "Validation error shown when a filename replacement rule has invalid fields.",
+    "placeholders": {
+      "number": { "content": "$1" }
+    }
+  },
+  "filenameRuleFromCannotBeEmpty": {
+    "message": "$NUMBER$번째 파일명 치환 규칙의 `from` 값은 비워 둘 수 없습니다.",
+    "description": "Validation error shown when a filename replacement rule has an empty source value.",
+    "placeholders": {
+      "number": { "content": "$1" }
+    }
+  },
+  "invalidFilenameReplacementRules": {
+    "message": "파일명 치환 규칙이 올바르지 않습니다.",
+    "description": "Alert shown when filename replacement rules are invalid."
+  },
+  "unableToSaveOptions": {
+    "message": "설정을 저장할 수 없습니다.",
+    "description": "Alert shown when extension options cannot be saved."
+  },
+  "filenameRulesMayExceedSyncStorage": {
+    "message": "파일명 치환 규칙이 브라우저 동기화 저장소의 용량 제한을 초과했을 수 있습니다.",
+    "description": "Explains a possible reason extension options could not be saved."
   }
 }

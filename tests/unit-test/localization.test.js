@@ -29,7 +29,7 @@ test.each(['chrome', 'firefox'])('%s locales cover every message reference', (br
   const referencedKeys = new Set([
     ...collectMatches(sources.manifest, /__MSG_([A-Za-z0-9_@]+)__/g),
     ...collectMatches(sources.optionsHtml, /data-i18n="([^"]+)"/g),
-    ...collectMatches(sources.optionsJs, /(?:chrome|browser)\.i18n\.getMessage\(["']([^"']+)["']\)/g),
+    ...collectMatches(sources.optionsJs, /(?:chrome|browser)\.i18n\.getMessage\(["']([^"']+)["']/g),
     ...collectMatches(sources.backgroundJs, /(?:chrome|browser)\.i18n\.getMessage\(["']([^"']+)["']\)/g),
   ]);
 
