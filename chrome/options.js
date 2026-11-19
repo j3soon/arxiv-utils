@@ -2,12 +2,7 @@ const DEFAULT_FILENAME_FORMAT = '${title}, ${firstAuthor} et al., ${publishedYea
 const DEFAULT_FILENAME_REPLACEMENT_RULES = '[]';
 
 function getFilenameReplacementRules(rulesText) {
-  let rules;
-  try {
-    rules = JSON.parse(rulesText);
-  } catch {
-    throw new Error();
-  }
+  const rules = JSON.parse(rulesText);
   if (!Array.isArray(rules))
     throw new Error(chrome.i18n.getMessage("filenameRulesMustBeArray"));
   for (const [index, rule] of rules.entries()) {
