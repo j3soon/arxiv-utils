@@ -56,9 +56,13 @@ describe.each([
   const messages = JSON.parse(read(browser, `_locales/${locale}/messages.json`));
   const invalidRulesMessage = messages.invalidFilenameReplacementRules.message;
 
-  function getMessage(key, substitutions = []) {
+  function getMessage(key, substitutions) {
     const { message, placeholders = {} } = messages[key];
-    const values = [].concat(substitutions);
+    let values = [];
+    if (Array.isArray(substitutions))
+      values = substitutions;
+    else if (typeof substitutions === 'string')
+      values = [substitutions];
     return message.replace(/\$(\w+)\$/g, (_, name) => {
       const content = placeholders[name.toLowerCase()]?.content ?? '';
       return content.replace(/\$(\d+)/g, (_, position) => values[Number(position) - 1] ?? '');
