@@ -32,7 +32,7 @@ test.each([
 
 test.each([
   ['android', true, 'unavailable on Android', false],
-  ['linux', false, 'true', true],
+  ['linux', false, 'Yes', true],
 ])('Firefox options on %s preserve the desktop save dialog preference', async (os, disabled, status, checked) => {
   const source = fs.readFileSync(path.join(__dirname, '..', '..', 'firefox', 'options.js'), 'utf8');
   const elements = {};
@@ -48,7 +48,16 @@ test.each([
   let savedOptions;
   const removedKeys = [];
   const browser = {
-    i18n: { getMessage: (key) => key === 'unavailableOnAndroid' ? 'unavailable on Android' : '' },
+    i18n: {
+      getMessage: (key) => ({
+        unavailableOnAndroid: 'unavailable on Android',
+        yes: 'Yes',
+        no: 'No',
+        zoomAuto: 'Auto',
+        zoomPageFit: 'Page Fit',
+        zoomPageWidth: 'Page Width',
+      })[key] || '',
+    },
     runtime: { getPlatformInfo: async () => ({ os }) },
     storage: {
       sync: {
@@ -66,6 +75,12 @@ test.each([
   };
   const context = vm.createContext({ browser, document, console, alert: () => {} });
   vm.runInContext(source, context);
+
+  expect(context.getBooleanText(true)).toBe('Yes');
+  expect(context.getBooleanText(false)).toBe('No');
+  expect(context.getZoomText('auto')).toBe('Auto');
+  expect(context.getZoomText('page-fit')).toBe('Page Fit');
+  expect(context.getZoomText('page-width')).toBe('Page Width');
 
   await context.restoreOptionsAsync();
   expect(elements['#new-download-save-as'].disabled).toBe(disabled);
