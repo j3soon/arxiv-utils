@@ -21,7 +21,7 @@
 A collection of features that enhance your reading experience on ArXiv (and some other sites):
 
 - Renames the title of PDF page to the paper's title.
-- Adds a button and hotkey (`Alt+A`) to navigate back to Abstract page for arXiv, OpenReview, and more.
+- Adds a button and hotkey (`Alt+A`) to navigate back to Abstract page for arXiv, OpenReview, USENIX, and more.
 - Download PDF with paper's title as filename.
 - Open the paper in extra services such as [ar5iv](https://ar5iv.labs.arxiv.org/).
 - Works with Native Tab Search, and other plugins! (See the [Solution Descriptions](#solution-descriptions) section for more details)
