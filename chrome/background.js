@@ -1,6 +1,7 @@
 // This background script implements the extension button,
 // and triggers the content script upon tab title change.
 import TARGET_URL_REGEXP_REPLACE from './target_url_regexp_replace.js';
+import { onDeterminingFilename, rememberOwnDownload } from './download_renamer.js';
 
 // All console logs should start with this prefix.
 const LOG_PREFIX = "[arXiv-utils]";
@@ -86,6 +87,9 @@ function onMessage(message, sender, sendResponse) {
 
   // Handle download requests
   if (message.type === 'downloadFile') {
+    // Our onDeterminingFilename listener re-applies this name, because Chrome may
+    // ignore the `filename` option while such a listener is registered.
+    rememberOwnDownload(message.url, message.filename);
     chrome.downloads.download({
       url: message.url,
       filename: message.filename,
@@ -147,6 +151,8 @@ chrome.action.onClicked.addListener(onButtonClickedAsync);
 chrome.contextMenus.onClicked.addListener(onContextClicked)
 // Listen to download request
 chrome.runtime.onMessage.addListener(onMessage);
+// Rename arXiv PDFs saved from other viewers (e.g., Google Scholar PDF Reader).
+chrome.downloads.onDeterminingFilename.addListener(onDeterminingFilename);
 
 // Listen to on extension install event.
 chrome.runtime.onInstalled.addListener(onInstalled);
