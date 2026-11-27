@@ -20,11 +20,11 @@ function scholarReaderLikeHtml(suggestedName) {
 // Waits for the latest download to finish (or fail: downloads from arxiv.org cannot
 // be served by Playwright routes, but the filename is already chosen by then).
 // The Direct Download request goes to the real arxiv.org, so allow time for the network.
-async function lastDownload(worker) {
+async function lastDownload(worker, timeout = 20000) {
   await expect.poll(() => worker.evaluate(async () => {
     const items = await chrome.downloads.search({});
     return items.length > 0 && items.every(item => item.state !== 'in_progress');
-  }), { timeout: 20000 }).toBe(true);
+  }), { timeout }).toBe(true);
   return worker.evaluate(async () =>
     (await chrome.downloads.search({ orderBy: ['-startTime'], limit: 1 }))[0]);
 }
@@ -77,6 +77,30 @@ test('uses the configured filename format', async ({ extension }) => {
   const item = await lastDownload(worker);
   expect(basename(item.filename)).toBe('Sample Paper, A Test.pdf');
 });
+
+// The listener answers asynchronously, so it must still release the download when the
+// arXiv lookup fails; otherwise the download would wait forever.
+for (const [failure, respond] of [
+  ['an HTTP error', route => route.fulfill({ status: 503, body: 'Service Unavailable' })],
+  ['an invalid response', route => route.fulfill({ status: 200, contentType: 'application/xml', body: '<feed></feed>' })],
+  ['an aborted request', route => route.abort('failed')],
+]) {
+  test(`keeps the original name when the arXiv lookup gets ${failure}`, async ({ extension }) => {
+    const { context, worker } = extension;
+    let lookups = 0;
+    // Registered after the fixture's route, so it takes precedence.
+    await context.route('https://export.arxiv.org/api/query**', route => { lookups++; return respond(route); });
+    const page = await newPageWithChromeDownloads(context);
+    await page.goto(`https://viewer.test/?name=${paperId}v2.pdf`);
+    await page.frameLocator('#reader').locator('#save').click();
+    // Chrome releases a download whose listener never answers after about 15 seconds,
+    // so require the fallback to finish sooner; the mocked failures resolve immediately.
+    const item = await lastDownload(worker, 10000);
+    expect(lookups).toBe(1);
+    expect(item.state).toBe('complete');
+    expect(basename(item.filename)).toBe(`${paperId}v2.pdf`);
+  });
+}
 
 test('leaves non-arXiv blob downloads alone', async ({ extension }) => {
   const { context, worker } = extension;
