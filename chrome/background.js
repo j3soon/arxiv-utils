@@ -89,13 +89,17 @@ function onMessage(message, sender, sendResponse) {
   if (message.type === 'downloadFile') {
     // Our onDeterminingFilename listener re-applies this name, because Chrome may
     // ignore the `filename` option while such a listener is registered.
-    rememberOwnDownload(message.url, message.filename);
+    const forgetOwnDownload = rememberOwnDownload(message.url, message.filename);
     chrome.downloads.download({
       url: message.url,
       filename: message.filename,
       saveAs: !!message.saveAs,
     }).then(() => {
       console.log(LOG_PREFIX, `Downloading file: ${message.filename} from ${message.url}.`)
+    }).catch(error => {
+      // The download never started, so the listener will not consume the queued name.
+      forgetOwnDownload();
+      console.error(LOG_PREFIX, `Error: Failed to download ${message.url}.`, error);
     });
   }
 }

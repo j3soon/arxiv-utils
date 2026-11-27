@@ -25,20 +25,32 @@ const ARXIV_URL_REGEXP = /^https?:\/\/(?:export\.|browse\.|www\.)?arxiv\.org\/pd
 // being injected twice right after installation).
 const ownDownloadFilenames = new Map();
 
+// Returns a function that removes this entry again, for when the download fails to
+// start and onDeterminingFilename will never consume it.
 export function rememberOwnDownload(url, filename) {
+  const entry = { filename };
   const queue = ownDownloadFilenames.get(url) || [];
-  queue.push(filename);
+  queue.push(entry);
   ownDownloadFilenames.set(url, queue);
+  return () => {
+    const current = ownDownloadFilenames.get(url);
+    const index = current ? current.indexOf(entry) : -1;
+    if (index === -1)
+      return;
+    current.splice(index, 1);
+    if (!current.length)
+      ownDownloadFilenames.delete(url);
+  };
 }
 
 function takeOwnDownloadFilename(url) {
   const queue = ownDownloadFilenames.get(url);
   if (!queue)
     return undefined;
-  const filename = queue.shift();
+  const entry = queue.shift();
   if (!queue.length)
     ownDownloadFilenames.delete(url);
-  return filename;
+  return entry.filename;
 }
 
 function basename(path) {
