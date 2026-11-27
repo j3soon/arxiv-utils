@@ -49,8 +49,15 @@ const articleXml = `<feed><entry>
 </entry></feed>`;
 
 const test = base.extend({
-  extension: async ({}, use) => {
-    const context = await chromium.launchPersistentContext('', {
+  extension: async ({}, use, testInfo) => {
+    // Give each test its own profile and download folder, so downloads that Chrome
+    // handles itself never land in ~/Downloads or collide between parallel workers.
+    const userDataDir = testInfo.outputPath('user-data');
+    fs.mkdirSync(path.join(userDataDir, 'Default'), { recursive: true });
+    fs.writeFileSync(path.join(userDataDir, 'Default', 'Preferences'), JSON.stringify({
+      download: { default_directory: testInfo.outputPath('downloads'), prompt_for_download: false },
+    }));
+    const context = await chromium.launchPersistentContext(userDataDir, {
       channel: 'chromium',
       headless: true,
       args: [
